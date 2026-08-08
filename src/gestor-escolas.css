@@ -1,0 +1,805 @@
+.manager-schools-content {
+  display: grid;
+  gap: 18px;
+}
+
+.manager-school-heading,
+.manager-panel-header,
+.manager-detail-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.manager-school-heading h1 {
+  margin: 5px 0 7px;
+  font-size: 27px;
+}
+
+.manager-school-heading p,
+.manager-panel-header p {
+  margin: 0;
+  color: #60729a;
+}
+
+.manager-eyebrow {
+  color: #0872f8;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+.manager-primary-button,
+.manager-detail-navigation a,
+.manager-panel-header > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 15px;
+  border: 1px solid #d9e4f3;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #0868e5;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.manager-primary-button,
+.manager-detail-navigation .manager-primary-button {
+  border-color: #0a70f5;
+  background: #0a70f5;
+  color: #ffffff;
+}
+
+.manager-school-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.manager-school-stats.detail {
+  grid-template-columns: repeat(5, minmax(150px, 1fr));
+}
+
+.manager-school-stats article {
+  padding: 18px 20px;
+  border: 1px solid #e0e8f4;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(18, 58, 122, .06);
+}
+
+.manager-school-stats span,
+.manager-school-stats strong {
+  display: block;
+}
+
+.manager-school-stats span {
+  color: #60729a;
+  font-size: 11px;
+}
+
+.manager-school-stats strong {
+  margin-top: 7px;
+  font-size: 25px;
+}
+
+.manager-school-panel {
+  padding: 20px;
+  border: 1px solid #e0e8f4;
+  border-radius: 11px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(18, 58, 122, .06);
+}
+
+.manager-panel-header {
+  margin-bottom: 18px;
+}
+
+.manager-panel-header h2 {
+  margin: 0 0 5px;
+  font-size: 18px;
+}
+
+.manager-list-search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: min(430px, 45%);
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid #d9e4f3;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #7180a2;
+}
+
+.manager-list-search.compact {
+  width: min(350px, 45%);
+}
+
+.manager-list-search input {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 12px;
+}
+
+.manager-school-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.manager-school-card {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #e0e8f4;
+  border-radius: 10px;
+  background: #fbfdff;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+}
+
+.manager-school-card:hover {
+  transform: translateY(-2px);
+  border-color: #a9ccfa;
+  box-shadow: 0 9px 20px rgba(18, 84, 173, .1);
+}
+
+.manager-school-code {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0a70f5, #04a7db);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.manager-school-code.large {
+  width: 64px;
+  height: 64px;
+  font-size: 20px;
+}
+
+.manager-school-photo {
+  width: 64px;
+  height: 64px;
+  border: 2px solid rgba(255, 255, 255, .65);
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.manager-school-card-body {
+  min-width: 0;
+}
+
+.manager-school-card-body > span {
+  color: #0872f8;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.manager-school-card h3 {
+  margin: 5px 0;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.manager-school-card p {
+  margin: 0;
+  color: #60729a;
+  font-size: 11px;
+}
+
+.manager-school-card dl {
+  display: grid;
+  gap: 7px;
+  margin: 13px 0 0;
+}
+
+.manager-school-card dl div {
+  display: grid;
+  grid-template-columns: 55px 1fr;
+  gap: 7px;
+}
+
+.manager-school-card dt,
+.manager-school-card dd {
+  margin: 0;
+  font-size: 10px;
+}
+
+.manager-school-card dt {
+  color: #7180a2;
+}
+
+.manager-school-card dd {
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.manager-school-card > a {
+  grid-column: 1 / -1;
+  padding-top: 12px;
+  border-top: 1px solid #e6edf7;
+  color: #0868e5;
+  font-size: 11px;
+  font-weight: 800;
+  text-align: right;
+  text-decoration: none;
+}
+
+.manager-state,
+.manager-error {
+  margin: 0;
+  padding: 22px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.manager-state {
+  color: #60729a;
+  background: #f7faff;
+}
+
+.manager-error {
+  color: #a61d2a;
+  background: #fff0f2;
+}
+
+.manager-success {
+  margin: 0;
+  padding: 13px 16px;
+  border-radius: 8px;
+  background: #e9f9ef;
+  color: #147b42;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.manager-detail-navigation > div {
+  display: flex;
+  gap: 9px;
+}
+
+.manager-edit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  margin: 0;
+  padding: 0 15px;
+  border: 1px solid #0a70f5;
+  border-radius: 7px;
+  background: #0a70f5;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.manager-school-detail-hero {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 22px;
+  border-radius: 11px;
+  background: linear-gradient(120deg, #083970, #087af1);
+  color: #ffffff;
+}
+
+.manager-school-detail-hero > div > span {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  opacity: .8;
+}
+
+.manager-school-detail-hero h1 {
+  margin: 5px 0 7px;
+  font-size: 25px;
+}
+
+.manager-school-detail-hero p {
+  margin: 0;
+  font-size: 12px;
+  opacity: .85;
+}
+
+.manager-school-detail-hero dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(110px, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.manager-school-detail-hero dl div {
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, .08);
+}
+
+.manager-school-detail-hero dt,
+.manager-school-detail-hero dd {
+  margin: 0;
+}
+
+.manager-school-detail-hero dt {
+  font-size: 9px;
+  opacity: .7;
+}
+
+.manager-school-detail-hero dd {
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.manager-team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.manager-team-card {
+  padding: 15px;
+  border: 1px solid #e1e9f5;
+  border-radius: 8px;
+  background: #f9fbff;
+}
+
+.manager-team-card span,
+.manager-team-card strong,
+.manager-team-card small {
+  display: block;
+}
+
+.manager-team-card span {
+  color: #0872f8;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.manager-team-card strong {
+  margin: 7px 0 4px;
+  font-size: 13px;
+}
+
+.manager-team-card small {
+  color: #60729a;
+  font-size: 10px;
+}
+
+.manager-team-card .manager-empty-team {
+  color: #7180a2;
+  font-weight: 600;
+}
+
+.manager-table-wrap {
+  overflow-x: auto;
+}
+
+.manager-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.manager-table th,
+.manager-table td {
+  padding: 11px 10px;
+  border-bottom: 1px solid #e7edf6;
+  font-size: 11px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.manager-table th {
+  color: #60729a;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.manager-table td strong {
+  color: #0b2859;
+}
+
+.manager-professional-total {
+  color: #0872f8;
+  font-size: 12px;
+}
+
+.manager-table button {
+  margin: 0;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 5px;
+  background: #eaf3ff;
+  color: #0868e5;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.manager-empty-row {
+  padding: 25px !important;
+  color: #7180a2;
+  text-align: center !important;
+}
+
+.manager-modal-backdrop {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(5, 24, 55, .55);
+}
+
+.manager-student-modal {
+  width: min(680px, 100%);
+  max-height: 90vh;
+  overflow: auto;
+  padding: 22px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(4, 25, 59, .3);
+}
+
+.manager-student-modal > header,
+.manager-student-modal > footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.manager-student-modal header span {
+  color: #0872f8;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.manager-student-modal h2,
+.manager-student-modal h3 {
+  margin: 5px 0 0;
+}
+
+.manager-student-modal header button {
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #eef4fc;
+  color: #23406e;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.manager-student-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.manager-student-details p,
+.manager-responsibles article {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #e1e9f5;
+  border-radius: 7px;
+  background: #f9fbff;
+}
+
+.manager-student-details span,
+.manager-student-details strong,
+.manager-responsibles span,
+.manager-responsibles strong,
+.manager-responsibles small {
+  display: block;
+}
+
+.manager-student-details span,
+.manager-responsibles span,
+.manager-responsibles small {
+  color: #60729a;
+  font-size: 10px;
+}
+
+.manager-student-details strong,
+.manager-responsibles strong {
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.manager-responsibles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 12px 0 20px;
+}
+
+.manager-responsibles small {
+  margin-top: 4px;
+}
+
+.manager-student-modal footer {
+  justify-content: flex-end;
+  padding-top: 16px;
+  border-top: 1px solid #e7edf6;
+}
+
+.manager-student-modal footer a,
+.manager-student-modal footer button {
+  margin: 0;
+  padding: 9px 13px;
+  border: 1px solid #0a70f5;
+  border-radius: 6px;
+  background: #0a70f5;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.manager-student-modal footer button {
+  border-color: #d9e4f3;
+  background: #ffffff;
+  color: #23406e;
+}
+
+.manager-edit-modal {
+  width: min(850px, 100%);
+  max-height: 92vh;
+  overflow: auto;
+  padding: 22px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(4, 25, 59, .3);
+}
+
+.manager-edit-modal > header,
+.manager-edit-modal > footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.manager-edit-modal header span {
+  color: #0872f8;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.manager-edit-modal h2 {
+  margin: 5px 0;
+}
+
+.manager-edit-modal header p,
+.manager-edit-note {
+  margin: 0;
+  color: #60729a;
+  font-size: 12px;
+}
+
+.manager-edit-modal header > button {
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #eef4fc;
+  color: #23406e;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.manager-photo-editor {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 16px;
+  align-items: center;
+  margin: 20px 0;
+  padding: 16px;
+  border: 1px solid #e1e9f5;
+  border-radius: 9px;
+  background: #f9fbff;
+}
+
+.manager-photo-editor img,
+.manager-photo-placeholder {
+  width: 130px;
+  height: 88px;
+  border-radius: 7px;
+  object-fit: cover;
+}
+
+.manager-photo-placeholder {
+  display: grid;
+  place-items: center;
+  border: 1px dashed #9dbbe4;
+  color: #60729a;
+  font-size: 11px;
+}
+
+.manager-photo-editor strong {
+  display: block;
+  font-size: 13px;
+}
+
+.manager-photo-editor p {
+  margin: 5px 0 10px;
+  color: #60729a;
+  font-size: 11px;
+}
+
+.manager-file-button,
+.manager-remove-photo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  margin: 0 8px 0 0;
+  padding: 0 11px;
+  border: 1px solid #0a70f5;
+  border-radius: 6px;
+  background: #0a70f5;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.manager-file-button input {
+  display: none;
+}
+
+.manager-remove-photo {
+  border-color: #d8e2f0;
+  background: #ffffff;
+  color: #23406e;
+}
+
+.manager-edit-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.manager-edit-fields label {
+  display: grid;
+  gap: 6px;
+  color: #183a6c;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.manager-edit-fields input,
+.manager-edit-fields select {
+  min-width: 0;
+  min-height: 40px;
+  margin: 0;
+  padding: 0 10px;
+  border: 1px solid #d4e0f0;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #183a6c;
+  font: inherit;
+  font-weight: 500;
+}
+
+.manager-edit-field-wide {
+  grid-column: 1 / -1;
+}
+
+.manager-edit-note {
+  margin-top: 16px;
+  padding: 11px 12px;
+  border-radius: 6px;
+  background: #f1f7ff;
+}
+
+.manager-edit-modal > footer {
+  justify-content: flex-end;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid #e7edf6;
+}
+
+.manager-edit-modal > footer button {
+  min-height: 38px;
+  margin: 0;
+  padding: 0 14px;
+  border: 1px solid #0a70f5;
+  border-radius: 6px;
+  background: #0a70f5;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.manager-edit-modal > footer button:first-child {
+  border-color: #d8e2f0;
+  background: #ffffff;
+  color: #23406e;
+}
+
+.manager-edit-modal > footer button:disabled {
+  cursor: wait;
+  opacity: .7;
+}
+
+@media (max-width: 1150px) {
+  .manager-school-grid {
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+  }
+
+  .manager-school-stats.detail,
+  .manager-team-grid {
+    grid-template-columns: repeat(2, minmax(160px, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .manager-school-heading,
+  .manager-panel-header,
+  .manager-detail-navigation,
+  .manager-school-detail-hero {
+    display: grid;
+  }
+
+  .manager-school-grid,
+  .manager-school-stats,
+  .manager-school-stats.detail,
+  .manager-team-grid,
+  .manager-student-details,
+  .manager-responsibles {
+    grid-template-columns: 1fr;
+  }
+
+  .manager-edit-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .manager-edit-field-wide {
+    grid-column: auto;
+  }
+
+  .manager-photo-editor {
+    grid-template-columns: 1fr;
+  }
+
+  .manager-list-search,
+  .manager-list-search.compact {
+    width: 100%;
+  }
+
+  .manager-school-detail-hero {
+    grid-template-columns: 64px 1fr;
+  }
+
+  .manager-school-detail-hero dl {
+    grid-column: 1 / -1;
+  }
+}

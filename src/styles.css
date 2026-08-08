@@ -1,0 +1,561 @@
+:root {
+  --siepin-azul-principal: #0a70f5;
+  --siepin-azul-institucional: #1262bf;
+  --siepin-verde: #0c8a72;
+  --siepin-roxo: #6b42c7;
+  --siepin-laranja: #e66f15;
+  --siepin-texto: #0b1d4e;
+  --siepin-fundo: #f6f9ff;
+  --siepin-raio-botao: 8px;
+
+  color: var(--siepin-texto);
+  background: var(--siepin-fundo);
+  font-family: Inter, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; } body { margin: 0; } input, select { width: 100%; height: 43px; margin-top: 7px; padding: 0 11px; border: 1px solid #ccd8e7; border-radius: 7px; font: inherit; } button, .button { display: inline-block; margin-top: 18px; padding: 12px 16px; border: 0; border-radius: var(--siepin-raio-botao); background: var(--siepin-azul-principal); color: white; font-weight: 700; text-decoration: none; cursor: pointer; } .login { min-height: 100vh; display: grid; place-items: center; padding: 20px; background: linear-gradient(135deg, #092b59, #1175db); } .login form { width: min(100%, 400px); padding: 36px; border-radius: 16px; background: white; } .login h1 { margin: 10px 0; } .login p { color: #64729a; } .login label, .panel label { display: block; margin-top: 15px; font-size: 12px; font-weight: 700; } .login a { display: block; margin-top: 18px; color: #0869f8; font-size: 12px; font-weight: 700; text-align: center; text-decoration: none; } .app-page { max-width: 1200px; margin: auto; padding: 22px; } header { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; } nav { display: flex; gap: 16px; } nav a { color: #0869f8; font-size: 13px; font-weight: 700; text-decoration: none; } .hero { padding: 34px; border-radius: 14px; color: white; background: linear-gradient(115deg, #092b59, #1175db); } .hero h1 { margin: 8px 0; } .eyebrow { font-size: 10px; font-weight: 800; letter-spacing: .1em; } .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 18px 0; } .cards article, .panel { padding: 22px; border: 1px solid #e3eaf5; border-radius: 12px; background: white; box-shadow: 0 5px 17px #173d7910; } .cards b, .cards span { display: block; } .cards b { font-size: 24px; } .cards span { margin-top: 6px; color: #64729a; font-size: 12px; } .two-columns { display: grid; grid-template-columns: 380px 1fr; gap: 16px; margin-top: 18px; } table { width: 100%; border-collapse: collapse; font-size: 12px; } th, td { padding: 12px 8px; border-bottom: 1px solid #e3eaf5; text-align: left; } small { display: block; margin-top: 12px; color: #64729a; } @media (max-width: 700px) { header, nav { align-items: flex-start; flex-direction: column; } .cards, .two-columns { grid-template-columns: 1fr; } }
+
+.error { color: #b42318; font-size: 12px; } .success { color: #087443; font-size: 12px; font-weight: 700; } .link-button { margin: 0; padding: 0; border: 0; background: transparent; color: #0869f8; font: 700 13px Inter, Arial, sans-serif; } .danger { margin: 0; padding: 7px 9px; background: #d92d3a; font-size: 10px; }
+.runtime-error { min-height: 100vh; display: grid; place-content: center; gap: 12px; padding: 24px; text-align: center; background: #f6f9ff; } .runtime-error h1 { margin: 0; color: #0a2e5d; } .runtime-error p { color: #b42318; }
+
+
+/* Tela de login institucional */
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(390px, 41%) 1fr;
+  font-family: Inter, Arial, sans-serif;
+}
+
+.login-brand {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 52px 62px 38px;
+  overflow: hidden;
+  color: #fff;
+  background:
+    linear-gradient(180deg, rgba(4, 64, 132, .72), rgba(0, 42, 91, .80)),
+    url('/images/igrejas.jpeg') center / cover;
+}
+
+.login-brand::after {
+  content: '';
+  position: absolute;
+  width: 540px;
+  height: 540px;
+  right: -295px;
+  bottom: -145px;
+  border: 26px solid rgba(24, 111, 255, .52);
+  border-radius: 50%;
+}
+
+.prefeitura-highlight, .brand-top, .brand-message, .benefits, .city-brand { position: relative; z-index: 1; }
+.brand-top { display: flex; gap: 13px; align-items: center; }
+.system-logo { width: 72px; height: 72px; object-fit: contain; filter: brightness(0) invert(1); }
+.brand-top h1 { margin: 0; font-size: 39px; letter-spacing: -1px; }
+.brand-top p { margin: 3px 0 0; font-size: 15px; line-height: 1.55; }
+.brand-message { margin-top: 104px; }
+.brand-message h2 { margin: 0; font-size: clamp(28px, 2.5vw, 38px); line-height: 1.3; letter-spacing: -.8px; }
+.brand-message h2 span { color: #3987ff; }
+.brand-message i { display: block; width: 52px; height: 4px; margin: 28px 0; border-radius: 5px; background: #1972ff; }
+.brand-message p { max-width: 440px; margin: 0; font-size: 16px; line-height: 1.65; }
+.benefits { display: grid; gap: 18px; margin-top: 34px; }
+.benefits p { display: flex; align-items: center; gap: 16px; margin: 0; }
+.benefits b { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 11px; background: #126bf5; color: #fff; font-size: 20px; }
+.benefits span { display: grid; gap: 4px; font-size: 13px; line-height: 1.4; }
+.benefits strong { font-size: 15px; }
+.city-brand { display: flex; align-items: center; gap: 14px; margin-top: auto; padding-top: 34px; font-size: 12px; line-height: 1.55; }
+.city-brand img { width: 55px; max-height: 60px; object-fit: contain; filter: brightness(0) invert(1); }
+
+.login-form-area { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 40px 30px; background: #f7faff; }
+.login-card { width: min(100%, 545px); padding: 34px; border-radius: 17px; background: rgba(255, 255, 255, .95); box-shadow: 0 18px 42px rgba(16, 50, 101, .12); }
+.login-icon { display: grid; place-items: center; width: 78px; height: 78px; margin: 0 auto 16px; border-radius: 50%; background: #eaf1ff; }
+.login-icon img { width: 48px; height: 48px; object-fit: contain; }
+.login-card h2 { margin: 0; color: #0a2557; font-size: 25px; text-align: center; }
+.login-card > p { margin: 10px 0 27px; color: #5a6d96; text-align: center; }
+.login-card > label { display: grid; gap: 8px; margin-top: 16px; color: #0b1d4e; font-size: 12px; font-weight: 800; }
+.login-card input:not([type='checkbox']) { width: 100%; height: 54px; margin: 0; border: 1px solid #cbd8ec; border-radius: 8px; padding: 0 15px; font-size: 14px; }
+.login-options { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; color: #53678f; font-size: 12px; }
+.login-options label { display: flex; align-items: center; gap: 7px; }
+.login-options input { width: 16px; height: 16px; }
+.login-options a { color: #0869f8; text-decoration: none; }
+.login-card > button { width: 100%; height: 54px; margin-top: 24px; border-radius: 8px; font-size: 15px; }
+.login-divider { display: flex; align-items: center; gap: 12px; margin: 28px 0; color: #2869cf; font-size: 11px; text-align: center; }
+.login-divider::before, .login-divider::after { content: ''; flex: 1; height: 1px; background: #dbe4f2; }
+.social-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.social-buttons button { height: 47px; margin: 0; border: 1px solid #d4deec; border-radius: 8px; background: #fff; color: #3d527b; font-size: 14px; }
+.login-form-area footer { margin-top: auto; padding-top: 35px; color: #5a6d96; font-size: 11px; }
+
+@media (max-width: 860px) {
+  .login-page { grid-template-columns: 1fr; }
+  .login-brand { min-height: auto; padding: 35px 28px; }
+  .brand-message { margin-top: 38px; }
+  .benefits, .city-brand { display: none; }
+  .login-form-area { min-height: auto; padding: 30px 18px; }
+}
+
+/* Destaque da Prefeitura no painel institucional */
+.prefeitura-highlight {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: fit-content;
+  margin-top: 24px;
+  padding: 14px 22px 14px 16px;
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: 12px;
+  background: rgba(1, 28, 71, .42);
+  box-shadow: 0 10px 25px rgba(0, 15, 48, .22);
+}
+
+.prefeitura-highlight img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.prefeitura-highlight span,
+.prefeitura-highlight small {
+  display: block;
+}
+
+.prefeitura-highlight span {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.prefeitura-highlight small {
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+@media (max-width: 860px) {
+  .prefeitura-highlight { margin-top: 18px; }
+}
+
+
+
+/* Cabecalho institucional do login */
+.login-brand .prefeitura-highlight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 420px;
+  margin: 0;
+  padding: 0 0 20px;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.login-brand .prefeitura-highlight img {
+  flex: 0 0 auto;
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.login-brand .prefeitura-highlight span {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.login-brand .prefeitura-highlight small {
+  margin-top: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.login-brand .brand-top {
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.login-brand .system-logo {
+  width: 66px;
+  height: 66px;
+}
+
+.login-brand .brand-top h1 {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.login-brand .brand-top p {
+  margin-top: 7px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.login-brand .brand-message {
+  margin-top: 72px;
+}
+
+@media (max-width: 860px) {
+  .login-brand .prefeitura-highlight {
+    max-width: none;
+    padding-bottom: 18px;
+  }
+
+  .login-brand .brand-top {
+    margin-top: 22px;
+  }
+
+  .login-brand .brand-message {
+    margin-top: 52px;
+  }
+}
+/* Marca da Prefeitura em destaque */
+.login-brand .prefeitura-highlight {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.login-brand .prefeitura-highlight img {
+  width: 128px;
+  height: 128px;
+}
+
+.login-brand .prefeitura-highlight span {
+  font-size: 17px;
+  line-height: 1.25;
+}
+
+.login-form-area footer {
+  text-align: center;
+  font-weight: 600;
+}
+
+@media (max-width: 860px) {
+  .login-brand .prefeitura-highlight img {
+    width: 112px;
+    height: 112px;
+  }
+}
+/* Centralizacao da marca municipal */
+.login-brand .prefeitura-highlight {
+  align-items: center;
+  text-align: center;
+}
+
+.login-brand .prefeitura-highlight img {
+  width: 150px;
+  height: 150px;
+}
+
+@media (max-width: 860px) {
+  .login-brand .prefeitura-highlight img {
+    width: 130px;
+    height: 130px;
+  }
+}
+/* Portal do Diretor */
+.director-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 34px;
+  border-radius: 16px;
+  color: #ffffff;
+  background: linear-gradient(120deg, #07336c, #126fe8);
+}
+
+.director-hero h1 {
+  margin: 8px 0 10px;
+  font-size: clamp(28px, 3vw, 38px);
+}
+
+.director-hero p {
+  max-width: 700px;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.school-badge {
+  display: grid;
+  min-width: 210px;
+  gap: 7px;
+  padding: 17px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.school-badge b {
+  font-size: 15px;
+}
+
+.school-badge span {
+  font-size: 12px;
+  line-height: 1.45;
+  opacity: 0.88;
+}
+
+.director-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 18px 0;
+}
+
+.director-stats article,
+.director-intro,
+.director-pillar,
+.director-notice {
+  border: 1px solid #e1e9f5;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 7px 20px rgba(23, 61, 121, 0.06);
+}
+
+.director-stats article {
+  display: grid;
+  gap: 7px;
+  padding: 20px;
+}
+
+.director-stats span,
+.director-stats small {
+  color: #60729b;
+  font-size: 12px;
+}
+
+.director-stats b {
+  color: #092d64;
+  font-size: 28px;
+}
+
+.director-intro {
+  margin-top: 18px;
+  padding: 23px 25px;
+}
+
+.director-intro h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.director-intro p {
+  max-width: 830px;
+  margin: 0;
+  color: #4e638d;
+  line-height: 1.55;
+}
+
+.director-pillars {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.director-pillar {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 15px;
+  padding: 24px;
+}
+
+.pillar-icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 12px;
+  background: #eaf2ff;
+  font-size: 23px;
+}
+
+.director-pillar h2 {
+  margin: 1px 0 8px;
+  color: #0a2f67;
+  font-size: 18px;
+}
+
+.director-pillar p {
+  margin: 0;
+  color: #5c7097;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.pillar-actions {
+  display: flex;
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 4px;
+}
+
+.pillar-actions button {
+  margin: 0;
+  padding: 9px 11px;
+  border: 1px solid #d8e4f6;
+  border-radius: 8px;
+  background: #f7faff;
+  color: #075fd5;
+  font-size: 12px;
+}
+
+.pillar-actions button:hover {
+  border-color: #0a6af4;
+  background: #eaf3ff;
+}
+
+.director-notice {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 18px 0 30px;
+  padding: 17px 21px;
+  border-left: 4px solid #0b70ec;
+}
+
+.director-notice strong {
+  color: #07336c;
+  white-space: nowrap;
+}
+
+.director-notice span {
+  color: #5b6e96;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@media (max-width: 800px) {
+  .director-hero {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .director-stats,
+  .director-pillars {
+    grid-template-columns: 1fr;
+  }
+
+  .director-notice {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+/* Gestao municipal e cadastro de escolas */
+.manager-access {
+  display: grid;
+  gap: 16px;
+}
+
+.manager-access h2 {
+  margin: 0 0 9px;
+}
+
+.manager-access p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.manager-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.manager-actions .button {
+  margin: 0;
+}
+
+.secondary-button {
+  border: 1px solid #0a6af4;
+  background: #edf5ff;
+  color: #075fd5;
+}
+
+.manager-access small {
+  margin: 0;
+  color: #61749a;
+  line-height: 1.5;
+}
+
+.schools-layout {
+  grid-template-columns: minmax(340px, 380px) 1fr;
+}
+
+@media (max-width: 700px) {
+  .schools-layout {
+    grid-template-columns: 1fr;
+  }
+}
+/* Transporte escolar */
+.transport-forms {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.transport-forms .panel {
+  padding: 22px;
+}
+
+.transport-forms h2,
+.transport-list h2 {
+  margin-top: 0;
+}
+
+.transport-list {
+  margin: 18px 0 30px;
+}
+
+@media (max-width: 800px) {
+  .transport-forms {
+    grid-template-columns: 1fr;
+  }
+}
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.form-actions button {
+  margin-top: 0;
+}
+
+.form-return {
+  padding: 10px 12px;
+  border: 1px solid #b9cbe8;
+  border-radius: 8px;
+  color: #0a64d8;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.pillar-actions a {
+  margin: 0;
+  padding: 9px 11px;
+  border: 1px solid #d8e4f6;
+  border-radius: 8px;
+  background: #f7faff;
+  color: #075fd5;
+  font-size: 12px;
+  text-decoration: none;
+}
+.logout-screen-button { margin: 0; padding: 10px 12px; border: 1px solid #ffffff55; background: transparent; color: #fff; font-size: 12px; }
+.school-tool-header-actions, .finance-header-actions { display: flex; gap: 9px; flex-wrap: wrap; }
+
+.password-form-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.password-form-header .logout-screen-button { border-color: #c5d5ed; color: #0a64d8; }

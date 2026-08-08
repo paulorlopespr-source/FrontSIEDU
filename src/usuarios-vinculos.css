@@ -1,0 +1,318 @@
+.user-management-header nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-management-header nav button {
+  width: auto;
+  margin: 0;
+  padding: 9px 13px;
+  border: 1px solid #c9d8ec;
+  background: #ffffff;
+  color: #0869f8;
+}
+
+.user-feedback {
+  margin-top: 18px;
+}
+
+.user-feedback p {
+  margin: 0;
+}
+
+.first-access-card {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto auto;
+  gap: 20px;
+  align-items: center;
+  margin-top: 18px;
+  padding: 20px;
+  border: 1px solid #8ed5a9;
+  border-radius: 12px;
+  background: linear-gradient(120deg, #effcf4, #ffffff);
+  box-shadow: 0 8px 22px rgba(29, 130, 70, .1);
+}
+
+.first-access-card span {
+  color: #168146;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.first-access-card h2,
+.first-access-card p {
+  margin: 5px 0 0;
+}
+
+.first-access-card h2 {
+  color: #0b3e25;
+  font-size: 18px;
+}
+
+.first-access-card p {
+  color: #4d7560;
+  font-size: 12px;
+}
+
+.first-access-card dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.first-access-card dl div {
+  padding: 10px 12px;
+  border: 1px solid #c6ead3;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.first-access-card dt,
+.first-access-card dd {
+  margin: 0;
+}
+
+.first-access-card dt {
+  color: #5c806b;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.first-access-card dd {
+  margin-top: 4px;
+  color: #0b3e25;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.first-access-card > button {
+  width: auto;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid #78c795;
+  border-radius: 7px;
+  background: #168146;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.user-management-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 390px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+.user-create-panel,
+.user-list-panel {
+  min-width: 0;
+}
+
+.school-binding-fieldset {
+  margin: 20px 0 0;
+  padding: 16px;
+  border: 1px solid #cfdbec;
+  border-radius: 10px;
+}
+
+.school-binding-fieldset legend {
+  padding: 0 6px;
+  color: #092d64;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.school-binding-help {
+  margin: 0 0 12px;
+  color: #64729a;
+  font-size: 12px;
+}
+
+.school-binding-options {
+  display: grid;
+  gap: 8px;
+  max-height: 230px;
+  overflow-y: auto;
+}
+
+.school-binding-option {
+  display: flex !important;
+  align-items: center;
+  gap: 9px;
+  margin: 0 !important;
+  padding: 10px;
+  border: 1px solid #e0e8f4;
+  border-radius: 8px;
+  background: #f8fbff;
+  cursor: pointer;
+}
+
+.school-binding-option input {
+  flex: 0 0 18px;
+  width: 18px !important;
+  height: 18px !important;
+  margin: 0 !important;
+}
+
+.school-binding-option span {
+  color: #183a69;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.school-binding-empty {
+  margin: 0;
+  color: #9a5d13;
+  font-size: 12px;
+}
+
+.user-list-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.user-list-heading h2,
+.user-list-heading p {
+  margin: 0;
+}
+
+.user-list-heading p {
+  margin-top: 5px;
+  color: #64729a;
+  font-size: 12px;
+}
+
+.user-list-heading > span {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #edf5ff;
+  color: #1168d4;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.user-table-scroll {
+  width: 100%;
+  margin-top: 16px;
+  overflow-x: auto;
+}
+
+.user-table-scroll table {
+  min-width: 760px;
+}
+
+.school-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.school-tags span {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: #e8f2ff;
+  color: #0a5fc7;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.school-tags em {
+  color: #9a5d13;
+  font-size: 11px;
+}
+
+.user-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.user-row-actions button,
+.binding-actions button,
+.binding-close {
+  width: auto;
+  margin: 0;
+  padding: 8px 10px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.button-secondary,
+.binding-close {
+  border: 1px solid #bed0e8 !important;
+  background: #ffffff !important;
+  color: #0a64d8 !important;
+}
+
+.school-binding-editor {
+  margin-top: 22px;
+  padding: 20px;
+  border: 1px solid #bcd2ef;
+  border-radius: 12px;
+  background: #f7fbff;
+}
+
+.school-binding-editor-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.school-binding-editor-heading span {
+  color: #1172df;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.school-binding-editor-heading h3,
+.school-binding-editor-heading p {
+  margin: 4px 0 0;
+}
+
+.school-binding-editor-heading p {
+  color: #64729a;
+  font-size: 12px;
+}
+
+.binding-actions {
+  display: flex;
+  gap: 9px;
+  margin-top: 16px;
+}
+
+@media (max-width: 900px) {
+  .user-management-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .user-management-header,
+  .user-management-header nav,
+  .user-list-heading,
+  .school-binding-editor-heading,
+  .user-row-actions,
+  .binding-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .first-access-card {
+    grid-template-columns: 1fr;
+  }
+
+  .first-access-card dl {
+    grid-template-columns: 1fr;
+  }
+}
