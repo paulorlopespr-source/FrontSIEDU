@@ -236,6 +236,22 @@ export const api = {
     return request(`/professor/exams/${id}`, {}, token);
   },
 
+  listClassMaterials(turmaId, token) {
+    return request(`/professor/materials${turmaId ? `?turmaId=${turmaId}` : ''}`, {}, token);
+  },
+
+  createClassMaterial(data, token) {
+    return post('/professor/materials', data, token);
+  },
+
+  updateClassMaterial(id, data, token) {
+    return request(`/professor/materials/${id}`, { method: 'PUT', body: JSON.stringify(data) }, token);
+  },
+
+  deleteClassMaterial(id, token) {
+    return request(`/professor/materials/${id}`, { method: 'DELETE' }, token);
+  },
+
   listAudit(filters, token) {
     return getWithFilters('/audit', filters, token);
   },
