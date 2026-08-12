@@ -61,6 +61,7 @@ function Login({ onLogin }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [lembrar, setLembrar] = useState(false);
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   async function entrar(event) {
     event.preventDefault();
@@ -176,13 +177,25 @@ function Login({ onLogin }) {
 
           <label>
             Senha
-            <input
-              value={senha}
-              onChange={(event) => setSenha(event.target.value)}
-              required
-              type="password"
-              placeholder="Digite sua senha"
-            />
+            <div className="password-input-wrapper">
+              <input
+                value={senha}
+                onChange={(event) => setSenha(event.target.value)}
+                required
+                type={mostrarSenha ? 'text' : 'password'}
+                placeholder="Digite sua senha"
+              />
+              <button
+                type="button"
+                className="password-visibility-button"
+                onClick={() => setMostrarSenha((valorAtual) => !valorAtual)}
+                aria-label={mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'}
+                aria-pressed={mostrarSenha}
+                title={mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'}
+              >
+                <span aria-hidden="true">{mostrarSenha ? '🙈' : '👁'}</span>
+              </button>
+            </div>
           </label>
 
           <div className="login-options">
