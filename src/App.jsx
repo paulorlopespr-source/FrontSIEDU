@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { api } from './services/api';
 import GestorDashboard from './GestorDashboard';
+import SuperintendenciaDashboard from './SuperintendenciaDashboard';
 import {
   DetalhesEscolaGestor,
   ListaEscolasGestor,
@@ -231,7 +232,9 @@ function Login({ onLogin }) {
   );
 }
 function Gestor({ user, onLogout, token }) {
-  return <GestorDashboard user={user} onLogout={onLogout} token={token} />;
+  return isSuperintendent(user)
+    ? <SuperintendenciaDashboard user={user} onLogout={onLogout} token={token} />
+    : <GestorDashboard user={user} onLogout={onLogout} token={token} />;
 }
 function Diretor({ user, onLogout, token }) {
   return (
@@ -577,8 +580,14 @@ function isDirector(user) {
   return schoolPortalProfiles.has(user?.perfil);
 }
 
+function isSuperintendent(user) {
+  return user?.perfil === 'Superintendente / Diretor de Ensino';
+}
+
 function destinationFor(user) {
-  return isDirector(user) ? '/diretor' : '/gestor';
+  if (isDirector(user)) return '/diretor';
+  if (isSuperintendent(user)) return '/superintendencia';
+  return '/gestor';
 }
 
 export default function App() {
@@ -605,6 +614,15 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<Login onLogin={login} />} />
       <Route path="/recuperar-senha" element={<RecuperarSenha />} />
+
+      <Route
+        path="/superintendencia"
+        element={
+          <Protected token={session?.token}>
+            {isSuperintendent(session?.user) ? <SuperintendenciaDashboard user={session?.user} onLogout={logout} token={session?.token} /> : <Navigate to={destinationFor(session?.user)} replace />}
+          </Protected>
+        }
+      />
 
       <Route
         path="/gestor"
@@ -717,8 +735,8 @@ export default function App() {
         path="/usuarios"
         element={
           <Protected token={session?.token}>
-            {isDirector(session?.user) ? (
-              <Navigate to="/diretor" replace />
+            {isDirector(session?.user) || isSuperintendent(session?.user) ? (
+              <Navigate to={isSuperintendent(session?.user) ? "/superintendencia" : "/diretor"} replace />
             ) : (
               <Usuarios
                 token={session?.token}
