@@ -658,8 +658,8 @@ export default function App() {
         path="/transportes"
         element={
           <Protected token={session?.token}>
-            {isDirector(session?.user) ? (
-              <Navigate to="/diretor" replace />
+            {isDirector(session?.user) || isSuperintendent(session?.user) ? (
+              <Navigate to={isSuperintendent(session?.user) ? "/superintendencia" : "/diretor"} replace />
             ) : (
               <TransporteEscolar
                 token={session?.token}
@@ -751,7 +751,9 @@ export default function App() {
         path="/gestor/financeiro"
         element={
           <Protected token={session?.token}>
-            {isDirector(session?.user) ? (
+            {isSuperintendent(session?.user) ? (
+              <Navigate to="/superintendencia#financeiro" replace />
+            ) : isDirector(session?.user) ? (
               <Navigate to="/diretor/financeiro" replace />
             ) : (
               <FinanceiroEscolar
