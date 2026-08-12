@@ -64,7 +64,7 @@ export default function CoordenadorDashboard({ user, token, onLogout }) {
       <div><b style={{ fontSize: 21 }}>Portal do Coordenador</b><small style={{ display: 'block', color: '#607399' }}>Coordenação Pedagógica Municipal</small></div>
       <div style={{ margin: '0 auto', width: 'min(42vw, 510px)', border: '1px solid #d5e0ef', borderRadius: 11, padding: '13px 18px', color: '#7183a3' }}>⌕ &nbsp; Pesquisar turmas, professores, alunos e conteúdos...</div>
       <div style={{ textAlign: 'right' }}><b>{user?.nome || 'Coordenador(a)'}</b><small style={{ display: 'block', color: '#607399' }}>Coordenador(a) Pedagógico(a)</small></div>
-      <button type="button" onClick={onLogout}>Sair</button>
+      <button type="button" onClick={onLogout} aria-label="Sair e voltar para o login">Sair</button>
     </header>
     <main style={{ display: 'grid', gridTemplateColumns: '240px 1fr', minHeight: 'calc(100vh - 78px)' }}>
       <aside style={{ background: 'linear-gradient(#063675,#04285b)', color: '#fff', padding: '28px 18px' }}>
@@ -75,7 +75,6 @@ export default function CoordenadorDashboard({ user, token, onLogout }) {
       <section style={{ padding: '32px 3.5%', overflow: 'hidden' }}>
         <div style={{ display: 'flex', gap: 24, justifyContent: 'space-between', flexWrap: 'wrap' }}>
           <div><h2 style={{ margin: 0, fontSize: 27 }}>Olá, {user?.nome?.split(' ')[0] || 'Coordenador(a)'}! 👋</h2><p style={{ color: '#5e7193' }}>Acompanhe os indicadores e as atividades pedagógicas da rede.</p></div>
-          <article style={{ background: '#fff', borderRadius: 12, padding: '15px 20px', minWidth: 295, boxShadow: '0 2px 12px #dbe4f2' }}><b>⏱ Jornada de trabalho</b><div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 10 }}><strong style={{ fontSize: 28, color: '#1268d4' }}>{formatHours(hoursToday)}</strong><button type="button" onClick={toggleWorkday} style={{ background: clockedIn ? '#d9465f' : '#0aa56c', color: '#fff', border: 0, borderRadius: 8, padding: '9px 13px' }}>{clockedIn ? 'Encerrar jornada' : 'Iniciar jornada'}</button></div><small style={{ color: '#5e7193' }}>{clockedIn ? 'Em atividade — contabilização ativa' : 'Horas trabalhadas hoje'}</small></article>
         </div>
         {notice && <p style={{ padding: 12, background: '#e2f6ea', color: '#12603d', borderRadius: 8 }}>{notice}</p>}
         <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 14, margin: '22px 0' }}>{cards.map(([icon, label, value, color]) => <article key={label} style={{ background: '#fff', borderRadius: 13, padding: 18, boxShadow: '0 2px 12px #dbe4f2' }}><span style={{ display: 'inline-block', padding: 10, minWidth: 20, textAlign: 'center', background: color, color: '#fff', borderRadius: '50%' }}>{icon}</span><small style={{ display: 'block', marginTop: 12 }}>{label}</small><b style={{ fontSize: 27, color: label.includes('pendentes') && value ? '#c62828' : '#09245a' }}>{value}</b><small style={{ display: 'block', color: label.includes('pendentes') ? (value ? '#c62828' : '#178d4c') : '#607399' }}>{label.includes('pendentes') ? (value ? 'Aguardam aprovação' : 'Tudo regular') : 'Indicador atualizado'}</small></article>) }</section>
