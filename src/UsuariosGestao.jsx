@@ -208,14 +208,19 @@ export default function UsuariosGestao({ token, onLogout }) {
         escolaIds: form.escolaIds,
       }, token);
 
-      setMessage(
-        'Cadastro efetuado com sucesso. Guarde as credenciais de primeiro acesso abaixo.',
-      );
-      setFirstAccessCredentials({
-        nome: result.user.nome,
-        usuario: result.user.usuario,
-        senhaTemporaria: result.senhaTemporaria,
-      });
+      if (result.senhaTemporaria) {
+        setMessage(
+          'Cadastro efetuado com sucesso. Guarde as credenciais de primeiro acesso abaixo.',
+        );
+        setFirstAccessCredentials({
+          nome: result.user.nome,
+          usuario: result.user.usuario,
+          senhaTemporaria: result.senhaTemporaria,
+        });
+      } else {
+        setMessage('Cadastro funcional criado sem acesso operacional ao portal.');
+        setFirstAccessCredentials(null);
+      }
       setForm(emptyForm);
       await load();
     } catch (requestError) {
