@@ -252,6 +252,18 @@ export const api = {
     return request(`/professor/materials/${id}`, { method: 'DELETE' }, token);
   },
 
+  getProfessorClassReports(token) {
+    return request('/professor/reports/classes', {}, token);
+  },
+
+  getProfessorClassReport(classId, token) {
+    return request(`/professor/reports/classes/${classId}`, {}, token);
+  },
+
+  getProfessorStudentReport(studentId, classId, token) {
+    return request(`/professor/reports/students/${studentId}?turmaId=${classId}`, {}, token);
+  },
+
   listAudit(filters, token) {
     return getWithFilters('/audit', filters, token);
   },
