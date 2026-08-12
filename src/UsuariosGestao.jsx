@@ -4,13 +4,18 @@ import { api } from './services/api';
 import { isValidCpf, isValidEmail } from './validation';
 import './usuarios-vinculos.css';
 
-const managedSchoolProfiles = new Set([
-  'Diretor',
-  'Vice-diretor',
-  'Coordenador',
+const educationEmployeeProfiles = [
+  'Motorista',
+  'Auxiliar de Serviços Gerais',
+  'Auxiliar de Vida Escolar (AVE)',
+  'Secretaria Administrativa',
   'Secretaria Escolar',
-  'Secretário Escolar',
-]);
+  'Diretor',
+  'Coordenador',
+  'Professor',
+];
+
+const managedSchoolProfiles = new Set(educationEmployeeProfiles);
 
 const emptyForm = {
   nome: '',
@@ -115,7 +120,7 @@ export default function UsuariosGestao({ token, onLogout }) {
         api.listUserTypes(token),
       ]);
       const visibleTypes = typeList.filter(
-        (type) => [3, 4, 5].includes(type.nivel),
+        (type) => educationEmployeeProfiles.includes(type.nome),
       );
       const uniqueTypes = [
         ...new Map(
@@ -304,7 +309,7 @@ export default function UsuariosGestao({ token, onLogout }) {
 
       <section className="user-management-grid">
         <form className="panel user-create-panel" onSubmit={create}>
-          <h2>Cadastrar usuário</h2>
+          <h2>Cadastrar funcionário</h2>
 
           <label>
             Nome completo
@@ -377,8 +382,8 @@ export default function UsuariosGestao({ token, onLogout }) {
         <section className="panel user-list-panel">
           <div className="user-list-heading">
             <div>
-              <h2>Usuários cadastrados</h2>
-              <p>Diretores, Coordenadores e Secretários Escolares.</p>
+              <h2>Funcionários cadastrados</h2>
+              <p>Perfis profissionais da rede municipal de educação.</p>
             </div>
             <span>{loading ? 'Carregando...' : `${users.length} usuário(s)`}</span>
           </div>
