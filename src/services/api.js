@@ -264,6 +264,18 @@ export const api = {
     return request(`/professor/reports/students/${studentId}?turmaId=${classId}`, {}, token);
   },
 
+  getProfessorCalendar(year, token) {
+    return request(`/professor/calendar?year=${year}`, {}, token);
+  },
+
+  createProfessorCalendarEvent(data, token) {
+    return post('/professor/calendar-events', data, token);
+  },
+
+  deleteProfessorCalendarEvent(id, token) {
+    return request(`/professor/calendar-events/${id}`, { method: 'DELETE' }, token);
+  },
+
   listAudit(filters, token) {
     return getWithFilters('/audit', filters, token);
   },
