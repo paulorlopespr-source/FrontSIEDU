@@ -701,7 +701,9 @@ export default function App() {
         path="/gestor/escolas"
         element={
           <Protected token={session?.token}>
-            {isDirector(session?.user) ? (
+            {isSuperintendent(session?.user) ? (
+              <Navigate to="/superintendencia#demandas" replace />
+            ) : isDirector(session?.user) ? (
               <Navigate to="/diretor" replace />
             ) : (
               <ListaEscolasGestor
