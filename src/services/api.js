@@ -180,6 +180,18 @@ export const api = {
     return post('/professor/diaries', data, token);
   },
 
+  getProfessorGradebook(classId, token) {
+    return request(`/professor/gradebook/${classId}`, {}, token);
+  },
+
+  createProfessorAssessment(classId, data, token) {
+    return post(`/professor/gradebook/${classId}/assessments`, data, token);
+  },
+
+  saveProfessorGrades(classId, notas, token) {
+    return request(`/professor/gradebook/${classId}/grades`, { method: 'PUT', body: JSON.stringify({ notas }) }, token);
+  },
+
   listAudit(filters, token) {
     return getWithFilters('/audit', filters, token);
   },
