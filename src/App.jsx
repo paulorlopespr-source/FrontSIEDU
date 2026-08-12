@@ -12,6 +12,7 @@ import ProfessorBoletim from './ProfessorBoletim';
 import ProfessorPlanejamento from './ProfessorPlanejamento';
 import ProfessorPlanos from './ProfessorPlanos';
 import ProfessorAtividades from './ProfessorAtividades';
+import ProfessorProvaImpressao from './ProfessorProvaImpressao';
 import {
   DetalhesEscolaGestor,
   ListaEscolasGestor,
@@ -632,6 +633,11 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<Login onLogin={login} />} />
       <Route path="/recuperar-senha" element={<RecuperarSenha />} />
+
+      <Route
+        path="/professor/provas/:id/imprimir"
+        element={<Protected token={session?.token}>{isProfessor(session?.user) ? <ProfessorProvaImpressao token={session?.token} /> : <Navigate to={destinationFor(session?.user)} replace />}</Protected>}
+      />
 
       <Route
         path="/professor/atividades"
