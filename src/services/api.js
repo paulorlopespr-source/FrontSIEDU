@@ -204,6 +204,18 @@ export const api = {
     return request(`/professor/lesson-plans/${id}`, { method: 'PUT', body: JSON.stringify(data) }, token);
   },
 
+  getProfessorSchedule(token) {
+    return request('/professor/schedule', {}, token);
+  },
+
+  listProfessorActivities(token) {
+    return request('/professor/activities', {}, token);
+  },
+
+  createProfessorActivity(data, token) {
+    return post('/professor/activities', data, token);
+  },
+
   listAudit(filters, token) {
     return getWithFilters('/audit', filters, token);
   },
