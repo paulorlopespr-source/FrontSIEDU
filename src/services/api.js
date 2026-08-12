@@ -216,6 +216,26 @@ export const api = {
     return post('/professor/activities', data, token);
   },
 
+  listProfessorQuestions(token) {
+    return request('/professor/questions', {}, token);
+  },
+
+  createProfessorQuestion(data, token) {
+    return post('/professor/questions', data, token);
+  },
+
+  listProfessorExams(token) {
+    return request('/professor/exams', {}, token);
+  },
+
+  createProfessorExam(data, token) {
+    return post('/professor/exams', data, token);
+  },
+
+  getProfessorExam(id, token) {
+    return request(`/professor/exams/${id}`, {}, token);
+  },
+
   listAudit(filters, token) {
     return getWithFilters('/audit', filters, token);
   },
