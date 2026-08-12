@@ -316,3 +316,355 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+.final-registration-grid {
+  grid-template-columns: minmax(560px, 1.25fr) minmax(420px, .9fr);
+}
+
+.final-registration {
+  padding: 0;
+  overflow: hidden;
+}
+
+.registration-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px 16px;
+}
+
+.registration-title span {
+  color: #0872df;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+
+.registration-title h2,
+.registration-title em {
+  margin: 4px 0 0;
+}
+
+.registration-title em {
+  color: #7a8498;
+  font-size: 11px;
+}
+
+.registration-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 0 24px;
+  border-bottom: 1px solid #dce5f2;
+}
+
+.registration-tabs button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 13px 8px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: #71809a;
+  font-size: 12px;
+}
+
+.registration-tabs button b {
+  display: grid;
+  width: 23px;
+  height: 23px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e8eef7;
+  font-size: 11px;
+}
+
+.registration-tabs button.active {
+  border-bottom-color: #0872df;
+  color: #075db9;
+}
+
+.registration-tabs button.active b {
+  background: #0872df;
+  color: white;
+}
+
+.registration-step {
+  padding: 24px;
+}
+
+.registration-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.registration-fields label,
+.profile-photo-field {
+  margin: 0;
+}
+
+.registration-fields label > span {
+  display: block;
+  margin-bottom: 6px;
+  color: #233b5d;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.registration-fields label > span b {
+  color: #d63838;
+}
+
+.registration-fields input,
+.registration-fields select,
+.registration-fields textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.registration-fields textarea {
+  resize: vertical;
+}
+
+.registration-fields label small {
+  display: block;
+  margin-top: 5px;
+  color: #77869d;
+  font-size: 10px;
+}
+
+.field-wide {
+  grid-column: 1 / -1;
+}
+
+.profile-photo-field {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 22px;
+  padding: 14px;
+  border: 1px solid #dbe5f2;
+  border-radius: 12px;
+  background: #f8fbff;
+}
+
+.profile-photo-preview {
+  display: grid;
+  flex: 0 0 86px;
+  width: 86px;
+  height: 86px;
+  place-items: center;
+  overflow: hidden;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: #dceafe;
+  box-shadow: 0 0 0 1px #bdd1eb;
+  color: #1765bc;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.profile-photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-photo-field strong,
+.profile-photo-field p {
+  display: block;
+  margin: 0;
+}
+
+.profile-photo-field p {
+  margin: 5px 0 10px;
+  color: #6e7f97;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.photo-button,
+.photo-remove {
+  display: inline-block !important;
+  width: auto !important;
+  margin: 0 8px 0 0 !important;
+  padding: 8px 11px !important;
+  border: 1px solid #b9cde8 !important;
+  border-radius: 7px !important;
+  background: #fff !important;
+  color: #0a64cf !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  cursor: pointer;
+}
+
+.photo-button input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.photo-remove {
+  color: #aa2835 !important;
+}
+
+.turn-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin: 0;
+  padding: 13px;
+  border: 1px solid #cfdbec;
+  border-radius: 9px;
+}
+
+.turn-selector legend {
+  padding: 0 5px;
+  color: #233b5d;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.turn-selector label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #405873;
+  font-size: 12px;
+}
+
+.turn-selector input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+.access-notice {
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border-left: 4px solid #0872df;
+  border-radius: 8px;
+  background: #eef6ff;
+}
+
+.access-notice strong,
+.access-notice p {
+  margin: 0;
+}
+
+.access-notice p {
+  margin-top: 5px;
+  color: #536b87;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.security-summary {
+  padding: 11px 13px;
+  border: 1px solid #dce7f4;
+  border-radius: 9px;
+  background: #fbfdff;
+}
+
+.security-summary span,
+.security-summary strong {
+  display: block;
+}
+
+.security-summary span {
+  color: #78869a;
+  font-size: 10px;
+}
+
+.security-summary strong {
+  margin-top: 4px;
+  color: #173b67;
+  font-size: 11px;
+}
+
+.registration-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 24px;
+  border-top: 1px solid #e1e8f2;
+  background: #fafcff;
+}
+
+.registration-actions button {
+  width: auto;
+  margin: 0;
+}
+
+.registration-actions .form-return {
+  margin-left: auto;
+}
+
+.privacy-note {
+  display: block;
+  padding: 0 24px 20px;
+  color: #74839a;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.employee-cell {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.employee-cell div,
+.employee-cell strong,
+.employee-cell small {
+  display: block;
+}
+
+.employee-avatar {
+  display: grid;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e4efff;
+  color: #1765bc;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.access-status {
+  display: inline-block;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: #fff1ca;
+  color: #895d00;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.status-ativo { background: #ddf6e7; color: #17703b; }
+.status-bloqueado, .status-desligado { background: #fee5e7; color: #a12633; }
+
+@media (max-width: 1180px) {
+  .final-registration-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 650px) {
+  .registration-fields { grid-template-columns: 1fr; }
+  .registration-title, .profile-photo-field, .registration-actions { align-items: stretch; flex-direction: column; }
+  .registration-tabs { padding: 0 10px; }
+  .registration-tabs button { flex-direction: column; gap: 4px; font-size: 10px; }
+  .registration-step { padding: 18px; }
+  .registration-actions .form-return { margin-left: 0; }
+}
