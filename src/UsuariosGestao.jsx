@@ -250,7 +250,7 @@ export default function UsuariosGestao({ token, onLogout }) {
   return (
     <main className="app-page user-management-page">
       <header className="user-management-header">
-        <strong>SIEDU · Portal do Gestor</strong>
+        <strong>SIEDU-PINDOBAÇU · Portal do Gestor</strong>
         <nav>
           <Link to="/gestor">Painel</Link>
           <Link to="/gestor/escolas">Escolas</Link>
