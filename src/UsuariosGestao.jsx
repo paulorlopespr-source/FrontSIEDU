@@ -5,17 +5,40 @@ import { isValidCpf, isValidEmail } from './validation';
 import './usuarios-vinculos.css';
 
 const educationEmployeeProfiles = [
-  'Motorista',
-  'Auxiliar de Serviços Gerais',
-  'Auxiliar de Vida Escolar (AVE)',
-  'Secretaria Administrativa',
-  'Secretaria Escolar',
+  'Secretário Municipal de Educação',
+  'Superintendente / Diretor de Ensino',
+  'Coordenador Pedagógico Municipal',
+  'Técnico da Secretaria de Educação',
   'Diretor',
-  'Coordenador',
+  'Vice-Diretor',
+  'Coordenador Pedagógico',
+  'Secretário Escolar',
+  'Auxiliar/Assistente Administrativo',
   'Professor',
+  'Auxiliar de Vida Escolar / Cuidador',
+  'Auxiliar de Serviços Gerais',
+  'Motorista',
+  'Monitor de Transporte Escolar',
+  'Merendeira/Cozinheira',
+  'Porteiro/Vigia',
+  'Psicólogo',
+  'Assistente Social',
+  'Nutricionista'
 ];
 
-const managedSchoolProfiles = new Set(educationEmployeeProfiles);
+const schoolRequiredProfiles = new Set([
+  'Diretor',
+  'Vice-Diretor',
+  'Coordenador Pedagógico',
+  'Secretário Escolar',
+  'Auxiliar/Assistente Administrativo',
+  'Professor',
+  'Auxiliar de Vida Escolar / Cuidador',
+  'Auxiliar de Serviços Gerais',
+  'Merendeira/Cozinheira',
+  'Porteiro/Vigia'
+]);
+const multiSchoolProfiles = new Set(['Coordenador Pedagógico']);
 
 const emptyForm = {
   nome: '',
@@ -32,7 +55,7 @@ function SchoolBindingSelector({
   onChange,
   allowEmpty = false,
 }) {
-  const multiple = profile === 'Coordenador';
+  const multiple = multiSchoolProfiles.has(profile);
   const groupName = useId();
 
   function selectSchool(schoolId) {
@@ -57,7 +80,7 @@ function SchoolBindingSelector({
 
       <p className="school-binding-help">
         {multiple
-          ? 'O Coordenador pode atuar em mais de uma escola.'
+          ? 'Este perfil pode atuar em mais de uma escola.'
           : 'Este perfil pode atuar em somente uma escola.'}
       </p>
 
@@ -172,7 +195,7 @@ export default function UsuariosGestao({ token, onLogout }) {
       return;
     }
 
-    if (form.escolaIds.length === 0) {
+    if (selectedType?.requerEscola && form.escolaIds.length === 0) {
       setError('Selecione ao menos uma unidade escolar.');
       return;
     }
@@ -349,13 +372,13 @@ export default function UsuariosGestao({ token, onLogout }) {
               <option value="">Selecione</option>
               {types.map((type) => (
                 <option key={type.id} value={type.id}>
-                  {type.nome}
+                  Nível {type.nivel} · {type.nome}
                 </option>
               ))}
             </select>
           </label>
 
-          {selectedType && (
+          {selectedType?.requerEscola && (
             <SchoolBindingSelector
               schools={schools}
               profile={selectedType.nome}
@@ -375,7 +398,7 @@ export default function UsuariosGestao({ token, onLogout }) {
           </div>
 
           <small>
-            A senha temporária deverá ser alterada no primeiro acesso.
+            Perfis de nível 7 são apenas cadastrais e não recebem acesso operacional ao portal.
           </small>
         </form>
 
@@ -426,7 +449,7 @@ export default function UsuariosGestao({ token, onLogout }) {
                     </td>
                     <td>
                       <div className="user-row-actions">
-                        {managedSchoolProfiles.has(item.perfil) && (
+                        {schoolRequiredProfiles.has(item.perfil) && (
                           <button
                             className="button-secondary"
                             type="button"
