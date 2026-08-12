@@ -102,8 +102,8 @@ export default function DiretorDashboard({ user, onLogout, token }) {
     <div className="director-dashboard">
       <aside className="director-side">
         <div className="director-brand">
-          <img src="/images/sigepin.png" alt="SIEDU" />
-          <b>SIEDU</b>
+          <img src="/images/sigepin.png" alt="SIEDU-PINDOBAÇU" />
+          <b>SIEDU-PINDOBAÇU</b>
           <span>Sistema Integrado de Educação</span>
         </div>
 
