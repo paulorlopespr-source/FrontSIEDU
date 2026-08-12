@@ -29,7 +29,7 @@ function Layout({ children, onLogout, variant = 'gestor' }) {
     <main className="app-page">
       <header>
         <strong>
-          SIEPIN &middot; {isDirectorPortal ? 'Portal do Diretor' : 'Portal do Gestor'}
+          SIEDU &middot; {isDirectorPortal ? 'Portal do Diretor' : 'Portal do Gestor'}
         </strong>
         <nav>
           <Link to={isDirectorPortal ? '/diretor' : '/gestor'}>Painel</Link>
@@ -93,9 +93,9 @@ function Login({ onLogin }) {
         </div>
 
         <div className="brand-top">
-          <img src="/images/sigepin.png" alt="SIEPIN" className="system-logo" />
+          <img src="/images/sigepin.png" alt="SIEDU" className="system-logo" />
           <div>
-            <h1>SIEPIN</h1>
+            <h1>SIEDU</h1>
             <p>
               Sistema Integrado de Educa&ccedil;&atilde;o
               <br />
@@ -114,7 +114,7 @@ function Login({ onLogin }) {
           </h2>
           <i />
           <p>
-            O SIEPIN integra escolas, alunos, professores, gestores e comunidade
+            O SIEDU integra escolas, alunos, professores, gestores e comunidade
             em uma plataforma moderna, segura e eficiente.
           </p>
         </div>
