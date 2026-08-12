@@ -563,8 +563,18 @@ function readSession() {
   return readStoredSession(sessionStorage) || readStoredSession(localStorage);
 }
 
+const schoolPortalProfiles = new Set([
+  'Diretor',
+  'Vice-Diretor',
+  'Coordenador Pedagógico',
+  'Secretário Escolar',
+  'Auxiliar/Assistente Administrativo',
+  'Professor',
+  'Auxiliar de Vida Escolar / Cuidador'
+]);
+
 function isDirector(user) {
-  return user?.perfil?.toLowerCase().includes('diretor');
+  return schoolPortalProfiles.has(user?.perfil);
 }
 
 function destinationFor(user) {
