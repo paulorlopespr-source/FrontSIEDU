@@ -68,8 +68,8 @@ export function GestorSidebar({ onLogout }) {
   return (
     <aside className="dashboard-sidebar">
       <div className="sidebar-brand">
-        <img src="/images/sigepin.png" alt="SIEDU" />
-        <div><strong>SIEDU</strong><span>Sistema Integrado de Educação</span></div>
+        <img src="/images/sigepin.png" alt="SIEDU-PINDOBAÇU" />
+        <div><strong>SIEDU-PINDOBAÇU</strong><span>Sistema Integrado de Educação</span></div>
       </div>
 
       <Link className="sidebar-current" to="/gestor"><span>⌂</span> Dashboard</Link>
@@ -285,7 +285,7 @@ export default function GestorDashboard({ user, onLogout, token }) {
           <section className="dashboard-lower dashboard-real-lower"><UsersPanel users={dashboard.users} /></section>
 
           <section className="quick-actions"><h2>Ações rápidas</h2><div>{quickActions.map(([label, link, icon]) => <Link key={label} to={link}><span>{icon}</span><b>{label}</b></Link>)}</div></section>
-          <footer className="dashboard-footer">© 2026 SIEDU — Sistema Integrado de Educação de Pindobaçu. Todos os direitos reservados.<span>Versão 0.0.1 · Dados atualizados automaticamente</span></footer>
+          <footer className="dashboard-footer">© 2026 SIEDU-PINDOBAÇU — Sistema Integrado de Educação de Pindobaçu. Todos os direitos reservados.<span>Versão 0.0.1 · Dados atualizados automaticamente</span></footer>
         </main>
       </div>
     </div>
