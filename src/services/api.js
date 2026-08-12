@@ -160,6 +160,10 @@ export const api = {
     return request('/dashboard/manager', {}, token);
   },
 
+  getProfessorDashboard(token) {
+    return request('/professor/dashboard', {}, token);
+  },
+
   listAudit(filters, token) {
     return getWithFilters('/audit', filters, token);
   },
