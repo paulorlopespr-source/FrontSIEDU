@@ -164,6 +164,14 @@ export const api = {
     return request('/professor/dashboard', {}, token);
   },
 
+  getProfessorClassStudents(classId, token) {
+    return request(`/professor/classes/${classId}/students`, {}, token);
+  },
+
+  getProfessorStudentHistory(studentId, classId, token) {
+    return request(`/professor/students/${studentId}/history?turmaId=${classId}`, {}, token);
+  },
+
   listAudit(filters, token) {
     return getWithFilters('/audit', filters, token);
   },
