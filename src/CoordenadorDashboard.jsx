@@ -47,12 +47,14 @@ export default function CoordenadorDashboard({ user, token, onLogout }) {
     setMinutes(0); setStartedAt(now); setClockedIn(true); setNotice('Jornada iniciada. O tempo de trabalho está sendo contabilizado.');
   }
 
+  const pendingPlans = 3;
   const cards = [
-    ['Turmas acompanhadas', dashboard.summary?.classes || 0, '#1674e8'],
-    ['Professores acompanhados', dashboard.summary?.professors || 0, '#14a96d'],
-    ['Alunos matriculados', dashboard.summary?.students || 0, '#7350df'],
-    ['Frequência média', '92,6%', '#14b7c8'],
-    ['Planos pendentes', 3, '#ed4d82'],
+    ['🏫', 'Turmas acompanhadas', dashboard.summary?.classes || 0, '#1674e8'],
+    ['👩‍🏫', 'Professores acompanhados', dashboard.summary?.professors || 0, '#14a96d'],
+    ['🎒', 'Alunos matriculados', dashboard.summary?.students || 0, '#7350df'],
+    ['📊', 'Média geral da escola', '7,4', '#f28b16'],
+    ['✓', 'Frequência média', '92,6%', '#14b7c8'],
+    ['📋', 'Planos de aula pendentes', pendingPlans, pendingPlans ? '#dc3545' : '#16a34a'],
   ];
   const actions = ['Acompanhar turmas', 'Planos de aula', 'Gerar relatórios', 'Enviar comunicado', 'Agendar reunião', 'Ocorrências pedagógicas'];
 
@@ -76,7 +78,12 @@ export default function CoordenadorDashboard({ user, token, onLogout }) {
           <article style={{ background: '#fff', borderRadius: 12, padding: '15px 20px', minWidth: 295, boxShadow: '0 2px 12px #dbe4f2' }}><b>⏱ Jornada de trabalho</b><div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 10 }}><strong style={{ fontSize: 28, color: '#1268d4' }}>{formatHours(hoursToday)}</strong><button type="button" onClick={toggleWorkday} style={{ background: clockedIn ? '#d9465f' : '#0aa56c', color: '#fff', border: 0, borderRadius: 8, padding: '9px 13px' }}>{clockedIn ? 'Encerrar jornada' : 'Iniciar jornada'}</button></div><small style={{ color: '#5e7193' }}>{clockedIn ? 'Em atividade — contabilização ativa' : 'Horas trabalhadas hoje'}</small></article>
         </div>
         {notice && <p style={{ padding: 12, background: '#e2f6ea', color: '#12603d', borderRadius: 8 }}>{notice}</p>}
-        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 14, margin: '22px 0' }}>{cards.map(([label, value, color]) => <article key={label} style={{ background: '#fff', borderRadius: 13, padding: 18, boxShadow: '0 2px 12px #dbe4f2' }}><span style={{ display: 'inline-block', padding: 10, background: color, color: '#fff', borderRadius: '50%' }}>●</span><small style={{ display: 'block', marginTop: 12 }}>{label}</small><b style={{ fontSize: 27 }}>{value}</b></article>)}</section>
+        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 14, margin: '22px 0' }}>{cards.map(([icon, label, value, color]) => <article key={label} style={{ background: '#fff', borderRadius: 13, padding: 18, boxShadow: '0 2px 12px #dbe4f2' }}><span style={{ display: 'inline-block', padding: 10, minWidth: 20, textAlign: 'center', background: color, color: '#fff', borderRadius: '50%' }}>{icon}</span><small style={{ display: 'block', marginTop: 12 }}>{label}</small><b style={{ fontSize: 27, color: label.includes('pendentes') && value ? '#c62828' : '#09245a' }}>{value}</b><small style={{ display: 'block', color: label.includes('pendentes') ? (value ? '#c62828' : '#178d4c') : '#607399' }}>{label.includes('pendentes') ? (value ? 'Aguardam aprovação' : 'Tudo regular') : 'Indicador atualizado'}</small></article>) }</section>
+        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 18, marginBottom: 18 }}>
+          <article style={{ background: '#fff', padding: 22, borderRadius: 13, boxShadow: '0 2px 12px #dbe4f2' }}><h3 style={{ marginTop: 0 }}>📅 Calendário escolar</h3><p><b>15 ago</b> — Conselho pedagógico municipal</p><p><b>20 ago</b> — Fechamento do bimestre</p><p><b>25 ago</b> — Reunião com famílias</p><button type="button" onClick={() => setNotice('Calendário escolar aberto para consulta.')}>Ver calendário completo</button></article>
+          <article style={{ background: '#fff', padding: 22, borderRadius: 13, boxShadow: '0 2px 12px #dbe4f2' }}><h3 style={{ marginTop: 0 }}>📚 Desempenho por disciplina</h3>{[['Português','7,8'],['Matemática','6,9'],['Ciências','7,6'],['História','7,2']].map(([name,value]) => <p key={name} style={{ display:'flex', justifyContent:'space-between', borderBottom:'1px solid #edf1f7', paddingBottom:7 }}><span>{name}</span><b>{value}</b></p>)}</article>
+          <article style={{ background: '#fff', padding: 22, borderRadius: 13, boxShadow: '0 2px 12px #dbe4f2' }}><h3 style={{ marginTop: 0 }}>📝 Planos de aula para aprovar</h3>{['Plano de Matemática — 7º Ano','Plano de Ciências — 8º Ano','Plano de Leitura — 6º Ano'].map((plan) => <p key={plan} style={{ borderBottom:'1px solid #edf1f7', paddingBottom:8 }}><b>{plan}</b><br /><button type="button" onClick={() => setNotice(plan + ' aprovado.')}>Aprovar</button> <button type="button" onClick={() => setNotice('Solicitada correção: ' + plan)}>Solicitar correção</button></p>)}</article>
+        </section>
         <section style={{ display: 'grid', gridTemplateColumns: '1.2fr .8fr', gap: 18 }}>
           <article style={{ background: '#fff', padding: 22, borderRadius: 13, boxShadow: '0 2px 12px #dbe4f2' }}><h3 style={{ marginTop: 0 }}>Desempenho das turmas</h3><div style={{ height: 220, display: 'flex', alignItems: 'end', gap: 18, borderBottom: '1px solid #dce6f5', padding: '0 20px' }}>{[81, 76, 68, 72, 65, 59, 71, 67].map((score, i) => <div key={i} style={{ flex: 1, textAlign: 'center' }}><small>{(score / 10).toFixed(1)}</small><div style={{ height: score * 1.8, background: '#176fe3', borderRadius: '5px 5px 0 0', marginTop: 5 }} /><small>{i + 6}º Ano</small></div>)}</div><p style={{ color: '#176fe3', textAlign: 'right' }}>Ver relatório completo →</p></article>
           <article style={{ background: '#fff', padding: 22, borderRadius: 13, boxShadow: '0 2px 12px #dbe4f2' }}><h3 style={{ marginTop: 0 }}>Pendências e alertas</h3>{['Planos de aula aguardando aprovação', 'Turmas abaixo da média definida', 'Alunos com frequência abaixo de 75%', 'Diários de classe incompletos'].map((item, i) => <p key={item} style={{ color: '#435a80' }}><b style={{ color: '#f09b19' }}>• {i + 1}</b> &nbsp; {item}</p>)}<p style={{ borderTop: '1px solid #e3ebf6', paddingTop: 14, color: '#176fe3', textAlign: 'right' }}>Ver todas as pendências →</p></article>
