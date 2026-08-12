@@ -4,6 +4,7 @@ import { api } from './services/api';
 import GestorDashboard from './GestorDashboard';
 import SuperintendenciaDashboard from './SuperintendenciaDashboard';
 import CoordenadorDashboard from './CoordenadorDashboard';
+import ProfessorDashboard from './ProfessorDashboard';
 import {
   DetalhesEscolaGestor,
   ListaEscolasGestor,
@@ -573,7 +574,6 @@ const schoolPortalProfiles = new Set([
   'Coordenador Pedagógico',
   'Secretário Escolar',
   'Auxiliar/Assistente Administrativo',
-  'Professor',
   'Auxiliar de Vida Escolar / Cuidador'
 ]);
 
@@ -589,10 +589,15 @@ function isCoordinator(user) {
   return /coordenador.*pedagógico/i.test(user?.perfil || '');
 }
 
+function isProfessor(user) {
+  return user?.perfil === 'Professor';
+}
+
 function destinationFor(user) {
   if (isDirector(user)) return '/diretor';
   if (isSuperintendent(user)) return '/superintendencia';
   if (isCoordinator(user)) return '/coordenacao';
+  if (isProfessor(user)) return '/professor';
   return '/gestor';
 }
 
@@ -622,6 +627,15 @@ export default function App() {
       <Route path="/recuperar-senha" element={<RecuperarSenha />} />
 
       <Route
+        path="/professor"
+        element={
+          <Protected token={session?.token}>
+            {isProfessor(session?.user) ? <ProfessorDashboard user={session?.user} onLogout={logout} token={session?.token} /> : <Navigate to={destinationFor(session?.user)} replace />}
+          </Protected>
+        }
+      />
+
+      <Route
         path="/coordenacao"
         element={
           <Protected token={session?.token}>
@@ -643,7 +657,9 @@ export default function App() {
         path="/gestor"
         element={
           <Protected token={session?.token}>
-            {isCoordinator(session?.user) ? (
+            {isProfessor(session?.user) ? (
+              <Navigate to="/professor" replace />
+            ) : isCoordinator(session?.user) ? (
               <Navigate to="/coordenacao" replace />
             ) : isDirector(session?.user) ? (
               <Navigate to="/diretor" replace />
