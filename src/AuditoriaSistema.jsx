@@ -33,7 +33,7 @@ export default function AuditoriaSistema({ token, user, onLogout }) {
   return (
     <main className="audit-page">
       <header className="audit-header">
-        <div><span>SEGURANÇA E CONTROLE</span><h1>Auditoria de alterações</h1><p>Histórico de inclusões, alterações, exclusões e operações sensíveis realizadas no SIEPIN.</p></div>
+        <div><span>SEGURANÇA E CONTROLE</span><h1>Auditoria de alterações</h1><p>Histórico de inclusões, alterações, exclusões e operações sensíveis realizadas no SIEDU.</p></div>
         <div><Link to="/gestor">← Voltar ao Portal do Gestor</Link><strong>{user?.nome}</strong><button type="button" onClick={onLogout}>Sair</button></div>
       </header>
 
