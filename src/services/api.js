@@ -172,6 +172,14 @@ export const api = {
     return request(`/professor/students/${studentId}/history?turmaId=${classId}`, {}, token);
   },
 
+  listProfessorDiaries(token) {
+    return request('/professor/diaries', {}, token);
+  },
+
+  saveProfessorDiary(data, token) {
+    return post('/professor/diaries', data, token);
+  },
+
   listAudit(filters, token) {
     return getWithFilters('/audit', filters, token);
   },
