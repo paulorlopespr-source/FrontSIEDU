@@ -8,8 +8,8 @@ function DiretorAreaLayout({ user, onLogout, children }) {
     <div className="director-area">
       <aside className="director-area-sidebar">
         <div className="director-area-brand">
-          <img src="/images/sigepin.png" alt="SIEDU" />
-          <strong>SIEDU</strong>
+          <img src="/images/sigepin.png" alt="SIEDU-PINDOBAÇU" />
+          <strong>SIEDU-PINDOBAÇU</strong>
           <small>Sistema Integrado de Educação</small>
         </div>
 
