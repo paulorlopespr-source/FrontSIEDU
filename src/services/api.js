@@ -192,6 +192,18 @@ export const api = {
     return request(`/professor/gradebook/${classId}/grades`, { method: 'PUT', body: JSON.stringify({ notas }) }, token);
   },
 
+  listProfessorLessonPlans(token) {
+    return request('/professor/lesson-plans', {}, token);
+  },
+
+  createProfessorLessonPlan(data, token) {
+    return post('/professor/lesson-plans', data, token);
+  },
+
+  updateProfessorLessonPlan(id, data, token) {
+    return request(`/professor/lesson-plans/${id}`, { method: 'PUT', body: JSON.stringify(data) }, token);
+  },
+
   listAudit(filters, token) {
     return getWithFilters('/audit', filters, token);
   },
