@@ -15,6 +15,7 @@ import ProfessorAtividades from './ProfessorAtividades';
 import ProfessorProvaImpressao from './ProfessorProvaImpressao';
 import ProfessorMateriais from './ProfessorMateriais';
 import ProfessorRelatorios from './ProfessorRelatorios';
+import ProfessorCalendario from './ProfessorCalendario';
 import {
   DetalhesEscolaGestor,
   ListaEscolasGestor,
@@ -657,7 +658,7 @@ export default function App() {
       />
       <Route
         path="/professor/calendario"
-        element={<Protected token={session?.token}>{isProfessor(session?.user) ? <ProfessorAtividades token={session?.token} user={session?.user} /> : <Navigate to={destinationFor(session?.user)} replace />}</Protected>}
+        element={<Protected token={session?.token}>{isProfessor(session?.user) ? <ProfessorCalendario token={session?.token} /> : <Navigate to={destinationFor(session?.user)} replace />}</Protected>}
       />
 
       <Route
