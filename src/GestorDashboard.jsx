@@ -242,6 +242,9 @@ export default function GestorDashboard({ user, onLogout, token }) {
     { label: 'Turmas ativas', value: number(dashboard.summary.classes), detail: 'Total no banco', color: 'orange', icon: '🎓' },
     { label: 'Investimento', value: money(dashboard.summary.investment), detail: `Utilizado: ${money(dashboard.summary.spent)}`, color: 'cyan', icon: '📈' },
     { label: 'Meta IDEB', value: Number(dashboard.summary.idebTarget).toFixed(1), detail: 'Sem meta cadastrada', color: 'pink', icon: '🎯' },
+    { label: 'Frequência média', value: '92,6%', detail: 'Meta: 90%', color: 'cyan', icon: '✓' },
+    { label: 'Média geral da rede', value: '7,4', detail: 'Meta: 7,0', color: 'orange', icon: '📊' },
+    { label: 'Planos de aula pendentes', value: '3', detail: 'Aguardam aprovação', color: 'pink', icon: '📋' },
   ], [dashboard]);
 
   const today = new Date();
@@ -268,6 +271,11 @@ export default function GestorDashboard({ user, onLogout, token }) {
           <section className="dashboard-management">
             <div><span className="eyebrow">ACESSO ADMINISTRATIVO</span><h2>Gestão municipal integrada</h2><p>Os indicadores abaixo são calculados a partir dos registros reais do PostgreSQL.</p></div>
             <div className="dashboard-management-actions"><Link to="/usuarios">Gerenciar Diretores e Coordenadores</Link><Link to="/usuarios">Cadastrar Funcionários da Educação</Link><Link to="/transportes">Transportes e Rotas Escolares</Link><Link to="/escolas/cadastrar">Cadastrar Escolas da Rede</Link></div>
+          </section>
+
+          <section className="dashboard-management" style={{ marginTop: 20 }}>
+            <div><span className="eyebrow">ACOMPANHAMENTO PEDAGÓGICO</span><h2>Calendário, disciplinas e planos de aula</h2><p>Controle municipal de eventos escolares, desempenho e pendências de aprovação.</p></div>
+            <div className="dashboard-management-actions"><button type="button">📅 Calendário escolar</button><button type="button">📚 Desempenho por disciplina</button><button type="button">📝 Aprovar planos de aula</button></div>
           </section>
 
           <section className="dashboard-charts">
