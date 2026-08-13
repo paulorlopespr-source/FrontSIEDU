@@ -16,6 +16,7 @@ import ProfessorProvaImpressao from './ProfessorProvaImpressao';
 import ProfessorMateriais from './ProfessorMateriais';
 import ProfessorRelatorios from './ProfessorRelatorios';
 import ProfessorCalendario from './ProfessorCalendario';
+import AlunoDashboard from './AlunoDashboard';
 import {
   DetalhesEscolaGestor,
   ListaEscolasGestor,
