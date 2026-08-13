@@ -604,12 +604,15 @@ function isCoordinator(user) {
 function isProfessor(user) {
   return user?.perfil === 'Professor';
 }
-
+function isStudent(user) {
+  return user?.perfil === 'Aluno';
+}
 function destinationFor(user) {
   if (isDirector(user)) return '/diretor';
   if (isSuperintendent(user)) return '/superintendencia';
   if (isCoordinator(user)) return '/coordenacao';
   if (isProfessor(user)) return '/professor';
+  if (isStudent(user)) return '/aluno';
   return '/gestor';
 }
 
