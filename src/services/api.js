@@ -210,6 +210,7 @@ export const api = {
   },
 
   getMunicipalOverview(token) { return request('/municipal/overview', {}, token); },
+  getIdebAnalysis(token) { return request('/municipal/ideb/analysis', {}, token); },
   listIdeb(token) { return request('/municipal/ideb', {}, token); },
   importIdeb(registros, token) { return post('/municipal/ideb/import', { registros }, token); },
   listMunicipalMeetings(token) { return request('/municipal/meetings', {}, token); },

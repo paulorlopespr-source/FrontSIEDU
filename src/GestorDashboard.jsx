@@ -228,13 +228,14 @@ function UsersPanel({ users }) {
 
 export default function GestorDashboard({ user, onLogout, token }) {
   const [dashboard, setDashboard] = useState(emptyDashboard);
+  const [idebAnalysis, setIdebAnalysis] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     let active = true;
-    api.getManagerDashboard(token)
-      .then((payload) => active && setDashboard(payload))
+    Promise.all([api.getManagerDashboard(token), api.getIdebAnalysis(token).catch(() => null)])
+      .then(([payload, analysis]) => { if (active) { setDashboard(payload); setIdebAnalysis(analysis); } })
       .catch((requestError) => active && setError(requestError.message))
       .finally(() => active && setLoading(false));
     return () => { active = false; };
@@ -279,12 +280,12 @@ export default function GestorDashboard({ user, onLogout, token }) {
           </section>
 
           <section className="dashboard-management" style={{ marginTop: 20 }}>
-            <div><span className="eyebrow">ACOMPANHAMENTO PEDAGÓGICO</span><h2>Calendário, disciplinas e planos de aula</h2><p>Controle municipal de eventos escolares, desempenho e pendências de aprovação.</p></div>
-            <div className="dashboard-management-actions"><Link to="/aprendizagem">🧭 Simulado SAEB e aprendizagem</Link><Link to="/calendario-escolar">📅 Gestão do calendário escolar</Link><button type="button" disabled title="Módulo em preparação">📝 Aprovar planos de aula — em breve</button></div>
+            <div><span className="eyebrow">ACOMPANHAMENTO PEDAGÓGICO</span><h2>Calendário, IDEB e aprendizagem</h2><p>Ano letivo vigente: <b>{idebAnalysis?.currentSchoolYear || new Date().getFullYear()}</b>. Último ciclo oficial: <b>{idebAnalysis?.latestOfficialYear || 2025}</b>.</p></div>
+            <div className="dashboard-management-actions"><Link to="/gestao-municipal?tab=ideb-analise">📈 Análise do IDEB — 10 anos</Link><Link to="/aprendizagem">🧭 Simulado SAEB e aprendizagem</Link><Link to="/calendario-escolar">📅 Gestão do calendário escolar</Link></div>
           </section>
 
           <section className="dashboard-charts">
-            {dashboard.academic.ideb.length ? <article className="dashboard-panel"><h2>Evolução do IDEB</h2>{dashboard.academic.ideb.map(item=><p key={item.ano}><b>{item.ano}</b> — resultado {Number(item.valor).toFixed(1)} · meta {Number(item.meta||0).toFixed(1)}</p>)}<Link to="/gestao-municipal">Abrir série oficial ›</Link></article> : <EmptyAcademicPanel title="Evolução do IDEB" text="Ainda não existem avaliações IDEB registradas no banco." />}
+            {idebAnalysis?.summaries?.length ? <article className="dashboard-panel"><h2>Resultados do IDEB</h2><p><b>Ano letivo vigente {idebAnalysis.currentSchoolYear}</b> · resultados oficiais até {idebAnalysis.latestOfficialYear}</p>{idebAnalysis.summaries.map(item=><p key={item.stage}><b>{item.stage}</b> — {Number(item.latestValue).toFixed(1)} ({item.latestYear})</p>)}<Link to="/gestao-municipal?tab=ideb-analise">Abrir análise dos últimos 10 anos ›</Link></article> : <EmptyAcademicPanel title="Evolução do IDEB" text="Ainda não existem avaliações IDEB registradas no banco." />}
             <FinancePanel distribution={dashboard.financeDistribution} total={dashboard.summary.investment} />
             <TransportPanel transport={dashboard.transport} />
           </section>
