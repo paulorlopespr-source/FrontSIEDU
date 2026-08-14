@@ -23,6 +23,7 @@ import AlunoPortal from './AlunoPortal';
 import AprendizagemGestao from './AprendizagemGestao';
 import CalendarioEscolarGestao from './CalendarioEscolarGestao';
 import GestaoMunicipal from './GestaoMunicipal';
+import DemandasEscolares from './DemandasEscolares';
 import {
   DetalhesEscolaGestor,
   ListaEscolasGestor,
@@ -45,6 +46,10 @@ import {
   canManageLearning,
   canManageSchoolCalendar,
   canAccessMunicipalManagement,
+  canAccessSchoolDemands,
+  canCreateSchoolDemand,
+  canDecideSchoolDemand,
+  canExecuteSchoolDemand,
   destinationFor,
   isMunicipalCoordinator,
   isMunicipalManager,
@@ -797,6 +802,26 @@ export default function App() {
       <Route
         path="/gestao-municipal"
         element={<Protected token={session?.token}><Allowed allowed={canAccessMunicipalManagement(session?.user)} user={session?.user}><GestaoMunicipal token={session?.token} user={session?.user} onLogout={logout} /></Allowed></Protected>}
+      />
+
+      <Route
+        path="/demandas"
+        element={<Protected token={session?.token}><Allowed allowed={canAccessSchoolDemands(session?.user)} user={session?.user}><DemandasEscolares token={session?.token} user={session?.user} onLogout={logout} /></Allowed></Protected>}
+      />
+
+      <Route
+        path="/gestor/demandas"
+        element={<Protected token={session?.token}><Allowed allowed={canDecideSchoolDemand(session?.user)} user={session?.user}><DemandasEscolares token={session?.token} user={session?.user} onLogout={logout} /></Allowed></Protected>}
+      />
+
+      <Route
+        path="/diretor/demandas"
+        element={<Protected token={session?.token}><Allowed allowed={canCreateSchoolDemand(session?.user)} user={session?.user}><DemandasEscolares token={session?.token} user={session?.user} onLogout={logout} /></Allowed></Protected>}
+      />
+
+      <Route
+        path="/administracao"
+        element={<Protected token={session?.token}><Allowed allowed={canExecuteSchoolDemand(session?.user)} user={session?.user}><DemandasEscolares token={session?.token} user={session?.user} onLogout={logout} /></Allowed></Protected>}
       />
 
       <Route

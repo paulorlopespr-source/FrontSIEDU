@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { canAccessSchoolPortal, canManageLearning, canManageSchoolCalendar, canManageSchoolStaff, destinationFor, isStudent } from '../src/permissions.js';
+import { canAccessSchoolDemands, canCreateSchoolDemand, canDecideSchoolDemand, canExecuteSchoolDemand, canAccessSchoolPortal, canManageLearning, canManageSchoolCalendar, canManageSchoolStaff, destinationFor, isStudent } from '../src/permissions.js';
 
 test('direciona cada perfil implementado ao portal correto', () => {
   assert.equal(destinationFor({ perfil: 'Super Administrador' }), '/gestor');
@@ -41,4 +41,17 @@ test('limita a gestão do calendário à Secretaria e Coordenação Municipal', 
   assert.equal(canManageSchoolCalendar({ perfil: 'Coordenador Pedagógico Municipal' }), true);
   assert.equal(canManageSchoolCalendar({ perfil: 'Professor' }), false);
   assert.equal(canManageSchoolCalendar({ perfil: 'Aluno' }), false);
+});
+
+test('direciona e separa as três responsabilidades das demandas escolares', () => {
+  const director = { perfil: 'Diretor' };
+  const secretary = { perfil: 'Secretário Municipal de Educação' };
+  const administration = { perfil: 'Técnico da Secretaria de Educação' };
+  assert.equal(canCreateSchoolDemand(director), true);
+  assert.equal(canCreateSchoolDemand({ perfil: 'Vice-Diretor' }), false);
+  assert.equal(canCreateSchoolDemand({ perfil: 'Professor' }), false);
+  assert.equal(canDecideSchoolDemand(secretary), true);
+  assert.equal(canExecuteSchoolDemand(administration), true);
+  assert.equal(canAccessSchoolDemands(administration), true);
+  assert.equal(destinationFor(administration), '/administracao');
 });

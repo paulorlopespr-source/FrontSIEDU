@@ -24,7 +24,7 @@ const emptyDashboard = {
 const menuGroups = [
   { title: 'Gestão estratégica', items: ['Painel executivo', 'Indicadores do município', 'Metas e resultados', 'Unidades de ensino'] },
   { title: 'Gestão escolar', items: ['Escolas', 'Alunos', 'Professores', 'Turmas', 'Matrículas', 'Frequência', 'Avaliações e IDEB'] },
-  { title: 'Gestão administrativa', items: ['Planejamento', 'Orçamento e financeiro', 'Recursos e convênios', 'Transporte escolar', 'Merenda escolar', 'Infraestrutura'] },
+  { title: 'Gestão administrativa', items: ['Planejamento', 'Solicitações e demandas', 'Orçamento e financeiro', 'Recursos e convênios', 'Transporte escolar', 'Merenda escolar', 'Infraestrutura'] },
   { title: 'Relatórios e documentos', items: ['Relatórios gerenciais', 'Documentos oficiais', 'Prestação de contas'] },
 ];
 
@@ -38,6 +38,8 @@ const menuLinks = {
   'Orçamento e financeiro': '/gestor/financeiro',
   'Recursos e convênios': '/gestor/financeiro',
   'Transporte escolar': '/transportes',
+  'Solicitações e demandas': '/gestor/demandas',
+  Infraestrutura: '/gestor/demandas',
   'Merenda escolar': '/gestor/financeiro',
   'Prestação de contas': '/gestor/financeiro',
 };
@@ -51,6 +53,7 @@ const quickActions = [
   ['Prestação de contas', '/gestor/financeiro', '\u{1F4C4}'],
   ['Convênios e recursos', '/gestor/financeiro', '\u{1F91D}'],
   ['Transporte escolar', '/transportes', '\u{1F68C}'],
+  ['Solicitações e demandas', '/gestor/demandas', '\u{1F4E8}'],
 ];
 
 function number(value) {
@@ -132,7 +135,7 @@ function StatCard({ stat }) {
     <article className={`stat-card ${stat.color}`}>
       <div className="stat-icon">{stat.icon}</div>
       <div><span>{stat.label}</span><strong>{stat.value}</strong><small>{stat.detail}</small></div>
-      <footer><b>Banco de dados</b><span>atualização automática</span></footer>
+      <footer>{stat.link ? <Link to={stat.link}><b>Abrir solicitações</b><span>Ver fluxo e notificações →</span></Link> : <><b>Banco de dados</b><span>atualização automática</span></>}</footer>
     </article>
   );
 }
@@ -229,13 +232,20 @@ function UsersPanel({ users }) {
 export default function GestorDashboard({ user, onLogout, token }) {
   const [dashboard, setDashboard] = useState(emptyDashboard);
   const [idebAnalysis, setIdebAnalysis] = useState(null);
+  const [demands, setDemands] = useState([]);
+  const [demandNotifications, setDemandNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     let active = true;
-    Promise.all([api.getManagerDashboard(token), api.getIdebAnalysis(token).catch(() => null)])
-      .then(([payload, analysis]) => { if (active) { setDashboard(payload); setIdebAnalysis(analysis); } })
+    Promise.all([
+      api.getManagerDashboard(token),
+      api.getIdebAnalysis(token).catch(() => null),
+      api.listMunicipalDemands(token).catch(() => []),
+      api.listDemandNotifications(token).catch(() => []),
+    ])
+      .then(([payload, analysis, demandItems, notifications]) => { if (active) { setDashboard(payload); setIdebAnalysis(analysis); setDemands(demandItems || []); setDemandNotifications(notifications || []); } })
       .catch((requestError) => active && setError(requestError.message))
       .finally(() => active && setLoading(false));
     return () => { active = false; };
@@ -251,7 +261,8 @@ export default function GestorDashboard({ user, onLogout, token }) {
     { label: 'Frequência média', value: `${Number(dashboard.summary.attendance||0).toFixed(1)}%`, detail: 'Consolidado dos diários', color: 'cyan', icon: '✓' },
     { label: 'Média geral da rede', value: Number(dashboard.summary.average||0).toFixed(1), detail: 'Consolidado das avaliações', color: 'orange', icon: '📊' },
     { label: 'Planos de aula pendentes', value: number(dashboard.summary.pendingPlans), detail: 'Aguardando coordenação', color: 'pink', icon: '📋' },
-  ], [dashboard]);
+    { label: 'Solicitações e Demandas', value: number(demands.filter((item) => item.status !== 'Demanda resolvida').length), detail: demandNotifications.some((item) => !item.lidaEm) ? `${demandNotifications.filter((item) => !item.lidaEm).length} nova(s) notificação(ões)` : 'Nenhuma nova notificação', color: demandNotifications.some((item) => !item.lidaEm) ? 'pink' : 'green', icon: '📨', link: '/gestor/demandas' },
+  ], [dashboard, demands, demandNotifications]);
 
   const today = new Date();
   const startOfYear = `01/01/${today.getFullYear()}`;
@@ -262,7 +273,7 @@ export default function GestorDashboard({ user, onLogout, token }) {
     <div className="gestor-dashboard" id="dashboard">
       <GestorSidebar onLogout={onLogout} />
       <div className="dashboard-main">
-        <GestorTopbar user={user} onLogout={onLogout} alertCount={dashboard.alerts.length} />
+        <GestorTopbar user={user} onLogout={onLogout} alertCount={dashboard.alerts.length + demandNotifications.filter((item) => !item.lidaEm).length} />
         <main className="dashboard-content" id="indicadores">
           <section className="dashboard-welcome">
             <div><h1>Bom dia, Gestor! 👋</h1><p>Visão geral da Rede Municipal de Ensino de Pindobaçu.</p><small>{writtenDate}</small></div>

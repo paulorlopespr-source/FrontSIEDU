@@ -218,7 +218,10 @@ export const api = {
   updateMunicipalMeetingStatus(id, status, token) { return request(`/municipal/meetings/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }, token); },
   listMunicipalDemands(token) { return request('/municipal/demands', {}, token); },
   createMunicipalDemand(data, token) { return post('/municipal/demands', data, token); },
-  updateMunicipalDemand(id, data, token) { return request(`/municipal/demands/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, token); },
+  decideMunicipalDemand(id, data, token) { return post(`/municipal/demands/${id}/decision`, data, token); },
+  executeMunicipalDemand(id, data, token) { return post(`/municipal/demands/${id}/execution`, data, token); },
+  listDemandNotifications(token) { return request('/municipal/demands/notifications', {}, token); },
+  readDemandNotification(id, token) { return request(`/municipal/demands/notifications/${id}/read`, { method: 'PATCH' }, token); },
   downloadMunicipalReport(type, token) { return download(`/municipal/reports/${type}.csv`, `relatorio-${type}.csv`, token); },
 
   getProfessorDashboard(token) {
