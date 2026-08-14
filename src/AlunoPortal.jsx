@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { api } from './services/api';
+import AlunoCalendar from './AlunoCalendar';
 import './aluno-portal.css';
 
 const sections = [
@@ -159,8 +160,9 @@ export default function AlunoPortal({ user, token, onLogout }) {
   }
 
   function renderCalendar() {
-    return <><SectionTitle eyebrow="AGENDA ESCOLAR" title="Calendário" description="Atividades, avaliações, reuniões e eventos destinados à sua turma." />
-      <section className="student-timeline">{data.calendario.map((item) => <article key={`${item.origem}-${item.id}`}><time><b>{date(item.data).slice(0, 5)}</b><span>{item.horaInicio || 'Dia inteiro'}</span></time><div><small>{item.origem} · {item.tipo}</small><h2>{item.titulo}</h2><p>{item.disciplina || item.observacao || 'Evento da turma'}</p></div></article>)}{!data.calendario.length && <Empty>Nenhum evento no calendário.</Empty>}</section></>;
+    return <><SectionTitle eyebrow="AGENDA ESCOLAR" title="Calendário Escolar" description="Ano letivo, avaliações, simulados, reuniões, feriados e eventos destinados à rede, à sua escola e à sua turma." />
+      <AlunoCalendar events={data.calendario} />
+    </>;
   }
 
   function renderNotifications() {
