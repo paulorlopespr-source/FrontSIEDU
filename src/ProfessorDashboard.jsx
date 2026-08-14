@@ -6,7 +6,6 @@ export default function ProfessorDashboard({ user, token, onLogout }) {
   const [data,setData]=useState({ professor:null, turmas:[], resumo:{ turmas:0, alunos:0, aulas:0, atividades:0, avaliacoes:0, faltasHoje:0 } });
   const [notice,setNotice]=useState('');
   useEffect(()=>{ api.getProfessorDashboard(token).then(setData).catch(e=>setNotice(e.message)); },[token]);
-  const leave=()=>{ localStorage.removeItem('sigepin_session'); sessionStorage.removeItem('sigepin_session'); window.location.assign('/login'); };
   const shortcuts=[
     ['👥','Minhas Turmas','Acesse somente suas turmas e alunos'],
     ['📖','Diário de Classe','Registre aulas, conteúdo e frequência'],
@@ -23,7 +22,7 @@ export default function ProfessorDashboard({ user, token, onLogout }) {
       <b style={{fontSize:22}}>☰ &nbsp; Portal do Professor</b>
       <div style={{margin:'0 auto',width:'min(42vw,500px)',border:'1px solid #d5e0ef',borderRadius:11,padding:'13px 18px',color:'#7183a3'}}>⌕ &nbsp; Pesquisar alunos, turmas e conteúdos...</div>
       <div><b>{user?.nome||'Professor(a)'}</b><small style={{display:'block',color:'#607399'}}>{data.professor?.disciplina||'Professor da Rede Municipal'}</small></div>
-      <button type="button" onClick={leave}>Sair</button>
+      <button type="button" onClick={onLogout}>Sair</button>
     </header>
     <main style={{display:'grid',gridTemplateColumns:'250px 1fr',minHeight:'calc(100vh - 78px)'}}>
       <aside style={{background:'linear-gradient(#073b7b,#042958)',color:'#fff',padding:'28px 16px'}}>

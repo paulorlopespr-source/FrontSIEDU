@@ -1,9 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { api } from './services/api';
+import { canAccessSchoolFinance, canManageSchoolStaff } from './permissions';
 import './diretor-turmas.css';
 
 function DiretorAreaLayout({ user, onLogout, children }) {
+  const mayManageStaff = canManageSchoolStaff(user);
+  const mayAccessFinance = canAccessSchoolFinance(user);
   return (
     <div className="director-area">
       <aside className="director-area-sidebar">
@@ -18,13 +21,13 @@ function DiretorAreaLayout({ user, onLogout, children }) {
         <nav>
           <h3>Gestão escolar</h3>
           <Link className="active" to="/diretor/turmas">Turmas</Link>
-          <Link to="/diretor/cadastrar-professor">Professores</Link>
+          {mayManageStaff && <Link to="/diretor/cadastrar-professor">Professores</Link>}
           <Link to="/diretor/matricular-aluno">Alunos</Link>
           <Link to="/diretor/frequencia">Frequência</Link>
 
           <h3>Administração</h3>
           <Link to="/diretor/documentos">Documentos</Link>
-          <Link to="/diretor/financeiro">Gestão financeira</Link>
+          {mayAccessFinance && <Link to="/diretor/financeiro">Gestão financeira</Link>}
           <Link to="/diretor/historicos">Históricos escolares</Link>
         </nav>
 
@@ -36,7 +39,7 @@ function DiretorAreaLayout({ user, onLogout, children }) {
       <div className="director-area-content">
         <header className="director-area-topbar">
           <div>
-            <strong>Portal do Diretor</strong>
+            <strong>Portal de {user?.perfil || 'Gestão escolar'}</strong>
             <small>Gestão da Escola</small>
           </div>
           <span>{user?.nome || 'Diretor(a)'}</span>

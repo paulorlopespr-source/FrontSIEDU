@@ -105,13 +105,13 @@ export function GestorSidebar({ onLogout }) {
 export function GestorTopbar({ user, onLogout, alertCount = 0 }) {
   return (
     <header className="dashboard-topbar">
-      <button className="menu-trigger" type="button">☰</button>
+      <button className="menu-trigger" type="button" disabled title="Menu já está aberto nesta versão">☰</button>
       <div className="topbar-title"><strong>Portal do Gestor</strong><span>Secretaria Municipal de Educação</span></div>
-      <label className="dashboard-search"><span>⌕</span><input placeholder="Pesquisar escolas, usuários e relatórios..." /></label>
+      <label className="dashboard-search" title="Pesquisa global em preparação"><span>⌕</span><input disabled placeholder="Pesquisa global — em preparação" /></label>
       <div className="topbar-actions">
-        <button type="button">🔔{alertCount > 0 && <i>{alertCount}</i>}</button>
-        <button type="button">✉</button>
-        <button type="button">?</button>
+        <button type="button" disabled title="Use a seção de alertas do painel">🔔{alertCount > 0 && <i>{alertCount}</i>}</button>
+        <button type="button" disabled title="Mensagens em preparação">✉</button>
+        <button type="button" disabled title="Central de ajuda em preparação">?</button>
       </div>
       <div className="topbar-user">
         <div className="user-avatar">{user?.nome?.slice(0, 1) || 'G'}</div>
@@ -242,9 +242,9 @@ export default function GestorDashboard({ user, onLogout, token }) {
     { label: 'Turmas ativas', value: number(dashboard.summary.classes), detail: 'Total no banco', color: 'orange', icon: '🎓' },
     { label: 'Investimento', value: money(dashboard.summary.investment), detail: `Utilizado: ${money(dashboard.summary.spent)}`, color: 'cyan', icon: '📈' },
     { label: 'Meta IDEB', value: Number(dashboard.summary.idebTarget).toFixed(1), detail: 'Sem meta cadastrada', color: 'pink', icon: '🎯' },
-    { label: 'Frequência média', value: '92,6%', detail: 'Meta: 90%', color: 'cyan', icon: '✓' },
-    { label: 'Média geral da rede', value: '7,4', detail: 'Meta: 7,0', color: 'orange', icon: '📊' },
-    { label: 'Planos de aula pendentes', value: '3', detail: 'Aguardam aprovação', color: 'pink', icon: '📋' },
+    { label: 'Frequência média', value: '—', detail: 'Aguardando lançamentos', color: 'cyan', icon: '✓' },
+    { label: 'Média geral da rede', value: '—', detail: 'Aguardando avaliações', color: 'orange', icon: '📊' },
+    { label: 'Planos de aula pendentes', value: '—', detail: 'Fluxo em preparação', color: 'pink', icon: '📋' },
   ], [dashboard]);
 
   const today = new Date();
@@ -260,7 +260,7 @@ export default function GestorDashboard({ user, onLogout, token }) {
         <main className="dashboard-content" id="indicadores">
           <section className="dashboard-welcome">
             <div><h1>Bom dia, Gestor! 👋</h1><p>Visão geral da Rede Municipal de Ensino de Pindobaçu.</p><small>{writtenDate}</small></div>
-            <div><button type="button">{startOfYear} - {todayLabel}</button><button className="export-button" type="button" onClick={() => window.print()}>⇩ Exportar relatório</button></div>
+            <div><button type="button" disabled title="Período atual do relatório">{startOfYear} - {todayLabel}</button><button className="export-button" type="button" onClick={() => window.print()}>⇩ Exportar relatório</button></div>
           </section>
 
           {error && <p className="dashboard-data-error">{error}</p>}
@@ -275,7 +275,7 @@ export default function GestorDashboard({ user, onLogout, token }) {
 
           <section className="dashboard-management" style={{ marginTop: 20 }}>
             <div><span className="eyebrow">ACOMPANHAMENTO PEDAGÓGICO</span><h2>Calendário, disciplinas e planos de aula</h2><p>Controle municipal de eventos escolares, desempenho e pendências de aprovação.</p></div>
-            <div className="dashboard-management-actions"><button type="button">📅 Calendário escolar</button><button type="button">📚 Desempenho por disciplina</button><button type="button">📝 Aprovar planos de aula</button></div>
+            <div className="dashboard-management-actions"><button type="button" disabled title="Módulo em preparação">📅 Calendário escolar — em breve</button><button type="button" disabled title="Módulo em preparação">📚 Desempenho por disciplina — em breve</button><button type="button" disabled title="Módulo em preparação">📝 Aprovar planos de aula — em breve</button></div>
           </section>
 
           <section className="dashboard-charts">

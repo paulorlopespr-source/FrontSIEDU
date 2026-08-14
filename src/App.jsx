@@ -31,6 +31,18 @@ import AuditoriaSistema from './AuditoriaSistema';
 import Usuarios from './UsuariosGestao';
 import { passwordValidation } from './validation';
 import {
+  canAccessSchoolFinance,
+  canAccessSchoolPortal,
+  canManageSchoolAcademics,
+  canManageSchoolStaff,
+  destinationFor,
+  isMunicipalCoordinator,
+  isMunicipalManager,
+  isProfessor,
+  isSuperintendent,
+} from './permissions';
+import { AccessDenied, NotFound, UnsupportedProfile } from './RouteFeedback';
+import {
   ConsultaTurmas,
   DetalhesAluno,
   DetalhesTurma,
@@ -232,13 +244,13 @@ function Login({ onLogin }) {
 
           <div className="login-divider">ou acesse com</div>
           <div className="social-buttons">
-            <button type="button">Google</button>
-            <button type="button">Microsoft</button>
+            <button type="button" disabled title="Integração ainda não configurada">Google — em breve</button>
+            <button type="button" disabled title="Integração ainda não configurada">Microsoft — em breve</button>
           </div>
         </form>
 
         <footer>
-          &copy; Olhos de &Aacute;guia Desenvolvimento &middot; Vers&atilde;o do app 0.0.1 &middot; Todos os direitos reservados
+          &copy; Olhos de &Aacute;guia Desenvolvimento &middot; Vers&atilde;o Beta &middot; Todos os direitos reservados
         </footer>
       </section>
     </main>
@@ -560,12 +572,15 @@ function AlterarSenha({ token, user, onComplete }) {
           Use pelo menos 8 caracteres, com letra maiúscula, minúscula e número.
         </small>
         {error && <p className="error">{error}</p>}
-        <div className="form-actions"><button>Salvar nova senha</button><Link className="form-return" to="/gestor">&larr; Voltar ao painel</Link></div>
+        <div className="form-actions"><button>Salvar nova senha</button><Link className="form-return" to={destinationFor(user)}>&larr; Voltar ao painel</Link></div>
       </form>
     </main>
   );
 }
 function Protected({ token, children }) { return token ? children : <Navigate to="/login" replace />; }
+function Allowed({ allowed, user, children }) {
+  return allowed ? children : <AccessDenied user={user} />;
+}
 function readStoredSession(storage) {
   try {
     return JSON.parse(storage.getItem('sigepin_session') || 'null');
@@ -579,41 +594,18 @@ function readSession() {
   return readStoredSession(sessionStorage) || readStoredSession(localStorage);
 }
 
-const schoolPortalProfiles = new Set([
-  'Diretor',
-  'Vice-Diretor',
-  'Coordenador Pedagógico',
-  'Secretário Escolar',
-  'Auxiliar/Assistente Administrativo',
-  'Auxiliar de Vida Escolar / Cuidador'
-]);
-
-function isDirector(user) {
-  return schoolPortalProfiles.has(user?.perfil);
-}
-
-function isSuperintendent(user) {
-  return user?.perfil === 'Superintendente / Diretor de Ensino';
-}
-
-function isCoordinator(user) {
-  return /coordenador.*pedagógico/i.test(user?.perfil || '');
-}
-
-function isProfessor(user) {
-  return user?.perfil === 'Professor';
-}
-
-function destinationFor(user) {
-  if (isDirector(user)) return '/diretor';
-  if (isSuperintendent(user)) return '/superintendencia';
-  if (isCoordinator(user)) return '/coordenacao';
-  if (isProfessor(user)) return '/professor';
-  return '/gestor';
-}
-
 export default function App() {
   const [session, setSession] = useState(readSession);
+
+  useEffect(() => {
+    function expireSession() {
+      setSession(null);
+      localStorage.removeItem('sigepin_session');
+      sessionStorage.removeItem('sigepin_session');
+    }
+    window.addEventListener('siedu:session-expired', expireSession);
+    return () => window.removeEventListener('siedu:session-expired', expireSession);
+  }, []);
 
   function login(data, lembrar) {
     setSession(data);
@@ -636,6 +628,8 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<Login onLogin={login} />} />
       <Route path="/recuperar-senha" element={<RecuperarSenha />} />
+      <Route path="/" element={<Navigate to={destinationFor(session?.user)} replace />} />
+      <Route path="/perfil-sem-portal" element={<Protected token={session?.token}><UnsupportedProfile user={session?.user} /></Protected>} />
 
       <Route
         path="/professor/relatorios"
@@ -712,7 +706,7 @@ export default function App() {
         path="/coordenacao"
         element={
           <Protected token={session?.token}>
-            {isCoordinator(session?.user) ? <CoordenadorDashboard user={session?.user} onLogout={logout} token={session?.token} /> : <Navigate to={destinationFor(session?.user)} replace />}
+            {isMunicipalCoordinator(session?.user) ? <CoordenadorDashboard user={session?.user} onLogout={logout} token={session?.token} /> : <AccessDenied user={session?.user} />}
           </Protected>
         }
       />
@@ -721,7 +715,7 @@ export default function App() {
         path="/superintendencia"
         element={
           <Protected token={session?.token}>
-            {isSuperintendent(session?.user) ? <SuperintendenciaDashboard user={session?.user} onLogout={logout} token={session?.token} /> : <Navigate to={destinationFor(session?.user)} replace />}
+            {isSuperintendent(session?.user) ? <SuperintendenciaDashboard user={session?.user} onLogout={logout} token={session?.token} /> : <AccessDenied user={session?.user} />}
           </Protected>
         }
       />
@@ -730,19 +724,13 @@ export default function App() {
         path="/gestor"
         element={
           <Protected token={session?.token}>
-            {isProfessor(session?.user) ? (
-              <Navigate to="/professor" replace />
-            ) : isCoordinator(session?.user) ? (
-              <Navigate to="/coordenacao" replace />
-            ) : isDirector(session?.user) ? (
-              <Navigate to="/diretor" replace />
-            ) : (
+            {isMunicipalManager(session?.user) ? (
               <Gestor
                 user={session?.user}
                 onLogout={logout}
                 token={session?.token}
               />
-            )}
+            ) : <AccessDenied user={session?.user} />}
           </Protected>
         }
       />
@@ -751,11 +739,9 @@ export default function App() {
         path="/diretor"
         element={
           <Protected token={session?.token}>
-            <Diretor
-              user={session?.user}
-              onLogout={logout}
-              token={session?.token}
-            />
+            <Allowed allowed={canAccessSchoolPortal(session?.user)} user={session?.user}>
+              <Diretor user={session?.user} onLogout={logout} token={session?.token} />
+            </Allowed>
           </Protected>
         }
       />
@@ -764,15 +750,13 @@ export default function App() {
         path="/transportes"
         element={
           <Protected token={session?.token}>
-            {isDirector(session?.user) || isSuperintendent(session?.user) ? (
-              <Navigate to={isSuperintendent(session?.user) ? "/superintendencia" : "/diretor"} replace />
-            ) : (
+            {isMunicipalManager(session?.user) ? (
               <TransporteEscolar
                 token={session?.token}
                 user={session?.user}
                 onLogout={logout}
               />
-            )}
+            ) : <AccessDenied user={session?.user} />}
           </Protected>
         }
       />
@@ -781,11 +765,9 @@ export default function App() {
         path="/escolas"
         element={
           <Protected token={session?.token}>
-            {isDirector(session?.user) ? (
-              <Navigate to="/diretor" replace />
-            ) : (
+            {isMunicipalManager(session?.user) ? (
               <Navigate to="/gestor/escolas" replace />
-            )}
+            ) : <AccessDenied user={session?.user} />}
           </Protected>
         }
       />
@@ -794,11 +776,9 @@ export default function App() {
         path="/escolas/cadastrar"
         element={
           <Protected token={session?.token}>
-            {isDirector(session?.user) ? (
-              <Navigate to="/diretor" replace />
-            ) : (
+            {isMunicipalManager(session?.user) ? (
               <Escolas token={session?.token} onLogout={logout} />
-            )}
+            ) : <AccessDenied user={session?.user} />}
           </Protected>
         }
       />
@@ -807,17 +787,13 @@ export default function App() {
         path="/gestor/escolas"
         element={
           <Protected token={session?.token}>
-            {isSuperintendent(session?.user) ? (
-              <Navigate to="/superintendencia#demandas" replace />
-            ) : isDirector(session?.user) ? (
-              <Navigate to="/diretor" replace />
-            ) : (
+            {isMunicipalManager(session?.user) ? (
               <ListaEscolasGestor
                 token={session?.token}
                 user={session?.user}
                 onLogout={logout}
               />
-            )}
+            ) : <AccessDenied user={session?.user} />}
           </Protected>
         }
       />
@@ -826,15 +802,13 @@ export default function App() {
         path="/gestor/escolas/:escolaId"
         element={
           <Protected token={session?.token}>
-            {isDirector(session?.user) ? (
-              <Navigate to="/diretor" replace />
-            ) : (
+            {isMunicipalManager(session?.user) ? (
               <DetalhesEscolaGestor
                 token={session?.token}
                 user={session?.user}
                 onLogout={logout}
               />
-            )}
+            ) : <AccessDenied user={session?.user} />}
           </Protected>
         }
       />
@@ -843,14 +817,12 @@ export default function App() {
         path="/usuarios"
         element={
           <Protected token={session?.token}>
-            {isDirector(session?.user) || isSuperintendent(session?.user) ? (
-              <Navigate to={isSuperintendent(session?.user) ? "/superintendencia" : "/diretor"} replace />
-            ) : (
+            {isMunicipalManager(session?.user) ? (
               <Usuarios
                 token={session?.token}
                 onLogout={logout}
               />
-            )}
+            ) : <AccessDenied user={session?.user} />}
           </Protected>
         }
       />
@@ -859,18 +831,14 @@ export default function App() {
         path="/gestor/financeiro"
         element={
           <Protected token={session?.token}>
-            {isSuperintendent(session?.user) ? (
-              <Navigate to="/superintendencia#financeiro" replace />
-            ) : isDirector(session?.user) ? (
-              <Navigate to="/diretor/financeiro" replace />
-            ) : (
+            {isMunicipalManager(session?.user) ? (
               <FinanceiroEscolar
                 token={session?.token}
                 user={session?.user}
                 onLogout={logout}
                 portal="gestor"
               />
-            )}
+            ) : <AccessDenied user={session?.user} />}
           </Protected>
         }
       />
@@ -879,15 +847,13 @@ export default function App() {
         path="/gestor/auditoria"
         element={
           <Protected token={session?.token}>
-            {isDirector(session?.user) ? (
-              <Navigate to="/diretor" replace />
-            ) : (
+            {isMunicipalManager(session?.user) ? (
               <AuditoriaSistema
                 token={session?.token}
                 user={session?.user}
                 onLogout={logout}
               />
-            )}
+            ) : <AccessDenied user={session?.user} />}
           </Protected>
         }
       />
@@ -896,12 +862,9 @@ export default function App() {
         path="/diretor/financeiro"
         element={
           <Protected token={session?.token}>
-            <FinanceiroEscolar
-              token={session?.token}
-              user={session?.user}
-              onLogout={logout}
-              portal="diretor"
-            />
+            <Allowed allowed={canAccessSchoolFinance(session?.user)} user={session?.user}>
+              <FinanceiroEscolar token={session?.token} user={session?.user} onLogout={logout} portal="diretor" />
+            </Allowed>
           </Protected>
         }
       />
@@ -910,11 +873,9 @@ export default function App() {
         path="/diretor/cadastrar-professor"
         element={
           <Protected token={session?.token}>
-            <CadastroDiretor
-              type="professor"
-              token={session?.token}
-              onLogout={logout}
-            />
+            <Allowed allowed={canManageSchoolStaff(session?.user)} user={session?.user}>
+              <CadastroDiretor type="professor" token={session?.token} onLogout={logout} />
+            </Allowed>
           </Protected>
         }
       />
@@ -922,11 +883,9 @@ export default function App() {
         path="/diretor/cadastrar-turma"
         element={
           <Protected token={session?.token}>
-            <CadastroDiretor
-              type="turma"
-              token={session?.token}
-              onLogout={logout}
-            />
+            <Allowed allowed={canManageSchoolAcademics(session?.user)} user={session?.user}>
+              <CadastroDiretor type="turma" token={session?.token} onLogout={logout} />
+            </Allowed>
           </Protected>
         }
       />
@@ -934,11 +893,9 @@ export default function App() {
         path="/diretor/cadastrar-secretario"
         element={
           <Protected token={session?.token}>
-            <CadastroDiretor
-              type="secretario"
-              token={session?.token}
-              onLogout={logout}
-            />
+            <Allowed allowed={canManageSchoolStaff(session?.user)} user={session?.user}>
+              <CadastroDiretor type="secretario" token={session?.token} onLogout={logout} />
+            </Allowed>
           </Protected>
         }
       />
@@ -946,11 +903,9 @@ export default function App() {
         path="/diretor/matricular-aluno"
         element={
           <Protected token={session?.token}>
-            <CadastroDiretor
-              type="matricula"
-              token={session?.token}
-              onLogout={logout}
-            />
+            <Allowed allowed={canManageSchoolAcademics(session?.user)} user={session?.user}>
+              <CadastroDiretor type="matricula" token={session?.token} onLogout={logout} />
+            </Allowed>
           </Protected>
         }
       />
@@ -958,11 +913,9 @@ export default function App() {
         path="/diretor/imprimir-documentos"
         element={
           <Protected token={session?.token}>
-            <CadastroDiretor
-              type="documentos"
-              token={session?.token}
-              onLogout={logout}
-            />
+            <Allowed allowed={canManageSchoolAcademics(session?.user)} user={session?.user}>
+              <CadastroDiretor type="documentos" token={session?.token} onLogout={logout} />
+            </Allowed>
           </Protected>
         }
       />
@@ -971,11 +924,9 @@ export default function App() {
         path="/diretor/turmas"
         element={
           <Protected token={session?.token}>
-            <ConsultaTurmas
-              user={session?.user}
-              onLogout={logout}
-              token={session?.token}
-            />
+            <Allowed allowed={canManageSchoolAcademics(session?.user)} user={session?.user}>
+              <ConsultaTurmas user={session?.user} onLogout={logout} token={session?.token} />
+            </Allowed>
           </Protected>
         }
       />
@@ -983,11 +934,9 @@ export default function App() {
         path="/diretor/turmas/:turmaId"
         element={
           <Protected token={session?.token}>
-            <DetalhesTurma
-              user={session?.user}
-              onLogout={logout}
-              token={session?.token}
-            />
+            <Allowed allowed={canManageSchoolAcademics(session?.user)} user={session?.user}>
+              <DetalhesTurma user={session?.user} onLogout={logout} token={session?.token} />
+            </Allowed>
           </Protected>
         }
       />
@@ -995,18 +944,16 @@ export default function App() {
         path="/diretor/turmas/:turmaId/alunos/:alunoId"
         element={
           <Protected token={session?.token}>
-            <DetalhesAluno
-              user={session?.user}
-              onLogout={logout}
-              token={session?.token}
-            />
+            <Allowed allowed={canManageSchoolAcademics(session?.user)} user={session?.user}>
+              <DetalhesAluno user={session?.user} onLogout={logout} token={session?.token} />
+            </Allowed>
           </Protected>
         }
       />
 
-      <Route path="/diretor/frequencia" element={<Protected token={session?.token}><Frequencia /></Protected>} />
-      <Route path="/diretor/historicos" element={<Protected token={session?.token}><HistoricoEscolar /></Protected>} />
-      <Route path="/diretor/documentos" element={<Protected token={session?.token}><DocumentosEscolares /></Protected>} />
+      <Route path="/diretor/frequencia" element={<Protected token={session?.token}><Allowed allowed={canManageSchoolAcademics(session?.user)} user={session?.user}><Frequencia /></Allowed></Protected>} />
+      <Route path="/diretor/historicos" element={<Protected token={session?.token}><Allowed allowed={canManageSchoolAcademics(session?.user)} user={session?.user}><HistoricoEscolar /></Allowed></Protected>} />
+      <Route path="/diretor/documentos" element={<Protected token={session?.token}><Allowed allowed={canManageSchoolAcademics(session?.user)} user={session?.user}><DocumentosEscolares /></Allowed></Protected>} />
 
       <Route
         path="/alterar-senha"
@@ -1024,7 +971,7 @@ export default function App() {
         }
       />
 
-      <Route path="*" element={<Navigate to={destinationFor(session?.user)} replace />} />
+      <Route path="*" element={<NotFound user={session?.user} />} />
     </Routes>
   );
 }

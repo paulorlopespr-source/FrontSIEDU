@@ -10,8 +10,19 @@ async function request(path, options = {}, token) {
     },
   });
 
-  const payload = response.status === 204 ? null : await response.json();
+  const responseText = response.status === 204 ? '' : await response.text();
+  let payload = null;
+  if (responseText) {
+    try {
+      payload = JSON.parse(responseText);
+    } catch {
+      payload = { message: 'O servidor respondeu em um formato inesperado. Tente novamente em instantes.' };
+    }
+  }
   if (!response.ok) {
+    if (response.status === 401 && token) {
+      window.dispatchEvent(new CustomEvent('siedu:session-expired'));
+    }
     throw new Error(
       payload?.message || 'Não foi possível concluir a solicitação.',
     );
