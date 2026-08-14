@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { canAccessSchoolPortal, canManageSchoolStaff, destinationFor } from '../src/permissions.js';
+import { canAccessSchoolPortal, canManageSchoolStaff, destinationFor, isStudent } from '../src/permissions.js';
 
 test('direciona cada perfil implementado ao portal correto', () => {
   assert.equal(destinationFor({ perfil: 'Super Administrador' }), '/gestor');
@@ -9,6 +9,13 @@ test('direciona cada perfil implementado ao portal correto', () => {
   assert.equal(destinationFor({ perfil: 'Coordenador Pedagógico Municipal' }), '/coordenacao');
   assert.equal(destinationFor({ perfil: 'Diretor' }), '/diretor');
   assert.equal(destinationFor({ perfil: 'Professor' }), '/professor');
+  assert.equal(destinationFor({ perfil: 'Aluno' }), '/aluno');
+});
+
+test('isola o Portal do Aluno dos demais perfis', () => {
+  assert.equal(isStudent({ perfil: 'Aluno' }), true);
+  assert.equal(isStudent({ perfil: 'Professor' }), false);
+  assert.equal(isStudent({ perfil: 'Diretor' }), false);
 });
 
 test('não entrega o portal do gestor a perfis sem tela própria', () => {

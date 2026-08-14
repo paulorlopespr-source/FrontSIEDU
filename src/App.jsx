@@ -16,6 +16,7 @@ import ProfessorProvaImpressao from './ProfessorProvaImpressao';
 import ProfessorMateriais from './ProfessorMateriais';
 import ProfessorRelatorios from './ProfessorRelatorios';
 import ProfessorCalendario from './ProfessorCalendario';
+import AlunoPortal from './AlunoPortal';
 import {
   DetalhesEscolaGestor,
   ListaEscolasGestor,
@@ -39,6 +40,7 @@ import {
   isMunicipalCoordinator,
   isMunicipalManager,
   isProfessor,
+  isStudent,
   isSuperintendent,
 } from './permissions';
 import { AccessDenied, NotFound, UnsupportedProfile } from './RouteFeedback';
@@ -630,6 +632,17 @@ export default function App() {
       <Route path="/recuperar-senha" element={<RecuperarSenha />} />
       <Route path="/" element={<Navigate to={destinationFor(session?.user)} replace />} />
       <Route path="/perfil-sem-portal" element={<Protected token={session?.token}><UnsupportedProfile user={session?.user} /></Protected>} />
+
+      <Route
+        path="/aluno/*"
+        element={
+          <Protected token={session?.token}>
+            {isStudent(session?.user) ? (
+              <AlunoPortal user={session?.user} token={session?.token} onLogout={logout} />
+            ) : <Navigate to={destinationFor(session?.user)} replace />}
+          </Protected>
+        }
+      />
 
       <Route
         path="/professor/relatorios"

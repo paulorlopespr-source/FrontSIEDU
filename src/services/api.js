@@ -279,6 +279,10 @@ export const api = {
     return request(`/professor/calendar?year=${year}`, {}, token);
   },
 
+  getStudentPortal(token) {
+    return request('/student/portal', {}, token);
+  },
+
   createProfessorCalendarEvent(data, token) {
     return post('/professor/calendar-events', data, token);
   },
