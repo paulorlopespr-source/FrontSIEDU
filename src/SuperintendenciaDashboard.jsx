@@ -59,7 +59,7 @@ export default function SuperintendenciaDashboard({ user, token, onLogout }) {
   return <div style={{ minHeight: '100vh', background: '#f4f7fb', color: '#17335e' }}>
     <header style={{ background: '#fff', borderBottom: '1px solid #dbe4f2', padding: '16px 5%', display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
       <div style={{ marginRight: 'auto' }}><small style={{ color: '#1872d3', fontWeight: 800 }}>SUPERVISÃO PEDAGÓGICA MUNICIPAL</small><h1 style={{ margin: 0, fontSize: 22 }}>Portal da Superintendência</h1></div>
-      <Link to="/superintendencia">Painel</Link><a href="#demandas">Escolas</a><a href="#pedagogico">Pedagógico</a><a href="#financeiro">Financeiro</a>
+      <Link to="/superintendencia">Painel</Link><Link to="/aprendizagem">SAEB e Aprendizagem</Link><a href="#demandas">Escolas</a><a href="#pedagogico">Pedagógico</a><a href="#financeiro">Financeiro</a>
       <div><b>{user?.nome || 'Superintendente'}</b><small style={{ display: 'block', color: '#627492' }}>Superintendente / Diretor de Ensino</small></div>
       <button type="button" onClick={onLogout}>Sair</button>
     </header>

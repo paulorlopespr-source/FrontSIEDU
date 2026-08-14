@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from './services/api';
-import { canAccessSchoolFinance, canManageSchoolAcademics, canManageSchoolStaff } from './permissions';
+import { canAccessSchoolFinance, canManageLearning, canManageSchoolAcademics, canManageSchoolStaff } from './permissions';
 import './diretor-dashboard.css';
 
 const emptySummary = {
@@ -19,6 +19,7 @@ export default function DiretorDashboard({ user, onLogout, token }) {
   const mayManageStaff = canManageSchoolStaff(user);
   const mayManageAcademics = canManageSchoolAcademics(user);
   const mayAccessFinance = canAccessSchoolFinance(user);
+  const mayManageLearning = canManageLearning(user);
   const portalTitle = user?.perfil || 'Gestão escolar';
 
   useEffect(() => {
@@ -122,6 +123,7 @@ export default function DiretorDashboard({ user, onLogout, token }) {
           {mayManageStaff && <Link to="/diretor/cadastrar-professor">Professores</Link>}
           {mayManageAcademics && <Link to="/diretor/matricular-aluno">Alunos</Link>}
           {mayManageAcademics && <Link to="/diretor/frequencia">Frequência</Link>}
+          {mayManageLearning && <Link to="/aprendizagem">Trilhas de revisão</Link>}
 
           <h3>Administração</h3>
           {mayManageAcademics && <Link to="/diretor/documentos">Documentos</Link>}
@@ -190,6 +192,7 @@ export default function DiretorDashboard({ user, onLogout, token }) {
             {mayManageStaff && <Link to="/diretor/cadastrar-secretario">Cadastrar secretário</Link>}
             {mayManageAcademics && <Link to="/diretor/matricular-aluno">Matricular aluno</Link>}
             {mayManageAcademics && <Link to="/diretor/imprimir-documentos">Impressão de documentos</Link>}
+            {mayManageLearning && <Link to="/aprendizagem">Editar trilhas após resultados</Link>}
             {!mayManageStaff && !mayManageAcademics && <p>Este perfil possui somente consulta aos indicadores da unidade.</p>}
           </section>
 

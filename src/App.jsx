@@ -17,6 +17,7 @@ import ProfessorMateriais from './ProfessorMateriais';
 import ProfessorRelatorios from './ProfessorRelatorios';
 import ProfessorCalendario from './ProfessorCalendario';
 import AlunoPortal from './AlunoPortal';
+import AprendizagemGestao from './AprendizagemGestao';
 import {
   DetalhesEscolaGestor,
   ListaEscolasGestor,
@@ -36,6 +37,7 @@ import {
   canAccessSchoolPortal,
   canManageSchoolAcademics,
   canManageSchoolStaff,
+  canManageLearning,
   destinationFor,
   isMunicipalCoordinator,
   isMunicipalManager,
@@ -640,6 +642,17 @@ export default function App() {
             {isStudent(session?.user) ? (
               <AlunoPortal user={session?.user} token={session?.token} onLogout={logout} />
             ) : <Navigate to={destinationFor(session?.user)} replace />}
+          </Protected>
+        }
+      />
+
+      <Route
+        path="/aprendizagem"
+        element={
+          <Protected token={session?.token}>
+            {canManageLearning(session?.user) ? (
+              <AprendizagemGestao user={session?.user} token={session?.token} />
+            ) : <AccessDenied user={session?.user} />}
           </Protected>
         }
       />
