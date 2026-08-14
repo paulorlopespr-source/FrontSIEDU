@@ -317,6 +317,25 @@ export const api = {
     return post('/learning/saeb', data, token);
   },
 
+  getCalendarManagement(year, token) {
+    return request(`/calendar/management?year=${year}`, {}, token);
+  },
+
+  createSchoolCalendarEvent(data, token) {
+    return post('/calendar/events', data, token);
+  },
+
+  updateSchoolCalendarEvent(id, data, token) {
+    return request(`/calendar/events/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }, token);
+  },
+
+  deleteSchoolCalendarEvent(id, token) {
+    return request(`/calendar/events/${id}`, { method: 'DELETE' }, token);
+  },
+
   createProfessorCalendarEvent(data, token) {
     return post('/professor/calendar-events', data, token);
   },

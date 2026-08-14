@@ -275,7 +275,7 @@ export default function GestorDashboard({ user, onLogout, token }) {
 
           <section className="dashboard-management" style={{ marginTop: 20 }}>
             <div><span className="eyebrow">ACOMPANHAMENTO PEDAGÓGICO</span><h2>Calendário, disciplinas e planos de aula</h2><p>Controle municipal de eventos escolares, desempenho e pendências de aprovação.</p></div>
-            <div className="dashboard-management-actions"><Link to="/aprendizagem">🧭 Simulado SAEB e aprendizagem</Link><button type="button" disabled title="Módulo em preparação">📅 Calendário escolar — em breve</button><button type="button" disabled title="Módulo em preparação">📝 Aprovar planos de aula — em breve</button></div>
+            <div className="dashboard-management-actions"><Link to="/aprendizagem">🧭 Simulado SAEB e aprendizagem</Link><Link to="/calendario-escolar">📅 Gestão do calendário escolar</Link><button type="button" disabled title="Módulo em preparação">📝 Aprovar planos de aula — em breve</button></div>
           </section>
 
           <section className="dashboard-charts">

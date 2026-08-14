@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { canAccessSchoolPortal, canManageLearning, canManageSchoolStaff, destinationFor, isStudent } from '../src/permissions.js';
+import { canAccessSchoolPortal, canManageLearning, canManageSchoolCalendar, canManageSchoolStaff, destinationFor, isStudent } from '../src/permissions.js';
 
 test('direciona cada perfil implementado ao portal correto', () => {
   assert.equal(destinationFor({ perfil: 'Super Administrador' }), '/gestor');
@@ -34,4 +34,11 @@ test('separa gestão da aprendizagem do acesso exclusivo do aluno', () => {
   assert.equal(canManageLearning({ perfil: 'Coordenador Pedagógico Municipal' }), true);
   assert.equal(canManageLearning({ perfil: 'Secretário Municipal de Educação' }), true);
   assert.equal(canManageLearning({ perfil: 'Aluno' }), false);
+});
+
+test('limita a gestão do calendário à Secretaria e Coordenação Municipal', () => {
+  assert.equal(canManageSchoolCalendar({ perfil: 'Secretário Municipal de Educação' }), true);
+  assert.equal(canManageSchoolCalendar({ perfil: 'Coordenador Pedagógico Municipal' }), true);
+  assert.equal(canManageSchoolCalendar({ perfil: 'Professor' }), false);
+  assert.equal(canManageSchoolCalendar({ perfil: 'Aluno' }), false);
 });

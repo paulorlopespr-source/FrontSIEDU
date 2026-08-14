@@ -18,6 +18,7 @@ import ProfessorRelatorios from './ProfessorRelatorios';
 import ProfessorCalendario from './ProfessorCalendario';
 import AlunoPortal from './AlunoPortal';
 import AprendizagemGestao from './AprendizagemGestao';
+import CalendarioEscolarGestao from './CalendarioEscolarGestao';
 import {
   DetalhesEscolaGestor,
   ListaEscolasGestor,
@@ -38,6 +39,7 @@ import {
   canManageSchoolAcademics,
   canManageSchoolStaff,
   canManageLearning,
+  canManageSchoolCalendar,
   destinationFor,
   isMunicipalCoordinator,
   isMunicipalManager,
@@ -652,6 +654,17 @@ export default function App() {
           <Protected token={session?.token}>
             {canManageLearning(session?.user) ? (
               <AprendizagemGestao user={session?.user} token={session?.token} />
+            ) : <AccessDenied user={session?.user} />}
+          </Protected>
+        }
+      />
+
+      <Route
+        path="/calendario-escolar"
+        element={
+          <Protected token={session?.token}>
+            {canManageSchoolCalendar(session?.user) ? (
+              <CalendarioEscolarGestao user={session?.user} token={session?.token} />
             ) : <AccessDenied user={session?.user} />}
           </Protected>
         }
