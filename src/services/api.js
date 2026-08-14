@@ -222,6 +222,7 @@ export const api = {
   executeMunicipalDemand(id, data, token) { return post(`/municipal/demands/${id}/execution`, data, token); },
   listDemandNotifications(token) { return request('/municipal/demands/notifications', {}, token); },
   readDemandNotification(id, token) { return request(`/municipal/demands/notifications/${id}/read`, { method: 'PATCH' }, token); },
+  downloadDemandAttachment(demandId, attachmentId, filename, token) { return download(`/municipal/demands/${demandId}/attachments/${attachmentId}`, filename, token); },
   downloadMunicipalReport(type, token) { return download(`/municipal/reports/${type}.csv`, `relatorio-${type}.csv`, token); },
 
   getProfessorDashboard(token) {

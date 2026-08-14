@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from './services/api';
 import {
@@ -20,6 +20,18 @@ const initialForm = {
 
 const urgencyLabel = (value) => value === 'Alta' ? 'Urgência alta' : value === 'Baixa' ? 'Urgência baixa' : 'Urgência normal';
 const dateTime = (value) => value ? new Date(value).toLocaleString('pt-BR') : '—';
+const allowedAttachmentTypes = new Set([
+  'image/jpeg', 'image/png', 'image/webp', 'application/pdf', 'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/plain',
+]);
+const fileSize = (bytes) => bytes >= 1_000_000 ? `${(bytes / 1_000_000).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1000))} KB`;
+const readAsDataUrl = (file) => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onload = () => resolve(reader.result);
+  reader.onerror = () => reject(new Error('Não foi possível ler o arquivo selecionado.'));
+  reader.readAsDataURL(file);
+});
 
 export default function DemandasEscolares({ user, token, onLogout }) {
   const director = canCreateSchoolDemand(user);
@@ -29,11 +41,13 @@ export default function DemandasEscolares({ user, token, onLogout }) {
   const [notifications, setNotifications] = useState([]);
   const [schools, setSchools] = useState([]);
   const [form, setForm] = useState(initialForm);
+  const [attachment, setAttachment] = useState(null);
   const [notes, setNotes] = useState({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const attachmentInput = useRef(null);
 
   async function load() {
     setLoading(true);
@@ -63,6 +77,28 @@ export default function DemandasEscolares({ user, token, onLogout }) {
     setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
   }
 
+  function selectAttachment(event) {
+    const file = event.target.files?.[0] || null;
+    setError('');
+    if (!file) return setAttachment(null);
+    if (!allowedAttachmentTypes.has(file.type)) {
+      event.target.value = '';
+      setAttachment(null);
+      return setError('Tipo de arquivo não permitido. Envie imagem, PDF, Word, Excel ou TXT.');
+    }
+    if (file.size > 5_000_000) {
+      event.target.value = '';
+      setAttachment(null);
+      return setError('O anexo deve ter no máximo 5 MB.');
+    }
+    return setAttachment(file);
+  }
+
+  function removeAttachment() {
+    setAttachment(null);
+    if (attachmentInput.current) attachmentInput.current.value = '';
+  }
+
   async function perform(action, success) {
     setSaving(true);
     setError('');
@@ -82,15 +118,35 @@ export default function DemandasEscolares({ user, token, onLogout }) {
 
   async function submitDemand(event) {
     event.preventDefault();
+    let anexo = null;
+    try {
+      if (attachment) anexo = { nome: attachment.name, dados: await readAsDataUrl(attachment) };
+    } catch (readError) {
+      setError(readError.message);
+      return;
+    }
     const saved = await perform(
       () => api.createMunicipalDemand({
         ...form,
         escolaId: Number(form.escolaId),
         prazo: form.prazo || null,
+        anexo,
       }, token),
       'Demanda enviada diretamente à Secretaria Municipal de Educação.',
     );
-    if (saved) setForm((current) => ({ ...initialForm, escolaId: current.escolaId }));
+    if (saved) {
+      setForm((current) => ({ ...initialForm, escolaId: current.escolaId }));
+      removeAttachment();
+    }
+  }
+
+  async function downloadAttachment(demandId, item) {
+    setError('');
+    try {
+      await api.downloadDemandAttachment(demandId, item.id, item.nome, token);
+    } catch (requestError) {
+      setError(requestError.message);
+    }
   }
 
   function secretaryAction(demand, action) {
@@ -159,6 +215,14 @@ export default function DemandasEscolares({ user, token, onLogout }) {
       <label>Prazo necessário<input type="date" name="prazo" value={form.prazo} onChange={change}/></label>
       <label className="wide">Qual é a demanda?<input name="titulo" value={form.titulo} onChange={change} placeholder="Ex.: Substituição de lâmpadas da sala 4" required/></label>
       <label className="wide">Justificativa<textarea name="descricao" value={form.descricao} onChange={change} rows="5" placeholder="Descreva a necessidade, quantidade, local e impacto para a escola." required/></label>
+      <div className="wide demand-attachment-picker">
+        <span>Anexo para comprovar a demanda <small>(opcional)</small></span>
+        <div>
+          <label className="attachment-button">📎 Enviar imagem ou arquivo<input ref={attachmentInput} type="file" onChange={selectAttachment} accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.txt"/></label>
+          {attachment && <span className="selected-attachment"><b>{attachment.name}</b> · {fileSize(attachment.size)} <button type="button" onClick={removeAttachment}>Remover</button></span>}
+        </div>
+        <small>Formatos aceitos: JPG, PNG, WebP, PDF, Word, Excel e TXT. Limite de 5 MB.</small>
+      </div>
       <button disabled={saving || !schools.length}>{saving ? 'Enviando…' : 'Enviar demanda à Secretaria'}</button>
     </form>}
 
@@ -171,6 +235,7 @@ export default function DemandasEscolares({ user, token, onLogout }) {
         return <article className={`demand-card ${resolved ? 'resolved' : administration ? 'task-pending' : ''}`} key={demand.id}>
           <header><div><span className={`urgency ${demand.prioridade.toLowerCase()}`}>{urgencyLabel(demand.prioridade)}</span><small>#{demand.id} · {demand.categoria}</small><h3>{demand.titulo}</h3></div><span className={`workflow-status ${resolved ? 'done' : ''}`}>{demand.status}</span></header>
           <p>{demand.descricao}</p>
+          {demand.anexos?.length > 0 && <div className="demand-attachments"><b>Comprovantes anexados</b>{demand.anexos.map((item) => <button type="button" key={item.id} onClick={() => downloadAttachment(demand.id, item)}>📎 {item.nome} <small>({fileSize(item.tamanho)})</small></button>)}</div>}
           <dl><div><dt>Escola</dt><dd>{demand.escola}</dd></div><div><dt>Enviada por</dt><dd>{demand.criadoPor}</dd></div><div><dt>Registrada</dt><dd>{dateTime(demand.criadoEm)}</dd></div><div><dt>Prazo</dt><dd>{demand.prazo ? new Date(`${demand.prazo}T12:00:00`).toLocaleDateString('pt-BR') : 'Não definido'}</dd></div></dl>
           {((secretary && secretaryPending) || (administration && adminPending)) && <div className="demand-actions">
             <label>Despacho/observação<textarea value={notes[demand.id] || ''} onChange={(event) => setNotes((current) => ({ ...current, [demand.id]: event.target.value }))} placeholder="Registre a orientação deste encaminhamento."/></label>
