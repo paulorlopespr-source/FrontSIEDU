@@ -39,6 +39,7 @@ export const isMunicipalCoordinator = (user) => user?.perfil === profiles.MUNICI
 export const isProfessor = (user) => user?.perfil === profiles.PROFESSOR;
 export const isStudent = (user) => user?.perfil === profiles.STUDENT;
 export const canManageSchoolCalendar = (user) => calendarManagers.has(user?.perfil);
+export const canAccessMunicipalManagement = (user) => calendarManagers.has(user?.perfil);
 export const canManageLearning = (user) => Boolean(user && (
   isMunicipalManager(user)
   || isSuperintendent(user)

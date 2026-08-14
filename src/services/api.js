@@ -88,6 +88,10 @@ export const api = {
     return post('/users', data, token);
   },
 
+  updateUser(id, data, token) {
+    return request(`/users/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, token);
+  },
+
   updateUserSchools(id, escolaIds, token) {
     return request(`/users/${id}/schools`, {
       method: 'PATCH',
@@ -161,6 +165,22 @@ export const api = {
     }, token);
   },
 
+  updateVehicle(id, data, token) {
+    return request(`/transport/vehicles/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, token);
+  },
+
+  updateDriver(id, data, token) {
+    return request(`/transport/drivers/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, token);
+  },
+
+  updateRouteStatus(id, ativo, token) {
+    return request(`/transport/routes/${id}/status`, { method: 'PATCH', body: JSON.stringify({ ativo }) }, token);
+  },
+
+  updateTransportStudentStatus(id, ativo, token) {
+    return request(`/transport/students/${id}/status`, { method: 'PATCH', body: JSON.stringify({ ativo }) }, token);
+  },
+
   getSchoolFinance(token) {
     return request('/finance', {}, token);
   },
@@ -181,9 +201,24 @@ export const api = {
     return post(`/finance/allocations/${id}/audit`, data, token);
   },
 
+  reviewSchoolStatement(id, data, token) {
+    return request(`/finance/statements/${id}/review`, { method: 'PATCH', body: JSON.stringify(data) }, token);
+  },
+
   getManagerDashboard(token) {
     return request('/dashboard/manager', {}, token);
   },
+
+  getMunicipalOverview(token) { return request('/municipal/overview', {}, token); },
+  listIdeb(token) { return request('/municipal/ideb', {}, token); },
+  importIdeb(registros, token) { return post('/municipal/ideb/import', { registros }, token); },
+  listMunicipalMeetings(token) { return request('/municipal/meetings', {}, token); },
+  createMunicipalMeeting(data, token) { return post('/municipal/meetings', data, token); },
+  updateMunicipalMeetingStatus(id, status, token) { return request(`/municipal/meetings/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }, token); },
+  listMunicipalDemands(token) { return request('/municipal/demands', {}, token); },
+  createMunicipalDemand(data, token) { return post('/municipal/demands', data, token); },
+  updateMunicipalDemand(id, data, token) { return request(`/municipal/demands/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, token); },
+  downloadMunicipalReport(type, token) { return download(`/municipal/reports/${type}.csv`, `relatorio-${type}.csv`, token); },
 
   getProfessorDashboard(token) {
     return request('/professor/dashboard', {}, token);

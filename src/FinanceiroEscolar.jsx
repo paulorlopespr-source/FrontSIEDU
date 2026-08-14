@@ -47,6 +47,7 @@ const initialAudit = {
   justificativa: '',
   dataReuniao: '',
 };
+const initialStatementReview = { statementId: '', status: 'Aprovada', parecer: '', dataReuniao: '' };
 
 function money(value) {
   return Number(value || 0).toLocaleString('pt-BR', {
@@ -109,6 +110,7 @@ export default function FinanceiroEscolar({ token, user, onLogout, portal = 'dir
   const [expense, setExpense] = useState(initialExpense);
   const [statement, setStatement] = useState(initialStatement);
   const [audit, setAudit] = useState(initialAudit);
+  const [statementReview, setStatementReview] = useState(initialStatementReview);
 
   const backPath = portal === 'gestor' ? '/gestor' : '/diretor';
   const backLabel = portal === 'gestor'
@@ -128,6 +130,7 @@ export default function FinanceiroEscolar({ token, user, onLogout, portal = 'dir
       setStatement((current) => ({ ...current, escolaId: current.escolaId || firstSchool }));
       setExpense((current) => ({ ...current, alocacaoId: current.alocacaoId || firstAllocation }));
       setAudit((current) => ({ ...current, alocacaoId: current.alocacaoId || firstAllocation }));
+      setStatementReview((current) => ({ ...current, statementId: current.statementId || payload.statements[0]?.id || '' }));
     } catch (loadError) {
       setError(loadError.message);
     } finally {
@@ -222,6 +225,15 @@ export default function FinanceiroEscolar({ token, user, onLogout, portal = 'dir
         ? 'Pendência registrada e destacada para comprovação.'
         : 'Avaliação financeira registrada com sucesso.',
       () => setAudit({ ...initialAudit, alocacaoId: data.allocations[0]?.id || '' }),
+    );
+  }
+
+  function submitStatementReview(event) {
+    event.preventDefault();
+    perform(
+      () => api.reviewSchoolStatement(statementReview.statementId, { status: statementReview.status, parecer: statementReview.parecer, dataReuniao: statementReview.dataReuniao || null }, token),
+      'Análise da prestação de contas registrada.',
+      () => setStatementReview({ ...initialStatementReview, statementId: data.statements[0]?.id || '' }),
     );
   }
 
@@ -369,6 +381,16 @@ export default function FinanceiroEscolar({ token, user, onLogout, portal = 'dir
 
       {tab === 'auditoria' && data.municipal && (
         <>
+          <form className="finance-card audit-card" onSubmit={submitStatementReview}>
+            <h2>Avaliar prestação de contas</h2>
+            <p>Aprove, devolva com pendência ou solicite reunião, mantendo o parecer registrado.</p>
+            <div className="finance-fields">
+              <Field label="Prestação/escola"><select name="statementId" value={statementReview.statementId} onChange={update(setStatementReview)} required><option value="">Selecione</option>{data.statements.map(item=><option key={item.id} value={item.id}>{item.competencia} · {item.escola} · {item.categoria}</option>)}</select></Field>
+              <Field label="Situação"><select name="status" value={statementReview.status} onChange={update(setStatementReview)}><option value="Aprovada">Aprovada</option><option value="Com pendencia">Com pendência</option><option value="Reuniao solicitada">Reunião solicitada</option></select></Field>
+              {statementReview.status==='Reuniao solicitada'&&<Field label="Data da reunião"><input type="datetime-local" name="dataReuniao" value={statementReview.dataReuniao} onChange={update(setStatementReview)} required/></Field>}
+              <Field label="Parecer técnico" wide><textarea name="parecer" value={statementReview.parecer} onChange={update(setStatementReview)} required/></Field>
+            </div><button disabled={saving||!data.statements.length}>Registrar análise</button>
+          </form>
           <form className="finance-card audit-card" onSubmit={submitAudit}>
             <h2>Avaliar execução financeira</h2>
             <p>Registre aprovação, solicite comprovação ou marque reunião com a gestão escolar.</p>

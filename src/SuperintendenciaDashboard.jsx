@@ -59,14 +59,14 @@ export default function SuperintendenciaDashboard({ user, token, onLogout }) {
   return <div style={{ minHeight: '100vh', background: '#f4f7fb', color: '#17335e' }}>
     <header style={{ background: '#fff', borderBottom: '1px solid #dbe4f2', padding: '16px 5%', display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
       <div style={{ marginRight: 'auto' }}><small style={{ color: '#1872d3', fontWeight: 800 }}>SUPERVISÃO PEDAGÓGICA MUNICIPAL</small><h1 style={{ margin: 0, fontSize: 22 }}>Portal da Superintendência</h1></div>
-      <Link to="/superintendencia">Painel</Link><Link to="/aprendizagem">SAEB e Aprendizagem</Link><a href="#demandas">Escolas</a><a href="#pedagogico">Pedagógico</a><a href="#financeiro">Financeiro</a>
+      <Link to="/superintendencia">Painel</Link><Link to="/gestao-municipal">Gestão municipal</Link><Link to="/aprendizagem">SAEB e Aprendizagem</Link><a href="#demandas">Escolas</a><a href="#pedagogico">Pedagógico</a><a href="#financeiro">Financeiro</a>
       <div><b>{user?.nome || 'Superintendente'}</b><small style={{ display: 'block', color: '#627492' }}>Superintendente / Diretor de Ensino</small></div>
       <button type="button" onClick={onLogout}>Sair</button>
     </header>
     <main style={{ maxWidth: 1380, margin: 'auto', padding: '34px 5%' }}>
       <section style={{ padding: 30, borderRadius: 18, background: 'linear-gradient(120deg,#0e4f9b,#1872d3)', color: '#fff', display: 'flex', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap' }}>
         <div><small>REDE MUNICIPAL DE ENSINO</small><h2 style={{ fontSize: 28, margin: '8px 0' }}>Acompanhamento pedagógico, financeiro e institucional</h2><p>Consulte resultados, acompanhe demandas, recursos e prestações de contas das unidades.</p></div>
-        <button type="button" onClick={() => window.print()}>Emitir relatório consolidado</button>
+        <Link to="/gestao-municipal" style={{background:'#fff',color:'#1263bd',padding:12,borderRadius:8,fontWeight:800}}>Indicadores, agenda e demandas</Link>
       </section>
       {notice && <p style={{ background: '#e4f6eb', color: '#176d3d', padding: 12 }}>{notice}</p>}
       <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(190px,1fr))', gap: 15, margin: '22px 0' }}>
