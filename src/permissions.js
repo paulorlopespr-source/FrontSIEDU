@@ -21,6 +21,12 @@ const schoolPortalProfiles = new Set([
   profiles.SCHOOL_ASSISTANT,
 ]);
 const schoolManagers = new Set([profiles.DIRECTOR, profiles.VICE_DIRECTOR]);
+const calendarManagers = new Set([
+  profiles.SUPER_ADMIN,
+  profiles.MUNICIPAL_SECRETARY,
+  profiles.SUPERINTENDENT,
+  profiles.MUNICIPAL_COORDINATOR,
+]);
 const schoolAcademicProfiles = new Set([
   ...schoolManagers,
   profiles.SCHOOL_COORDINATOR,
@@ -32,6 +38,7 @@ export const isSuperintendent = (user) => user?.perfil === profiles.SUPERINTENDE
 export const isMunicipalCoordinator = (user) => user?.perfil === profiles.MUNICIPAL_COORDINATOR;
 export const isProfessor = (user) => user?.perfil === profiles.PROFESSOR;
 export const isStudent = (user) => user?.perfil === profiles.STUDENT;
+export const canManageSchoolCalendar = (user) => calendarManagers.has(user?.perfil);
 export const canManageLearning = (user) => Boolean(user && (
   isMunicipalManager(user)
   || isSuperintendent(user)
