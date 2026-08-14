@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { api } from './services/api';
 import './gestor-dashboard.css';
 
@@ -29,19 +29,27 @@ const menuGroups = [
 ];
 
 const menuLinks = {
-  'Indicadores do município': '/gestao-municipal',
-  'Metas e resultados': '/gestao-municipal',
-  'Avaliações e IDEB': '/gestao-municipal',
-  'Relatórios gerenciais': '/gestao-municipal',
-  'Documentos oficiais': '/gestao-municipal',
+  'Painel executivo': '/gestor',
+  'Indicadores do município': '/gestao-municipal?tab=indicadores',
+  'Metas e resultados': '/gestao-municipal?tab=ideb-analise',
+  'Unidades de ensino': '/gestor/escolas',
   Escolas: '/gestor/escolas',
-  'Orçamento e financeiro': '/gestor/financeiro',
-  'Recursos e convênios': '/gestor/financeiro',
+  Alunos: '/gestor/rede/alunos',
+  Professores: '/gestor/rede/professores',
+  Turmas: '/gestor/rede/turmas',
+  Matrículas: '/gestor/rede/matriculas',
+  Frequência: '/gestor/rede/frequencia',
+  'Avaliações e IDEB': '/gestao-municipal?tab=ideb',
+  Planejamento: '/calendario-escolar',
+  'Orçamento e financeiro': '/gestor/financeiro?tab=recursos',
+  'Recursos e convênios': '/gestor/financeiro?tab=recursos',
   'Transporte escolar': '/transportes',
   'Solicitações e demandas': '/gestor/demandas',
   Infraestrutura: '/gestor/demandas',
-  'Merenda escolar': '/gestor/financeiro',
-  'Prestação de contas': '/gestor/financeiro',
+  'Merenda escolar': '/gestor/financeiro?tab=despesas',
+  'Relatórios gerenciais': '/gestao-municipal?tab=relatorios',
+  'Documentos oficiais': '/gestao-municipal?tab=relatorios',
+  'Prestação de contas': '/gestor/financeiro?tab=contas',
 };
 
 const quickActions = [
@@ -73,6 +81,9 @@ function shortDate(value) {
 }
 
 export function GestorSidebar({ onLogout }) {
+  const location = useLocation();
+  const current = `${location.pathname}${location.search}`;
+  const active = (path) => path === '/gestor' ? current === '/gestor' : current === path || (!path.includes('?') && location.pathname.startsWith(path));
   return (
     <aside className="dashboard-sidebar">
       <div className="sidebar-brand">
@@ -80,17 +91,13 @@ export function GestorSidebar({ onLogout }) {
         <div><strong>SIEDU-PINDOBAÇU</strong><span>Sistema Integrado de Educação</span></div>
       </div>
 
-      <Link className="sidebar-current" to="/gestor"><span>⌂</span> Dashboard</Link>
+      <Link className={`sidebar-current ${current === '/gestor' ? 'active' : ''}`} to="/gestor"><span>⌂</span> Dashboard</Link>
 
       <nav className="sidebar-menu">
         {menuGroups.map((group) => (
           <section key={group.title}>
             <h2>{group.title}</h2>
-            {group.items.map((item) => (
-              menuLinks[item]
-                ? <Link key={item} to={menuLinks[item]}>{item}</Link>
-                : <a key={item} href="#indicadores">{item}</a>
-            ))}
+            {group.items.map((item) => <Link className={active(menuLinks[item]) ? 'active' : ''} key={item} to={menuLinks[item]}>{item}</Link>)}
           </section>
         ))}
       </nav>

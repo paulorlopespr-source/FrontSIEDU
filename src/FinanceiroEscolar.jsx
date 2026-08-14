@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { api } from './services/api';
 import './financeiro-escolar.css';
 
@@ -100,7 +100,11 @@ function Field({ label, children, wide = false }) {
 }
 
 export default function FinanceiroEscolar({ token, user, onLogout, portal = 'diretor' }) {
-  const [tab, setTab] = useState('recursos');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const allowedTabs = ['recursos', 'despesas', 'contas', 'auditoria'];
+  const requestedTab = new URLSearchParams(location.search).get('tab');
+  const [tab, setTab] = useState(allowedTabs.includes(requestedTab) ? requestedTab : 'recursos');
   const [data, setData] = useState(emptyData);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -141,6 +145,15 @@ export default function FinanceiroEscolar({ token, user, onLogout, portal = 'dir
   useEffect(() => {
     load();
   }, [token]);
+
+  useEffect(() => {
+    const requested = new URLSearchParams(location.search).get('tab');
+    setTab(allowedTabs.includes(requested) ? requested : 'recursos');
+  }, [location.search]);
+
+  function selectTab(value) {
+    navigate(`${location.pathname}?tab=${value}`);
+  }
 
   const totals = useMemo(() => ({
     allocated: data.allocations.reduce((total, item) => total + Number(item.valor_alocado), 0),
@@ -268,10 +281,10 @@ export default function FinanceiroEscolar({ token, user, onLogout, portal = 'dir
       </section>
 
       <nav className="finance-tabs">
-        <button type="button" onClick={() => setTab('recursos')} className={tab === 'recursos' ? 'active' : ''}>Recursos</button>
-        <button type="button" onClick={() => setTab('despesas')} className={tab === 'despesas' ? 'active' : ''}>Despesas e manutenção</button>
-        <button type="button" onClick={() => setTab('contas')} className={tab === 'contas' ? 'active' : ''}>Prestação de contas</button>
-        {data.municipal && <button type="button" onClick={() => setTab('auditoria')} className={tab === 'auditoria' ? 'active' : ''}>Auditoria</button>}
+        <button type="button" onClick={() => selectTab('recursos')} className={tab === 'recursos' ? 'active' : ''}>Recursos</button>
+        <button type="button" onClick={() => selectTab('despesas')} className={tab === 'despesas' ? 'active' : ''}>Despesas e manutenção</button>
+        <button type="button" onClick={() => selectTab('contas')} className={tab === 'contas' ? 'active' : ''}>Prestação de contas</button>
+        {data.municipal && <button type="button" onClick={() => selectTab('auditoria')} className={tab === 'auditoria' ? 'active' : ''}>Auditoria</button>}
       </nav>
 
       {error && <p className="finance-feedback error">{error}</p>}

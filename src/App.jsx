@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { api } from './services/api';
 import GestorDashboard from './GestorDashboard';
+import GestorRede from './GestorRede';
 import SuperintendenciaDashboard from './SuperintendenciaDashboard';
 import CoordenadorDashboard from './CoordenadorDashboard';
 import ProfessorDashboard from './ProfessorDashboard';
@@ -797,6 +798,11 @@ export default function App() {
             ) : <AccessDenied user={session?.user} />}
           </Protected>
         }
+      />
+
+      <Route
+        path="/gestor/rede/:modulo"
+        element={<Protected token={session?.token}>{isMunicipalManager(session?.user) ? <GestorRede token={session?.token} user={session?.user} onLogout={logout} /> : <AccessDenied user={session?.user} />}</Protected>}
       />
 
       <Route
