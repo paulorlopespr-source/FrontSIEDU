@@ -16,6 +16,9 @@ import ProfessorProvaImpressao from './ProfessorProvaImpressao';
 import ProfessorMateriais from './ProfessorMateriais';
 import ProfessorRelatorios from './ProfessorRelatorios';
 import ProfessorCalendario from './ProfessorCalendario';
+import ProfessorPerfil from './ProfessorPerfil';
+import ProfessorMensagens from './ProfessorMensagens';
+import CoordenadorPlanos from './CoordenadorPlanos';
 import AlunoPortal from './AlunoPortal';
 import AprendizagemGestao from './AprendizagemGestao';
 import CalendarioEscolarGestao from './CalendarioEscolarGestao';
@@ -673,6 +676,21 @@ export default function App() {
       <Route
         path="/professor/relatorios"
         element={<Protected token={session?.token}>{isProfessor(session?.user) ? <ProfessorRelatorios token={session?.token} /> : <Navigate to={destinationFor(session?.user)} replace />}</Protected>}
+      />
+
+      <Route
+        path="/professor/perfil"
+        element={<Protected token={session?.token}>{isProfessor(session?.user) ? <ProfessorPerfil token={session?.token} user={session?.user} /> : <Navigate to={destinationFor(session?.user)} replace />}</Protected>}
+      />
+
+      <Route
+        path="/professor/mensagens"
+        element={<Protected token={session?.token}>{isProfessor(session?.user) ? <ProfessorMensagens token={session?.token} /> : <Navigate to={destinationFor(session?.user)} replace />}</Protected>}
+      />
+
+      <Route
+        path="/coordenacao/planos"
+        element={<Protected token={session?.token}>{(isMunicipalCoordinator(session?.user) || session?.user?.perfil === 'Coordenador Pedagógico') ? <CoordenadorPlanos token={session?.token} /> : <AccessDenied user={session?.user} />}</Protected>}
       />
 
       <Route

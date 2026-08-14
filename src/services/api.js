@@ -49,6 +49,20 @@ function post(path, data, token) {
   }, token);
 }
 
+async function download(path, filename, token) {
+  const response = await fetch(`${API_URL}${path}`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+  if (!response.ok) {
+    let message = 'Não foi possível baixar o arquivo.';
+    try { message = (await response.json()).message || message; } catch { /* resposta sem JSON */ }
+    throw new Error(message);
+  }
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url; anchor.download = filename || 'arquivo'; document.body.appendChild(anchor); anchor.click(); anchor.remove();
+  URL.revokeObjectURL(url);
+}
+
 export const api = {
   login(usuario, senha) {
     return post('/auth/login', { usuario, senha });
@@ -215,6 +229,22 @@ export const api = {
     return request(`/professor/lesson-plans/${id}`, { method: 'PUT', body: JSON.stringify(data) }, token);
   },
 
+  submitProfessorLessonPlan(id, token) {
+    return post(`/professor/lesson-plans/${id}/submit`, {}, token);
+  },
+
+  getProfessorLessonPlanHistory(id, token) {
+    return request(`/professor/lesson-plans/${id}/history`, {}, token);
+  },
+
+  listLessonPlansForReview(status, token) {
+    return request(`/professor/lesson-plans/review${status ? `?status=${encodeURIComponent(status)}` : ''}`, {}, token);
+  },
+
+  reviewProfessorLessonPlan(id, acao, parecer, token) {
+    return request(`/professor/lesson-plans/${id}/review`, { method: 'PUT', body: JSON.stringify({ acao, parecer }) }, token);
+  },
+
   getProfessorSchedule(token) {
     return request('/professor/schedule', {}, token);
   },
@@ -225,6 +255,14 @@ export const api = {
 
   createProfessorActivity(data, token) {
     return post('/professor/activities', data, token);
+  },
+
+  updateProfessorActivity(id, data, token) {
+    return request(`/professor/activities/${id}`, { method: 'PUT', body: JSON.stringify(data) }, token);
+  },
+
+  cancelProfessorActivity(id, motivo, token) {
+    return request(`/professor/activities/${id}/cancel`, { method: 'PATCH', body: JSON.stringify({ motivo }) }, token);
   },
 
   listProfessorQuestions(token) {
@@ -262,6 +300,20 @@ export const api = {
   deleteClassMaterial(id, token) {
     return request(`/professor/materials/${id}`, { method: 'DELETE' }, token);
   },
+
+  downloadClassMaterial(id, filename, token) {
+    return download(`/professor/materials/${id}/attachment`, filename, token);
+  },
+
+  getProfessorProfile(token) { return request('/professor/profile', {}, token); },
+  updateProfessorProfile(data, token) { return request('/professor/profile', { method: 'PUT', body: JSON.stringify(data) }, token); },
+  updateProfessorPhoto(foto, token) { return request('/professor/profile/photo', { method: 'PUT', body: JSON.stringify({ foto }) }, token); },
+  deleteProfessorPhoto(token) { return request('/professor/profile/photo', { method: 'DELETE' }, token); },
+  listProfessorMessageContacts(token) { return request('/professor/messages/contacts', {}, token); },
+  listProfessorMessages(token) { return request('/professor/messages', {}, token); },
+  sendProfessorMessage(data, token) { return post('/professor/messages', data, token); },
+  readProfessorMessage(id, token) { return request(`/professor/messages/${id}/read`, { method: 'PATCH' }, token); },
+  getProfessorHistory(token) { return request('/professor/history', {}, token); },
 
   getProfessorClassReports(token) {
     return request('/professor/reports/classes', {}, token);

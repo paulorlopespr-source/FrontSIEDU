@@ -13,10 +13,11 @@ export default function CoordenadorDashboard({ user, token, onLogout }) {
   const [minutes, setMinutes] = useState(0);
   const [startedAt, setStartedAt] = useState(null);
   const [notice, setNotice] = useState('');
+  const [pendingPlans, setPendingPlans] = useState(0);
 
   useEffect(() => {
-    Promise.all([api.listSchools(token).catch(() => []), api.getManagerDashboard(token).catch(() => ({ summary: {} }))])
-      .then(([units, data]) => { setSchools(units || []); setDashboard(data || { summary: {} }); });
+    Promise.all([api.listSchools(token).catch(() => []), api.getManagerDashboard(token).catch(() => ({ summary: {} })), api.listLessonPlansForReview('Enviado para aprovação', token).catch(() => [])])
+      .then(([units, data, plans]) => { setSchools(units || []); setDashboard(data || { summary: {} }); setPendingPlans(plans.length); });
     const saved = JSON.parse(localStorage.getItem('siedu_coordenacao_jornada') || '{}');
     if (saved.userId === user?.id) {
       setClockedIn(Boolean(saved.startedAt));
@@ -47,7 +48,6 @@ export default function CoordenadorDashboard({ user, token, onLogout }) {
     setMinutes(0); setStartedAt(now); setClockedIn(true); setNotice('Jornada iniciada. O tempo de trabalho está sendo contabilizado.');
   }
 
-  const pendingPlans = 3;
   const cards = [
     ['🏫', 'Turmas acompanhadas', dashboard.summary?.classes || 0, '#1674e8'],
     ['👩‍🏫', 'Professores acompanhados', dashboard.summary?.professors || 0, '#14a96d'],
@@ -69,7 +69,7 @@ export default function CoordenadorDashboard({ user, token, onLogout }) {
     <main style={{ display: 'grid', gridTemplateColumns: '240px 1fr', minHeight: 'calc(100vh - 78px)' }}>
       <aside style={{ background: 'linear-gradient(#063675,#04285b)', color: '#fff', padding: '28px 18px' }}>
         <h1 style={{ margin: 0, fontSize: 30 }}>SIEDU</h1><p style={{ fontSize: 13, opacity: .86 }}>Sistema Integrado de Educação</p>
-        {['Dashboard', 'Turmas', 'Professores', 'Alunos', 'Diário de classe', 'Planejamento', 'Frequência', 'Avaliações e IDEB', 'Relatórios', 'Comunicação', 'Agenda', 'Calendário escolar', 'Ocorrências'].map((item, index) => <button type="button" key={item} onClick={() => item === 'Calendário escolar' ? window.location.assign('/calendario-escolar') : setNotice(index === 0 ? 'Você já está no painel principal.' : `${item}: módulo em preparação para a próxima etapa da versão beta.`)} style={{ width: '100%', padding: '12px 10px', marginTop: index === 0 ? 18 : 2, borderRadius: 8, background: index === 0 ? '#1476ef' : 'transparent', fontWeight: 600, textAlign: 'left' }}>{item}</button>)}
+        {['Dashboard', 'Turmas', 'Professores', 'Alunos', 'Diário de classe', 'Planejamento', 'Frequência', 'Avaliações e IDEB', 'Relatórios', 'Comunicação', 'Agenda', 'Calendário escolar', 'Ocorrências'].map((item, index) => <button type="button" key={item} onClick={() => item === 'Calendário escolar' ? window.location.assign('/calendario-escolar') : item === 'Planejamento' ? window.location.assign('/coordenacao/planos') : setNotice(index === 0 ? 'Você já está no painel principal.' : `${item}: módulo em preparação para a próxima etapa da versão beta.`)} style={{ width: '100%', padding: '12px 10px', marginTop: index === 0 ? 18 : 2, borderRadius: 8, background: index === 0 ? '#1476ef' : 'transparent', fontWeight: 600, textAlign: 'left' }}>{item}</button>)}
         <p style={{ marginTop: 38, borderTop: '1px solid #ffffff33', paddingTop: 18, fontSize: 12 }}>Secretaria Municipal de Educação<br />Prefeitura de Pindobaçu - Bahia</p>
       </aside>
       <section style={{ padding: '32px 3.5%', overflow: 'hidden' }}>
@@ -81,7 +81,7 @@ export default function CoordenadorDashboard({ user, token, onLogout }) {
         <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 18, marginBottom: 18 }}>
           <article style={{ background: '#fff', padding: 22, borderRadius: 13, boxShadow: '0 2px 12px #dbe4f2' }}><h3 style={{ marginTop: 0 }}>📅 Calendário escolar</h3><p>Cadastre períodos letivos, avaliações, simulados, reuniões, feriados e eventos oficiais.</p><button type="button" onClick={() => window.location.assign('/calendario-escolar')}>Gerenciar calendário completo</button></article>
           <article style={{ background: '#fff', padding: 22, borderRadius: 13, boxShadow: '0 2px 12px #dbe4f2' }}><h3 style={{ marginTop: 0 }}>📚 Desempenho por disciplina</h3>{[['Português','7,8'],['Matemática','6,9'],['Ciências','7,6'],['História','7,2']].map(([name,value]) => <p key={name} style={{ display:'flex', justifyContent:'space-between', borderBottom:'1px solid #edf1f7', paddingBottom:7 }}><span>{name}</span><b>{value}</b></p>)}</article>
-          <article style={{ background: '#fff', padding: 22, borderRadius: 13, boxShadow: '0 2px 12px #dbe4f2' }}><h3 style={{ marginTop: 0 }}>📝 Planos de aula para aprovar</h3>{['Plano de Matemática — 7º Ano','Plano de Ciências — 8º Ano','Plano de Leitura — 6º Ano'].map((plan) => <p key={plan} style={{ borderBottom:'1px solid #edf1f7', paddingBottom:8 }}><b>{plan}</b><br /><button type="button" onClick={() => setNotice(plan + ' aprovado.')}>Aprovar</button> <button type="button" onClick={() => setNotice('Solicitada correção: ' + plan)}>Solicitar correção</button></p>)}</article>
+          <article style={{ background: '#fff', padding: 22, borderRadius: 13, boxShadow: '0 2px 12px #dbe4f2' }}><h3 style={{ marginTop: 0 }}>📝 Planos de aula para aprovar</h3><p><b>{pendingPlans}</b> plano(s) aguardam análise pedagógica.</p><button type="button" onClick={() => window.location.assign('/coordenacao/planos')}>Abrir fila de revisão</button></article>
         </section>
         <section style={{ display: 'grid', gridTemplateColumns: '1.2fr .8fr', gap: 18 }}>
           <article style={{ background: '#fff', padding: 22, borderRadius: 13, boxShadow: '0 2px 12px #dbe4f2' }}><h3 style={{ marginTop: 0 }}>Desempenho das turmas</h3><div style={{ height: 220, display: 'flex', alignItems: 'end', gap: 18, borderBottom: '1px solid #dce6f5', padding: '0 20px' }}>{[81, 76, 68, 72, 65, 59, 71, 67].map((score, i) => <div key={i} style={{ flex: 1, textAlign: 'center' }}><small>{(score / 10).toFixed(1)}</small><div style={{ height: score * 1.8, background: '#176fe3', borderRadius: '5px 5px 0 0', marginTop: 5 }} /><small>{i + 6}º Ano</small></div>)}</div><p style={{ color: '#176fe3', textAlign: 'right' }}>Ver relatório completo →</p></article>
