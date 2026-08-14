@@ -32,6 +32,13 @@ export const isSuperintendent = (user) => user?.perfil === profiles.SUPERINTENDE
 export const isMunicipalCoordinator = (user) => user?.perfil === profiles.MUNICIPAL_COORDINATOR;
 export const isProfessor = (user) => user?.perfil === profiles.PROFESSOR;
 export const isStudent = (user) => user?.perfil === profiles.STUDENT;
+export const canManageLearning = (user) => Boolean(user && (
+  isMunicipalManager(user)
+  || isSuperintendent(user)
+  || isMunicipalCoordinator(user)
+  || isProfessor(user)
+  || user.perfil === profiles.SCHOOL_COORDINATOR
+));
 export const canAccessSchoolPortal = (user) => schoolPortalProfiles.has(user?.perfil);
 export const canManageSchoolStaff = (user) => schoolManagers.has(user?.perfil);
 export const canManageSchoolAcademics = (user) => schoolAcademicProfiles.has(user?.perfil);

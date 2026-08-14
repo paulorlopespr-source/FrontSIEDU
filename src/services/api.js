@@ -283,6 +283,40 @@ export const api = {
     return request('/student/portal', {}, token);
   },
 
+  getLearningManagement(token) {
+    return request('/learning/management', {}, token);
+  },
+
+  createCycleAssessment(data, token) {
+    return post('/learning/cycles', data, token);
+  },
+
+  getCycleResults(id, token) {
+    return request(`/learning/cycles/${id}/results`, {}, token);
+  },
+
+  saveCycleResult(id, data, token) {
+    return request(`/learning/cycles/${id}/results`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }, token);
+  },
+
+  createRevisionTrail(data, token) {
+    return post('/learning/trails', data, token);
+  },
+
+  updateRevisionTrail(id, data, token) {
+    return request(`/learning/trails/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }, token);
+  },
+
+  createSaebSimulation(data, token) {
+    return post('/learning/saeb', data, token);
+  },
+
   createProfessorCalendarEvent(data, token) {
     return post('/professor/calendar-events', data, token);
   },

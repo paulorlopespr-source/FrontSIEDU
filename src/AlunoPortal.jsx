@@ -8,6 +8,10 @@ const sections = [
   ['turma', '🎓', 'Turma e horários'],
   ['materiais', '📚', 'Materiais'],
   ['atividades', '📝', 'Atividades'],
+  ['ciclos', '🔄', 'Avaliações de Ciclo'],
+  ['trilhas', '🧭', 'Trilhas de Revisão'],
+  ['aprendizagem', '📈', 'Aprendizagem'],
+  ['saeb', '🎯', 'Simulado SAEB'],
   ['notas', '📊', 'Notas e boletim'],
   ['frequencia', '✓', 'Frequência'],
   ['calendario', '📅', 'Calendário'],
@@ -25,6 +29,10 @@ const initialData = {
   frequencia: { registros: [], aulas: 0, faltas: 0, percentual: 100 },
   calendario: [],
   notificacoes: [],
+  avaliacoesCiclo: [],
+  trilhasRevisao: [],
+  simuladosSaeb: [],
+  painelAprendizagem: { mediaGeral: null, evolucao: [], pendencias: 0, trilhasConcluidas: 0, trilhasDisponiveis: 0, avaliacoesCiclo: 0 },
   resumo: { disciplinas: 0, materiais: 0, pendencias: 0, notificacoesNaoLidas: 0 },
 };
 
@@ -121,6 +129,29 @@ export default function AlunoPortal({ user, token, onLogout }) {
       <article className="student-card student-report"><div className="student-report-head"><img src="/images/prefeitura.png" alt="Prefeitura de Pindobaçu"/><div><h2>Boletim escolar</h2><p>{data.aluno?.nome} · {data.aluno?.turma} · {data.aluno?.anoLetivo}</p></div></div><div className="student-table-wrap"><table><thead><tr><th>Data</th><th>Disciplina</th><th>Avaliação</th><th>Bimestre</th><th>Nota</th></tr></thead><tbody>{data.notas.map((item) => <tr key={item.id}><td>{date(item.data)}</td><td>{item.disciplina}</td><td><b>{item.titulo}</b><small>Vale {Number(item.valorMaximo).toFixed(1)} pontos</small></td><td>{item.bimestre}º</td><td><strong className={item.nota != null && item.nota < 6 ? 'grade-low' : 'grade-ok'}>{grade(item.nota)}</strong></td></tr>)}</tbody></table></div>{!data.notas.length && <Empty>Nenhuma nota lançada.</Empty>}</article></>;
   }
 
+  function renderCycles() {
+    return <><SectionTitle eyebrow="ACOMPANHAMENTO QUINZENAL" title="Avaliações de Ciclo" description="Atividades por disciplina, disponibilizadas a partir do 6º ano, com nota e feedback definidos pelo professor." />
+      <section className="student-material-grid">{data.avaliacoesCiclo.map((item) => <article className="student-card student-cycle-card" key={item.id}><div className="student-card-heading"><div><small>{item.disciplina} · CICLO {item.cicloNumero}</small><h2>{item.titulo}</h2></div><span className={statusClass(item.status)}>{item.status}</span></div><p>{item.descricao || 'Avaliação quinzenal da disciplina.'}</p><div className="student-cycle-dates"><span><small>INÍCIO</small><b>{date(item.dataInicio)}</b></span><span><small>ENTREGA</small><b>{date(item.dataFim)}</b></span><span><small>VALOR</small><b>{Number(item.valorMaximo).toFixed(1)} pts</b></span></div>{item.instrucoes && <div className="student-material-text">{item.instrucoes}</div>}<div className="student-cycle-result"><span>Nota</span><strong>{grade(item.nota)}</strong></div>{item.feedback && <p className="student-feedback"><b>Feedback do professor:</b> {item.feedback}</p>}<small>Professor(a): {item.professor}</small></article>)}{!data.avaliacoesCiclo.length && <Empty>Nenhuma Avaliação de Ciclo disponível para sua turma.</Empty>}</section></>;
+  }
+
+  function renderTrails() {
+    return <><SectionTitle eyebrow="RECOMPOSIÇÃO DA APRENDIZAGEM" title="Trilhas de Revisão" description="Exercícios e conteúdos sugeridos por professores e coordenadores após a análise dos resultados." />
+      <section className="student-material-grid">{data.trilhasRevisao.map((item) => <article className="student-card student-trail-card" key={item.id}><div className="student-card-heading"><div><small>{item.disciplina} · VERSÃO {item.versao}</small><h2>{item.titulo}</h2></div><span className={statusClass(item.status)}>{item.status}</span></div><p><b>Objetivo:</b> {item.objetivo}</p><div className="student-learning-block"><small>CONTEÚDOS SUGERIDOS</small><p>{item.conteudos}</p></div><div className="student-learning-block"><small>EXERCÍCIOS</small><p>{item.exercicios}</p></div>{item.criterioResultado && <p className="student-feedback"><b>Por que esta trilha foi indicada:</b> {item.criterioResultado}</p>}<div className="student-progress"><span style={{ width: `${item.progresso}%` }} /><b>{item.progresso}% concluído</b></div><small>Elaborada por: {item.perfilCriador}</small></article>)}{!data.trilhasRevisao.length && <Empty>Nenhuma trilha indicada neste momento.</Empty>}</section></>;
+  }
+
+  function renderLearning() {
+    const panel = data.painelAprendizagem;
+    return <><SectionTitle eyebrow="VISÃO INTEGRADA" title="Painel de Aprendizagem" description="Desempenho, notas, evolução e pendências em um único lugar." />
+      <section className="student-summary-grid student-learning-summary"><article><span className="student-icon purple">📊</span><div><small>Média geral</small><strong>{grade(panel.mediaGeral)}</strong><p>avaliações regulares e ciclos</p></div></article><article><span className="student-icon orange">⚠</span><div><small>Pendências</small><strong>{panel.pendencias}</strong><p>ações que exigem atenção</p></div></article><article><span className="student-icon blue">🔄</span><div><small>Ciclos</small><strong>{panel.avaliacoesCiclo}</strong><p>avaliações recebidas</p></div></article><article><span className="student-icon green">🧭</span><div><small>Trilhas</small><strong>{panel.trilhasConcluidas}/{panel.trilhasDisponiveis}</strong><p>concluídas</p></div></article></section>
+      <section className="student-two-columns"><article className="student-card"><h2>Evolução das notas</h2><div className="student-evolution">{panel.evolucao.map((item) => <div key={item.id}><div><b>{item.disciplina}</b><small>{item.titulo} · {date(item.data)}</small></div><span><i style={{ width: `${Math.min(100, Number(item.nota) * 10)}%` }} /></span><strong>{grade(item.nota)}</strong></div>)}{!panel.evolucao.length && <Empty>A evolução aparecerá após o lançamento das notas.</Empty>}</div></article><article className="student-card"><h2>Orientação pedagógica</h2><p>Use as Trilhas de Revisão para reforçar habilidades indicadas após cada resultado.</p><div className="student-learning-links"><Link to="/aluno/ciclos">Ver Avaliações de Ciclo</Link><Link to="/aluno/trilhas">Abrir Trilhas de Revisão</Link><Link to="/aluno/saeb">Consultar agenda SAEB</Link></div></article></section>
+    </>;
+  }
+
+  function renderSaeb() {
+    return <><SectionTitle eyebrow="DIAGNÓSTICO MUNICIPAL" title="Simulado SAEB" description="Avaliação alinhada às matrizes do SAEB e definida pela Secretaria Municipal e Coordenação de Ensino." />
+      <section className="student-timeline student-saeb-list">{data.simuladosSaeb.map((item) => <article key={item.id}><time><b>{date(item.dataAplicacao).slice(0, 5)}</b><span>{item.horaInicio || 'Horário a definir'}</span></time><div><small>{item.areaConhecimento} · {item.status}</small><h2>{item.titulo}</h2><p>{item.matrizReferencia}</p><div className="student-saeb-meta"><span>⏱ {item.duracaoMinutos} minutos</span><span>📝 {item.quantidadeQuestoes} questões</span><span>🎓 {item.serieAno || 'Rede municipal'}</span></div>{item.instrucoes && <p><b>Orientações:</b> {item.instrucoes}</p>}{item.acertos != null && <p className="student-feedback"><b>Resultado:</b> {item.acertos} acertos · proficiência {item.proficiencia || '—'} · {item.nivelDesempenho || 'nível em análise'}</p>}</div></article>)}{!data.simuladosSaeb.length && <Empty>Nenhum Simulado SAEB programado para seu perfil.</Empty>}</section></>;
+  }
+
   function renderAttendance() {
     return <><SectionTitle eyebrow="ACOMPANHAMENTO" title="Frequência e faltas" description="Presenças registradas no diário de classe." />
       <section className="student-attendance"><article><small>FREQUÊNCIA</small><strong>{data.frequencia.percentual}%</strong><p>Percentual acumulado</p></article><article><small>AULAS REGISTRADAS</small><strong>{data.frequencia.aulas}</strong><p>No período atual</p></article><article><small>FALTAS</small><strong>{data.frequencia.faltas}</strong><p>Consulte as datas abaixo</p></article></section>
@@ -142,6 +173,10 @@ export default function AlunoPortal({ user, token, onLogout }) {
     turma: renderClass,
     materiais: renderMaterials,
     atividades: renderActivities,
+    ciclos: renderCycles,
+    trilhas: renderTrails,
+    aprendizagem: renderLearning,
+    saeb: renderSaeb,
     notas: renderGrades,
     frequencia: renderAttendance,
     calendario: renderCalendar,

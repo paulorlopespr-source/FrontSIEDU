@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { canAccessSchoolPortal, canManageSchoolStaff, destinationFor, isStudent } from '../src/permissions.js';
+import { canAccessSchoolPortal, canManageLearning, canManageSchoolStaff, destinationFor, isStudent } from '../src/permissions.js';
 
 test('direciona cada perfil implementado ao portal correto', () => {
   assert.equal(destinationFor({ perfil: 'Super Administrador' }), '/gestor');
@@ -27,4 +27,11 @@ test('limita ações de direção aos gestores da escola', () => {
   assert.equal(canAccessSchoolPortal({ perfil: 'Secretário Escolar' }), true);
   assert.equal(canManageSchoolStaff({ perfil: 'Secretário Escolar' }), false);
   assert.equal(canManageSchoolStaff({ perfil: 'Diretor' }), true);
+});
+
+test('separa gestão da aprendizagem do acesso exclusivo do aluno', () => {
+  assert.equal(canManageLearning({ perfil: 'Professor' }), true);
+  assert.equal(canManageLearning({ perfil: 'Coordenador Pedagógico Municipal' }), true);
+  assert.equal(canManageLearning({ perfil: 'Secretário Municipal de Educação' }), true);
+  assert.equal(canManageLearning({ perfil: 'Aluno' }), false);
 });
