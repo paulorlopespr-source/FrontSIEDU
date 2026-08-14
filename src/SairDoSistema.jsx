@@ -6,6 +6,7 @@ export default function SairDoSistema() {
       return;
     }
     localStorage.removeItem('sigepin_session');
+    sessionStorage.removeItem('sigepin_session');
     window.location.assign('/login');
   }
 

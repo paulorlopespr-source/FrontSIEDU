@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from './services/api';
+import { canAccessSchoolFinance, canManageSchoolAcademics, canManageSchoolStaff } from './permissions';
 import './diretor-dashboard.css';
 
 const emptySummary = {
@@ -15,6 +16,10 @@ export default function DiretorDashboard({ user, onLogout, token }) {
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const mayManageStaff = canManageSchoolStaff(user);
+  const mayManageAcademics = canManageSchoolAcademics(user);
+  const mayAccessFinance = canAccessSchoolFinance(user);
+  const portalTitle = user?.perfil || 'Gestão escolar';
 
   useEffect(() => {
     let active = true;
@@ -113,15 +118,15 @@ export default function DiretorDashboard({ user, onLogout, token }) {
 
         <nav>
           <h3>Gestão escolar</h3>
-          <Link to="/diretor/turmas">Turmas</Link>
-          <Link to="/diretor/cadastrar-professor">Professores</Link>
-          <Link to="/diretor/matricular-aluno">Alunos</Link>
-          <Link to="/diretor/frequencia">Frequência</Link>
+          {mayManageAcademics && <Link to="/diretor/turmas">Turmas</Link>}
+          {mayManageStaff && <Link to="/diretor/cadastrar-professor">Professores</Link>}
+          {mayManageAcademics && <Link to="/diretor/matricular-aluno">Alunos</Link>}
+          {mayManageAcademics && <Link to="/diretor/frequencia">Frequência</Link>}
 
           <h3>Administração</h3>
-          <Link to="/diretor/documentos">Documentos</Link>
-          <Link to="/diretor/financeiro">Gestão financeira</Link>
-          <Link to="/diretor/historicos">Históricos escolares</Link>
+          {mayManageAcademics && <Link to="/diretor/documentos">Documentos</Link>}
+          {mayAccessFinance && <Link to="/diretor/financeiro">Gestão financeira</Link>}
+          {mayManageAcademics && <Link to="/diretor/historicos">Históricos escolares</Link>}
         </nav>
 
         <button type="button" onClick={onLogout}>
@@ -133,7 +138,7 @@ export default function DiretorDashboard({ user, onLogout, token }) {
         <header>
           <span>&#9776;</span>
           <div>
-            <b>Portal do Diretor</b>
+            <b>Portal de {portalTitle}</b>
             <small>Gestão da Escola</small>
           </div>
           <input placeholder="Pesquisar alunos, turmas, professores, documentos..." />
@@ -150,7 +155,7 @@ export default function DiretorDashboard({ user, onLogout, token }) {
         <main>
           <section className="director-welcome">
             <div>
-              <h1>Bom dia, Diretor(a) {user?.nome || ''}!</h1>
+              <h1>Olá, {user?.nome || portalTitle}!</h1>
               <p>Acompanhe os principais indicadores da sua escola.</p>
             </div>
             <article>
@@ -180,11 +185,12 @@ export default function DiretorDashboard({ user, onLogout, token }) {
 
           <section id="acoes" className="director-quick">
             <h2>Ações rápidas</h2>
-            <Link to="/diretor/cadastrar-professor">Cadastrar professor</Link>
-            <Link to="/diretor/cadastrar-turma">Cadastrar turma</Link>
-            <Link to="/diretor/cadastrar-secretario">Cadastrar secretário</Link>
-            <Link to="/diretor/matricular-aluno">Matricular aluno</Link>
-            <Link to="/diretor/imprimir-documentos">Impressão de documentos</Link>
+            {mayManageStaff && <Link to="/diretor/cadastrar-professor">Cadastrar professor</Link>}
+            {mayManageAcademics && <Link to="/diretor/cadastrar-turma">Cadastrar turma</Link>}
+            {mayManageStaff && <Link to="/diretor/cadastrar-secretario">Cadastrar secretário</Link>}
+            {mayManageAcademics && <Link to="/diretor/matricular-aluno">Matricular aluno</Link>}
+            {mayManageAcademics && <Link to="/diretor/imprimir-documentos">Impressão de documentos</Link>}
+            {!mayManageStaff && !mayManageAcademics && <p>Este perfil possui somente consulta aos indicadores da unidade.</p>}
           </section>
 
           <section className="director-grid">
@@ -193,15 +199,15 @@ export default function DiretorDashboard({ user, onLogout, token }) {
               <div className="director-empty">
                 Sem turmas e avaliações registradas.
               </div>
-              <Link to="/diretor/frequencia">
+              {mayManageAcademics && <Link to="/diretor/frequencia">
                 Ver frequência e desempenho &rarr;
-              </Link>
+              </Link>}
             </article>
 
             <article className="director-panel">
               <h2>Avisos da Secretaria</h2>
               <div className="director-empty">Nenhum aviso recebido.</div>
-              <Link to="/diretor/documentos">Ver documentos &rarr;</Link>
+              {mayManageAcademics && <Link to="/diretor/documentos">Ver documentos &rarr;</Link>}
             </article>
 
             <article className="director-panel">
