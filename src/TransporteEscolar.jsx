@@ -307,6 +307,11 @@ export default function TransporteEscolar({ token, user, onLogout }) {
     );
   }
 
+  function toggleRoute(item) { perform(() => api.updateRouteStatus(item.id, !item.ativo, token), `Rota ${item.ativo ? 'desativada' : 'reativada'}.`); }
+  function toggleVehicle(item) { perform(() => api.updateVehicle(item.id, { ativo: !item.ativo }, token), `Veículo ${item.ativo ? 'desativado' : 'reativado'}.`); }
+  function toggleDriver(item) { perform(() => api.updateDriver(item.id, { ativo: !item.ativo }, token), `Motorista ${item.ativo ? 'desativado' : 'reativado'}.`); }
+  function toggleStudent(item) { perform(() => api.updateTransportStudentStatus(item.id, !item.ativo, token), `Vínculo ${item.ativo ? 'desativado' : 'reativado'}.`); }
+
   if (loading) {
     return <main className="transport-page"><div className="transport-loading">Carregando transporte escolar...</div></main>;
   }
@@ -343,7 +348,7 @@ export default function TransporteEscolar({ token, user, onLogout }) {
           <section className="transport-map-layout">
             <article className="transport-card route-selector">
               <h2>Itinerários cadastrados</h2>
-              {data.routes.length === 0 ? <p className="transport-empty">Nenhuma rota cadastrada.</p> : data.routes.map((item) => <button key={item.id} type="button" className={String(item.id) === String(selectedRouteId) ? 'selected' : ''} onClick={() => setSelectedRouteId(item.id)}><strong>{item.nome}</strong><span>{item.origem || 'Origem'} → {item.destino || 'Destino'}</span><small>{item.total_alunos} aluno(s) · {item.veiculo}</small></button>)}
+              {data.routes.length === 0 ? <p className="transport-empty">Nenhuma rota cadastrada.</p> : data.routes.map((item) => <div key={item.id} style={{display:'flex',gap:6}}><button type="button" className={String(item.id) === String(selectedRouteId) ? 'selected' : ''} onClick={() => setSelectedRouteId(item.id)}><strong>{item.nome}</strong><span>{item.origem || 'Origem'} → {item.destino || 'Destino'}</span><small>{item.total_alunos} aluno(s) · {item.veiculo} · {item.ativo?'Ativa':'Inativa'}</small></button><button type="button" onClick={()=>toggleRoute(item)}>{item.ativo?'Pausar':'Ativar'}</button></div>)}
             </article>
             <article className="transport-card"><RouteMap route={selectedRoute} /></article>
           </section>
@@ -390,7 +395,7 @@ export default function TransporteEscolar({ token, user, onLogout }) {
 
           <section className="transport-card">
             <div className="transport-section-heading"><div><h2>Alunos por rota</h2><p>Selecione uma rota para consultar seus passageiros.</p></div><select value={selectedRouteId} onChange={(event) => setSelectedRouteId(event.target.value)}><option value="">Selecione</option>{data.routes.map((item) => <option key={item.id} value={item.id}>{item.nome}</option>)}</select></div>
-            {selectedRouteStudents.length === 0 ? <p className="transport-empty">Nenhum aluno vinculado à rota selecionada.</p> : <div className="transport-table-wrap"><table className="transport-table"><thead><tr><th>Matrícula/aluno</th><th>Escola/turma</th><th>Embarque</th><th>Responsável</th><th>Contato</th></tr></thead><tbody>{selectedRouteStudents.map((item) => <tr key={item.id}><td><b>{item.nome}</b><small>{item.matricula}</small></td><td>{item.escola || 'Não informada'}<small>{item.turma}</small></td><td>{item.ponto_embarque}</td><td>{item.responsavel}</td><td>{item.contato_responsavel}</td></tr>)}</tbody></table></div>}
+            {selectedRouteStudents.length === 0 ? <p className="transport-empty">Nenhum aluno vinculado à rota selecionada.</p> : <div className="transport-table-wrap"><table className="transport-table"><thead><tr><th>Matrícula/aluno</th><th>Escola/turma</th><th>Embarque</th><th>Responsável</th><th>Contato</th><th>Vínculo</th></tr></thead><tbody>{selectedRouteStudents.map((item) => <tr key={item.id}><td><b>{item.nome}</b><small>{item.matricula}</small></td><td>{item.escola || 'Não informada'}<small>{item.turma}</small></td><td>{item.ponto_embarque}</td><td>{item.responsavel}</td><td>{item.contato_responsavel}</td><td><button type="button" onClick={()=>toggleStudent(item)}>{item.ativo?'Desativar':'Reativar'}</button></td></tr>)}</tbody></table></div>}
           </section>
         </>
       )}
@@ -418,7 +423,7 @@ export default function TransporteEscolar({ token, user, onLogout }) {
           </form>
 
           <section className="transport-card fleet-grid">
-            {data.vehicles.length === 0 ? <p className="transport-empty">Nenhum veículo cadastrado.</p> : data.vehicles.map((item) => <article key={item.id}><div className="vehicle-icon">🚌</div><div><h3>{item.prefixo}</h3><p>{item.marca_modelo || item.tipo} · {item.placa || 'Sem placa'}</p><span className={item.estado === 'Em manutencao' ? 'vehicle-maintenance' : 'vehicle-operating'}>{item.estado === 'Em manutencao' ? 'Em manutenção' : 'Em operação'}</span><small>Próxima manutenção: {date(item.proxima_manutencao)}</small></div></article>)}
+            {data.vehicles.length === 0 ? <p className="transport-empty">Nenhum veículo cadastrado.</p> : data.vehicles.map((item) => <article key={item.id}><div className="vehicle-icon">🚌</div><div><h3>{item.prefixo}</h3><p>{item.marca_modelo || item.tipo} · {item.placa || 'Sem placa'}</p><span className={item.estado === 'Em manutencao' ? 'vehicle-maintenance' : 'vehicle-operating'}>{item.estado === 'Em manutencao' ? 'Em manutenção' : 'Em operação'}</span><small>Próxima manutenção: {date(item.proxima_manutencao)} · {item.ativo?'Ativo':'Inativo'}</small><button type="button" onClick={()=>toggleVehicle(item)}>{item.ativo?'Desativar':'Reativar'}</button></div></article>)}
           </section>
         </>
       )}
@@ -427,7 +432,7 @@ export default function TransporteEscolar({ token, user, onLogout }) {
         <section className="transport-team-grid">
           <form className="transport-card" onSubmit={submitDriver}><h2>Cadastrar motorista</h2><Field label="Nome"><input name="nome" value={driver.nome} onChange={update(setDriver)} required /></Field><Field label="CPF"><input name="cpf" value={driver.cpf} onChange={update(setDriver)} /></Field><Field label="CNH"><input name="cnh" value={driver.cnh} onChange={update(setDriver)} required /></Field><Field label="Validade da CNH"><input type="date" name="validadeCnh" value={driver.validadeCnh} onChange={update(setDriver)} /></Field><Field label="Telefone"><input name="telefone" value={driver.telefone} onChange={update(setDriver)} /></Field><button disabled={saving}>Cadastrar motorista</button></form>
           <form className="transport-card" onSubmit={submitAttendant}><h2>Cadastrar acompanhante</h2><Field label="Nome"><input name="nome" value={attendant.nome} onChange={update(setAttendant)} required /></Field><Field label="CPF"><input name="cpf" value={attendant.cpf} onChange={update(setAttendant)} /></Field><Field label="Telefone"><input name="telefone" value={attendant.telefone} onChange={update(setAttendant)} /></Field><button disabled={saving}>Cadastrar acompanhante</button></form>
-          <article className="transport-card team-list"><h2>Equipe cadastrada</h2><h3>Motoristas</h3>{data.drivers.map((item) => <p key={item.id}><b>{item.nome}</b><span>CNH {item.cnh}</span></p>)}<h3>Acompanhantes</h3>{data.attendants.map((item) => <p key={item.id}><b>{item.nome}</b><span>{item.telefone || 'Sem telefone'}</span></p>)}</article>
+          <article className="transport-card team-list"><h2>Equipe cadastrada</h2><h3>Motoristas</h3>{data.drivers.map((item) => <p key={item.id}><b>{item.nome}</b><span>CNH {item.cnh} · {item.ativo?'Ativo':'Inativo'}</span><button type="button" onClick={()=>toggleDriver(item)}>{item.ativo?'Desativar':'Reativar'}</button></p>)}<h3>Acompanhantes</h3>{data.attendants.map((item) => <p key={item.id}><b>{item.nome}</b><span>{item.telefone || 'Sem telefone'}</span></p>)}</article>
         </section>
       )}
 

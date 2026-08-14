@@ -22,6 +22,7 @@ import CoordenadorPlanos from './CoordenadorPlanos';
 import AlunoPortal from './AlunoPortal';
 import AprendizagemGestao from './AprendizagemGestao';
 import CalendarioEscolarGestao from './CalendarioEscolarGestao';
+import GestaoMunicipal from './GestaoMunicipal';
 import {
   DetalhesEscolaGestor,
   ListaEscolasGestor,
@@ -43,6 +44,7 @@ import {
   canManageSchoolStaff,
   canManageLearning,
   canManageSchoolCalendar,
+  canAccessMunicipalManagement,
   destinationFor,
   isMunicipalCoordinator,
   isMunicipalManager,
@@ -790,6 +792,11 @@ export default function App() {
             ) : <AccessDenied user={session?.user} />}
           </Protected>
         }
+      />
+
+      <Route
+        path="/gestao-municipal"
+        element={<Protected token={session?.token}><Allowed allowed={canAccessMunicipalManagement(session?.user)} user={session?.user}><GestaoMunicipal token={session?.token} user={session?.user} onLogout={logout} /></Allowed></Protected>}
       />
 
       <Route

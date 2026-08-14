@@ -29,6 +29,11 @@ const menuGroups = [
 ];
 
 const menuLinks = {
+  'Indicadores do município': '/gestao-municipal',
+  'Metas e resultados': '/gestao-municipal',
+  'Avaliações e IDEB': '/gestao-municipal',
+  'Relatórios gerenciais': '/gestao-municipal',
+  'Documentos oficiais': '/gestao-municipal',
   Escolas: '/gestor/escolas',
   'Orçamento e financeiro': '/gestor/financeiro',
   'Recursos e convênios': '/gestor/financeiro',
@@ -41,7 +46,7 @@ const quickActions = [
   ['Consultar escolas', '/gestor/escolas', '\u{1F3EB}'],
   ['Gerenciar professores', '/usuarios', '\u{1F469}\u200D\u{1F3EB}'],
   ['Gestão financeira', '/gestor/financeiro', '\u{1F4B0}'],
-  ['Indicadores municipais', '#indicadores', '\u{1F4C8}'],
+  ['Indicadores municipais', '/gestao-municipal', '\u{1F4C8}'],
   ['Auditoria do sistema', '/gestor/auditoria', '\u{1F6E1}\uFE0F'],
   ['Prestação de contas', '/gestor/financeiro', '\u{1F4C4}'],
   ['Convênios e recursos', '/gestor/financeiro', '\u{1F91D}'],
@@ -241,10 +246,10 @@ export default function GestorDashboard({ user, onLogout, token }) {
     { label: 'Professores', value: number(dashboard.summary.professors), detail: 'Usuários ativos', color: 'purple', icon: '👩‍🏫' },
     { label: 'Turmas ativas', value: number(dashboard.summary.classes), detail: 'Total no banco', color: 'orange', icon: '🎓' },
     { label: 'Investimento', value: money(dashboard.summary.investment), detail: `Utilizado: ${money(dashboard.summary.spent)}`, color: 'cyan', icon: '📈' },
-    { label: 'Meta IDEB', value: Number(dashboard.summary.idebTarget).toFixed(1), detail: 'Sem meta cadastrada', color: 'pink', icon: '🎯' },
-    { label: 'Frequência média', value: '—', detail: 'Aguardando lançamentos', color: 'cyan', icon: '✓' },
-    { label: 'Média geral da rede', value: '—', detail: 'Aguardando avaliações', color: 'orange', icon: '📊' },
-    { label: 'Planos de aula pendentes', value: '—', detail: 'Fluxo em preparação', color: 'pink', icon: '📋' },
+    { label: 'Meta IDEB', value: Number(dashboard.summary.idebTarget).toFixed(1), detail: dashboard.academic.ideb.length ? 'Última meta oficial registrada' : 'Sem meta cadastrada', color: 'pink', icon: '🎯' },
+    { label: 'Frequência média', value: `${Number(dashboard.summary.attendance||0).toFixed(1)}%`, detail: 'Consolidado dos diários', color: 'cyan', icon: '✓' },
+    { label: 'Média geral da rede', value: Number(dashboard.summary.average||0).toFixed(1), detail: 'Consolidado das avaliações', color: 'orange', icon: '📊' },
+    { label: 'Planos de aula pendentes', value: number(dashboard.summary.pendingPlans), detail: 'Aguardando coordenação', color: 'pink', icon: '📋' },
   ], [dashboard]);
 
   const today = new Date();
@@ -279,13 +284,13 @@ export default function GestorDashboard({ user, onLogout, token }) {
           </section>
 
           <section className="dashboard-charts">
-            <EmptyAcademicPanel title="Evolução do IDEB" text="Ainda não existem avaliações IDEB registradas no banco." />
+            {dashboard.academic.ideb.length ? <article className="dashboard-panel"><h2>Evolução do IDEB</h2>{dashboard.academic.ideb.map(item=><p key={item.ano}><b>{item.ano}</b> — resultado {Number(item.valor).toFixed(1)} · meta {Number(item.meta||0).toFixed(1)}</p>)}<Link to="/gestao-municipal">Abrir série oficial ›</Link></article> : <EmptyAcademicPanel title="Evolução do IDEB" text="Ainda não existem avaliações IDEB registradas no banco." />}
             <FinancePanel distribution={dashboard.financeDistribution} total={dashboard.summary.investment} />
             <TransportPanel transport={dashboard.transport} />
           </section>
 
           <section className="dashboard-lower">
-            <EmptyAcademicPanel title="Indicadores de qualidade" text="Frequência, aprovação e abandono ainda não possuem registros acadêmicos." />
+            {dashboard.academic.performance.some(item=>item.frequencia||item.media)?<article className="dashboard-panel"><h2>Indicadores de qualidade</h2>{dashboard.academic.performance.slice(0,5).map(item=><p key={item.id}><b>{item.nome}</b> — frequência {Number(item.frequencia).toFixed(1)}% · média {Number(item.media).toFixed(1)}</p>)}<Link to="/gestao-municipal">Ver todas as escolas ›</Link></article>:<EmptyAcademicPanel title="Indicadores de qualidade" text="Frequência e médias serão consolidadas após os lançamentos acadêmicos." />}
             <SchoolRanking schools={dashboard.schoolRanking} />
             <AlertsPanel alerts={dashboard.alerts} />
           </section>

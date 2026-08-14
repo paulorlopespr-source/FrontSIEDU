@@ -261,6 +261,15 @@ export default function UsuariosGestao({ token, onLogout }) {
     } catch (requestError) { setError(requestError.message); }
   }
 
+  async function toggleAccess(item) {
+    try {
+      const next = item.situacaoAcesso === 'ativo' && item.ativo ? 'bloqueado' : 'ativo';
+      await api.updateUser(item.id, { situacaoAcesso: next }, token);
+      setMessage(next === 'ativo' ? 'Acesso do funcionário reativado.' : 'Acesso do funcionário bloqueado sem excluir o cadastro.');
+      await load();
+    } catch (requestError) { setError(requestError.message); }
+  }
+
   return (
     <main className="app-page user-management-page">
       <header className="user-management-header">
@@ -358,7 +367,7 @@ export default function UsuariosGestao({ token, onLogout }) {
 
         <section className="panel user-list-panel">
           <div className="user-list-heading"><div><h2>Funcionários cadastrados</h2><p>Perfis profissionais da rede municipal.</p></div><span>{loading ? 'Carregando...' : `${users.length} cadastro(s)`}</span></div>
-          <div className="user-table-scroll"><table><thead><tr><th>Funcionário</th><th>Perfil</th><th>Unidades</th><th>Acesso</th><th>Ações</th></tr></thead><tbody>{users.map((item) => <tr key={item.id}><td><div className="employee-cell"><span className="employee-avatar">{initials(item.nome)}</span><div><strong>{item.nomeSocial || item.nome}</strong><small>{item.matriculaFuncional || item.usuario}</small></div></div></td><td>{item.perfil}</td><td><div className="school-tags">{(item.escolas || []).map((school) => <span key={school.id}>{school.nome}</span>)}{!item.escolas?.length && <em>Sem vínculo</em>}</div></td><td><span className={`access-status status-${item.situacaoAcesso || 'pendente'}`}>{item.deve_alterar_senha ? 'Primeiro acesso' : item.situacaoAcesso || (item.ativo ? 'Ativo' : 'Inativo')}</span>{item.doisFatoresObrigatorio && <small>2FA obrigatório</small>}</td><td><div className="user-row-actions">{schoolProfiles.has(item.perfil) && <button className="button-secondary" type="button" onClick={() => setEditingBinding({ id: item.id, nome: item.nome, perfil: item.perfil, escolaIds: (item.escolas || []).map((school) => school.id) })}>Escolas</button>}<button className="danger" type="button" onClick={() => remove(item.id)}>Excluir</button></div></td></tr>)}</tbody></table></div>
+          <div className="user-table-scroll"><table><thead><tr><th>Funcionário</th><th>Perfil</th><th>Unidades</th><th>Acesso</th><th>Ações</th></tr></thead><tbody>{users.map((item) => <tr key={item.id}><td><div className="employee-cell"><span className="employee-avatar">{initials(item.nome)}</span><div><strong>{item.nomeSocial || item.nome}</strong><small>{item.matriculaFuncional || item.usuario}</small></div></div></td><td>{item.perfil}</td><td><div className="school-tags">{(item.escolas || []).map((school) => <span key={school.id}>{school.nome}</span>)}{!item.escolas?.length && <em>Sem vínculo</em>}</div></td><td><span className={`access-status status-${item.situacaoAcesso || 'pendente'}`}>{item.deve_alterar_senha ? 'Primeiro acesso' : item.situacaoAcesso || (item.ativo ? 'Ativo' : 'Inativo')}</span>{item.doisFatoresObrigatorio && <small>2FA obrigatório</small>}</td><td><div className="user-row-actions">{schoolProfiles.has(item.perfil) && <button className="button-secondary" type="button" onClick={() => setEditingBinding({ id: item.id, nome: item.nome, perfil: item.perfil, escolaIds: (item.escolas || []).map((school) => school.id) })}>Escolas</button>}<button className="button-secondary" type="button" onClick={()=>toggleAccess(item)}>{item.situacaoAcesso==='ativo'&&item.ativo?'Bloquear':'Reativar'}</button><button className="danger" type="button" onClick={() => remove(item.id)}>Excluir</button></div></td></tr>)}</tbody></table></div>
           {editingBinding && <section className="school-binding-editor"><div className="school-binding-editor-heading"><div><span>EDITAR UNIDADES AUTORIZADAS</span><h3>{editingBinding.nome}</h3><p>{editingBinding.perfil}</p></div><button className="binding-close" type="button" onClick={() => setEditingBinding(null)}>Fechar</button></div><SchoolBindingSelector schools={schools} profile={editingBinding.perfil} selectedIds={editingBinding.escolaIds} allowEmpty onChange={(escolaIds) => setEditingBinding((current) => ({ ...current, escolaIds }))} /><div className="binding-actions"><button type="button" onClick={saveBindings}>Salvar vínculos</button><button className="button-secondary" type="button" onClick={() => setEditingBinding(null)}>Cancelar</button></div></section>}
         </section>
       </section>
