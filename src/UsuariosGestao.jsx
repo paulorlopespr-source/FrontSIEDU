@@ -121,6 +121,15 @@ function Field({ label, required, help, children, wide = false }) {
 
 export default function UsuariosGestao({ token, onLogout }) {
   const [users, setUsers] = useState([]);
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(25);
+  const [pagination, setPagination] = useState({
+    pagina: 1,
+    limite: 25,
+    total: 0,
+    totalPaginas: 0,
+  });
   const [schools, setSchools] = useState([]);
   const [types, setTypes] = useState([]);
   const [form, setForm] = useState(emptyForm);
@@ -132,21 +141,66 @@ export default function UsuariosGestao({ token, onLogout }) {
   const [message, setMessage] = useState('');
   const [credentials, setCredentials] = useState(null);
 
-  async function load() {
+  async function loadUsers() {
     setLoading(true);
     try {
-      const [userList, schoolList, typeList] = await Promise.all([
-        api.listUsers(token), api.listSchools(token), api.listUserTypes(token),
-      ]);
-      const visible = typeList.filter((type) => profiles.includes(type.nome));
-      setUsers(userList);
-      setSchools(schoolList);
-      setTypes([...new Map(visible.map((type) => [type.nome, type])).values()]);
-    } catch (requestError) { setError(requestError.message); }
-    finally { setLoading(false); }
+      const result = await api.listUsers({
+        busca: search.trim(),
+        page,
+        limit,
+      }, token);
+
+      const data = Array.isArray(result?.dados) ? result.dados : [];
+
+      if (data.length === 0 && page > 1) {
+        setPage(1);
+        return;
+      }
+
+      setUsers(data);
+      setPagination(result?.paginacao || {
+        pagina: page,
+        limite: limit,
+        total: 0,
+        totalPaginas: 0,
+      });
+    } catch (requestError) {
+      setError(requestError.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
-  useEffect(() => { load(); }, [token]);
+  useEffect(() => {
+    let active = true;
+
+    Promise.all([
+      api.listSchools(token),
+      api.listUserTypes(token),
+    ])
+      .then(([schoolList, typeList]) => {
+        if (!active) return;
+
+        const visible = typeList.filter((type) => profiles.includes(type.nome));
+        setSchools(schoolList);
+        setTypes([...new Map(visible.map((type) => [type.nome, type])).values()]);
+      })
+      .catch((requestError) => {
+        if (active) setError(requestError.message);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [token]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      loadUsers();
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [token, search, page, limit]);
   const selectedType = useMemo(
     () => types.find((type) => String(type.id) === String(form.tipoUsuarioId)),
     [types, form.tipoUsuarioId],
@@ -237,7 +291,7 @@ export default function UsuariosGestao({ token, onLogout }) {
         : 'Cadastro funcional criado sem acesso operacional ao portal.');
       setForm(emptyForm);
       setActiveTab('pessoais');
-      await load();
+      await loadUsers();
     } catch (requestError) { setError(requestError.message); }
     finally { setSaving(false); }
   }
@@ -248,7 +302,7 @@ export default function UsuariosGestao({ token, onLogout }) {
       await api.updateUserSchools(editingBinding.id, editingBinding.escolaIds, token);
       setEditingBinding(null);
       setMessage('Unidades autorizadas atualizadas e registradas no histórico.');
-      await load();
+      await loadUsers();
     } catch (requestError) { setError(requestError.message); }
   }
 
@@ -257,7 +311,7 @@ export default function UsuariosGestao({ token, onLogout }) {
     try {
       await api.deleteUser(id, token);
       setMessage('Cadastro excluído.');
-      await load();
+      await loadUsers();
     } catch (requestError) { setError(requestError.message); }
   }
 
@@ -266,7 +320,7 @@ export default function UsuariosGestao({ token, onLogout }) {
       const next = item.situacaoAcesso === 'ativo' && item.ativo ? 'bloqueado' : 'ativo';
       await api.updateUser(item.id, { situacaoAcesso: next }, token);
       setMessage(next === 'ativo' ? 'Acesso do funcionário reativado.' : 'Acesso do funcionário bloqueado sem excluir o cadastro.');
-      await load();
+      await loadUsers();
     } catch (requestError) { setError(requestError.message); }
   }
 
@@ -366,8 +420,65 @@ export default function UsuariosGestao({ token, onLogout }) {
         </form>
 
         <section className="panel user-list-panel">
-          <div className="user-list-heading"><div><h2>Funcionários cadastrados</h2><p>Perfis profissionais da rede municipal.</p></div><span>{loading ? 'Carregando...' : `${users.length} cadastro(s)`}</span></div>
+          <div className="user-list-heading">
+            <div>
+              <h2>Funcionários cadastrados</h2>
+              <p>Perfis profissionais da rede municipal.</p>
+            </div>
+
+            <div className="user-list-tools">
+              <input
+                type="search"
+                value={search}
+                onChange={(event) => {
+                  setSearch(event.target.value);
+                  setPage(1);
+                }}
+                placeholder="Buscar funcionário, matrícula, perfil ou CPF"
+              />
+              <span>{loading ? 'Carregando...' : pagination.total + ' cadastro(s)'}</span>
+            </div>
+          </div>
           <div className="user-table-scroll"><table><thead><tr><th>Funcionário</th><th>Perfil</th><th>Unidades</th><th>Acesso</th><th>Ações</th></tr></thead><tbody>{users.map((item) => <tr key={item.id}><td><div className="employee-cell"><span className="employee-avatar">{initials(item.nome)}</span><div><strong>{item.nomeSocial || item.nome}</strong><small>{item.matriculaFuncional || item.usuario}</small></div></div></td><td>{item.perfil}</td><td><div className="school-tags">{(item.escolas || []).map((school) => <span key={school.id}>{school.nome}</span>)}{!item.escolas?.length && <em>Sem vínculo</em>}</div></td><td><span className={`access-status status-${item.situacaoAcesso || 'pendente'}`}>{item.deve_alterar_senha ? 'Primeiro acesso' : item.situacaoAcesso || (item.ativo ? 'Ativo' : 'Inativo')}</span>{item.doisFatoresObrigatorio && <small>2FA obrigatório</small>}</td><td><div className="user-row-actions">{schoolProfiles.has(item.perfil) && <button className="button-secondary" type="button" onClick={() => setEditingBinding({ id: item.id, nome: item.nome, perfil: item.perfil, escolaIds: (item.escolas || []).map((school) => school.id) })}>Escolas</button>}<button className="button-secondary" type="button" onClick={()=>toggleAccess(item)}>{item.situacaoAcesso==='ativo'&&item.ativo?'Bloquear':'Reativar'}</button><button className="danger" type="button" onClick={() => remove(item.id)}>Excluir</button></div></td></tr>)}</tbody></table></div>
+          <div className="user-pagination">
+            <label>
+              Por página
+              <select
+                value={limit}
+                onChange={(event) => {
+                  setLimit(Number(event.target.value));
+                  setPage(1);
+                }}
+              >
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+            </label>
+
+            <span>
+              Página {pagination.totalPaginas ? pagination.pagina : 0}
+              {' '}de {pagination.totalPaginas}
+            </span>
+
+            <div>
+              <button
+                type="button"
+                disabled={pagination.pagina <= 1}
+                onClick={() => setPage((current) => Math.max(1, current - 1))}
+              >
+                Anterior
+              </button>
+              <button
+                type="button"
+                disabled={pagination.pagina >= pagination.totalPaginas}
+                onClick={() => setPage((current) => current + 1)}
+              >
+                Próxima
+              </button>
+            </div>
+          </div>
+
           {editingBinding && <section className="school-binding-editor"><div className="school-binding-editor-heading"><div><span>EDITAR UNIDADES AUTORIZADAS</span><h3>{editingBinding.nome}</h3><p>{editingBinding.perfil}</p></div><button className="binding-close" type="button" onClick={() => setEditingBinding(null)}>Fechar</button></div><SchoolBindingSelector schools={schools} profile={editingBinding.perfil} selectedIds={editingBinding.escolaIds} allowEmpty onChange={(escolaIds) => setEditingBinding((current) => ({ ...current, escolaIds }))} /><div className="binding-actions"><button type="button" onClick={saveBindings}>Salvar vínculos</button><button className="button-secondary" type="button" onClick={() => setEditingBinding(null)}>Cancelar</button></div></section>}
         </section>
       </section>
