@@ -353,6 +353,44 @@
   text-align: center;
 }
 
+.director-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e8f4;
+}
+
+.director-pagination label,
+.director-pagination > div {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.director-pagination label {
+  color: #5d7198;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.director-pagination select {
+  width: auto;
+  margin: 0;
+}
+
+.director-pagination button {
+  margin: 0;
+}
+
+.director-pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 @media (max-width: 1100px) {
   .director-summary-grid,
   .student-info-grid {

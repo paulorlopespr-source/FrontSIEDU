@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { api } from './services/api';
 import { canAccessSchoolFinance, canManageSchoolStaff } from './permissions';
@@ -93,21 +93,27 @@ function formatDate(value) {
 export function ConsultaTurmas({ user, onLogout, token }) {
   const [search, setSearch] = useState('');
   const [classes, setClasses] = useState([]);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(25);
+  const [pagination, setPagination] = useState({
+    pagina: 1,
+    limite: 25,
+    total: 0,
+    totalPaginas: 0,
+  });
+  const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     let active = true;
-    setLoading(true);
-    api.listAcademicClasses({}, token)
+
+    api.getAcademicSummary({}, token)
       .then((data) => {
-        if (active) setClasses(data || []);
+        if (active) setSummary(data);
       })
-      .catch((requestError) => {
-        if (active) setError(requestError.message);
-      })
-      .finally(() => {
-        if (active) setLoading(false);
+      .catch(() => {
+        if (active) setSummary(null);
       });
 
     return () => {
@@ -115,30 +121,50 @@ export function ConsultaTurmas({ user, onLogout, token }) {
     };
   }, [token]);
 
-  const filteredClasses = useMemo(() => {
-    const term = search.trim().toLocaleLowerCase('pt-BR');
-    if (!term) return classes;
+  useEffect(() => {
+    let active = true;
 
-    return classes.filter((schoolClass) => [
-      schoolClass.nome,
-      schoolClass.serieAno,
-      schoolClass.turno,
-      schoolClass.coordenador,
-      schoolClass.escola,
-    ]
-      .join(' ')
-      .toLocaleLowerCase('pt-BR')
-      .includes(term));
-  }, [classes, search]);
+    const timeout = setTimeout(() => {
+      setLoading(true);
+      setError('');
 
-  const totalStudents = classes.reduce(
-    (total, schoolClass) => total + schoolClass.alunosMatriculados,
-    0,
-  );
+      api.listAcademicClasses({
+        busca: search.trim(),
+        page,
+        limit,
+      }, token)
+        .then((data) => {
+          if (!active) return;
+
+          setClasses(Array.isArray(data?.dados) ? data.dados : []);
+          setPagination(data?.paginacao || {
+            pagina: page,
+            limite: limit,
+            total: 0,
+            totalPaginas: 0,
+          });
+        })
+        .catch((requestError) => {
+          if (active) setError(requestError.message);
+        })
+        .finally(() => {
+          if (active) setLoading(false);
+        });
+    }, 300);
+
+    return () => {
+      active = false;
+      clearTimeout(timeout);
+    };
+  }, [token, search, page, limit]);
+
   const totalVacancies = classes.reduce(
     (total, schoolClass) => total + schoolClass.vagasDisponiveis,
     0,
   );
+
+  const hasPreviousPage = pagination.pagina > 1;
+  const hasNextPage = pagination.pagina < pagination.totalPaginas;
 
   return (
     <DiretorAreaLayout user={user} onLogout={onLogout}>
@@ -156,18 +182,18 @@ export function ConsultaTurmas({ user, onLogout, token }) {
       <section className="director-summary-grid">
         <article>
           <span>Turmas</span>
-          <strong>{classes.length}</strong>
-          <small>Total cadastrado</small>
+          <strong>{pagination.total}</strong>
+          <small>Total encontrado</small>
         </article>
         <article>
           <span>Alunos</span>
-          <strong>{totalStudents}</strong>
-          <small>Matriculados nas turmas</small>
+          <strong>{summary?.alunosMatriculados ?? '—'}</strong>
+          <small>Matrículas ativas</small>
         </article>
         <article>
           <span>Vagas disponíveis</span>
           <strong>{totalVacancies}</strong>
-          <small>Conforme a capacidade</small>
+          <small>Nas turmas desta página</small>
         </article>
         <article>
           <span>Fonte dos dados</span>
@@ -180,12 +206,15 @@ export function ConsultaTurmas({ user, onLogout, token }) {
         <div className="director-list-toolbar">
           <div>
             <h2>Turmas da unidade</h2>
-            <p>{filteredClasses.length} turma(s) encontrada(s)</p>
+            <p>{pagination.total} turma(s) encontrada(s)</p>
           </div>
           <input
             type="search"
             value={search}
-            onChange={(event) => setSearch(event.target.value)}
+            onChange={(event) => {
+              setSearch(event.target.value);
+              setPage(1);
+            }}
             placeholder="Buscar turma, escola, turno ou coordenador"
           />
         </div>
@@ -193,63 +222,104 @@ export function ConsultaTurmas({ user, onLogout, token }) {
         {error && <p className="error">{error}</p>}
         {loading ? (
           <LoadingState />
-        ) : filteredClasses.length === 0 ? (
+        ) : classes.length === 0 ? (
           <EmptyState
-            title="Nenhuma turma cadastrada"
-            description="Cadastre a primeira turma para começar a organizar alunos e professores."
-            action={<Link to="/diretor/cadastrar-turma">Cadastrar primeira turma</Link>}
+            title="Nenhuma turma encontrada"
+            description="Não há turmas correspondentes aos filtros informados."
+            action={<Link to="/diretor/cadastrar-turma">Cadastrar turma</Link>}
           />
         ) : (
-          <div className="director-table-scroll">
-            <table className="director-data-table">
-              <thead>
-                <tr>
-                  <th>Turma</th>
-                  <th>Turno</th>
-                  <th>Alunos</th>
-                  <th>Vagas</th>
-                  <th>Professores</th>
-                  <th>Coordenador</th>
-                  <th>Ação</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredClasses.map((schoolClass) => (
-                  <tr key={schoolClass.id}>
-                    <td>
-                      <strong>{schoolClass.nome}</strong>
-                      <small>{schoolClass.serieAno} · {schoolClass.escola}</small>
-                    </td>
-                    <td>{schoolClass.turno}</td>
-                    <td>{schoolClass.alunosMatriculados} de {schoolClass.capacidade}</td>
-                    <td>
-                      <span className={schoolClass.vagasDisponiveis ? 'status-open' : 'status-full'}>
-                        {schoolClass.vagasDisponiveis
-                          ? `${schoolClass.vagasDisponiveis} vagas`
-                          : 'Turma completa'}
-                      </span>
-                    </td>
-                    <td>
-                      {schoolClass.professores.length
-                        ? schoolClass.professores
-                          .map((teacher) => `${teacher.nome} (${teacher.componenteCurricular})`)
-                          .join(', ')
-                        : 'Não informado'}
-                    </td>
-                    <td>{schoolClass.coordenador || 'Não informado'}</td>
-                    <td>
-                      <Link
-                        className="director-row-action"
-                        to={`/diretor/turmas/${schoolClass.id}`}
-                      >
-                        Ver turma
-                      </Link>
-                    </td>
+          <>
+            <div className="director-table-scroll">
+              <table className="director-data-table">
+                <thead>
+                  <tr>
+                    <th>Turma</th>
+                    <th>Turno</th>
+                    <th>Alunos</th>
+                    <th>Vagas</th>
+                    <th>Professores</th>
+                    <th>Coordenador</th>
+                    <th>Ação</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {classes.map((schoolClass) => (
+                    <tr key={schoolClass.id}>
+                      <td>
+                        <strong>{schoolClass.nome}</strong>
+                        <small>{schoolClass.serieAno} · {schoolClass.escola}</small>
+                      </td>
+                      <td>{schoolClass.turno}</td>
+                      <td>{schoolClass.alunosMatriculados} de {schoolClass.capacidade}</td>
+                      <td>
+                        <span className={schoolClass.vagasDisponiveis ? 'status-open' : 'status-full'}>
+                          {schoolClass.vagasDisponiveis
+                            ? `${schoolClass.vagasDisponiveis} vagas`
+                            : 'Turma completa'}
+                        </span>
+                      </td>
+                      <td>
+                        {schoolClass.professores.length
+                          ? schoolClass.professores
+                            .map((teacher) => `${teacher.nome} (${teacher.componenteCurricular})`)
+                            .join(', ')
+                          : 'Não informado'}
+                      </td>
+                      <td>{schoolClass.coordenador || 'Não informado'}</td>
+                      <td>
+                        <Link
+                          className="director-row-action"
+                          to={`/diretor/turmas/${schoolClass.id}`}
+                        >
+                          Ver turma
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="director-pagination">
+              <label>
+                Por página
+                <select
+                  value={limit}
+                  onChange={(event) => {
+                    setLimit(Number(event.target.value));
+                    setPage(1);
+                  }}
+                >
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
+              </label>
+
+              <span>
+                Página {pagination.totalPaginas ? pagination.pagina : 0}
+                {' '}de {pagination.totalPaginas}
+              </span>
+
+              <div>
+                <button
+                  type="button"
+                  disabled={!hasPreviousPage}
+                  onClick={() => setPage((current) => Math.max(1, current - 1))}
+                >
+                  Anterior
+                </button>
+                <button
+                  type="button"
+                  disabled={!hasNextPage}
+                  onClick={() => setPage((current) => current + 1)}
+                >
+                  Próxima
+                </button>
+              </div>
+            </div>
+          </>
         )}
       </section>
     </DiretorAreaLayout>
