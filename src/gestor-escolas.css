@@ -803,3 +803,43 @@
     grid-column: 1 / -1;
   }
 }
+
+
+.manager-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e8f4;
+}
+
+.manager-pagination label,
+.manager-pagination > div {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.manager-pagination label {
+  color: #64729a;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.manager-pagination select {
+  width: auto;
+  margin: 0;
+}
+
+.manager-pagination button {
+  width: auto;
+  margin: 0;
+}
+
+.manager-pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
