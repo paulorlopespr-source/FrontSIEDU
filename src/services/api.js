@@ -80,8 +80,15 @@ export const api = {
     return post('/auth/alterar-senha', { senhaAtual, novaSenha }, token);
   },
 
-  listUsers(token) {
-    return request('/users', {}, token);
+  listUsers(filtersOrToken, token) {
+    const filters = typeof filtersOrToken === 'string'
+      ? {}
+      : (filtersOrToken || {});
+    const authToken = typeof filtersOrToken === 'string'
+      ? filtersOrToken
+      : token;
+
+    return getWithFilters('/users', filters, authToken);
   },
 
   createUser(data, token) {
@@ -103,8 +110,15 @@ export const api = {
     return request(`/users/${id}`, { method: 'DELETE' }, token);
   },
 
-  listSchools(token) {
-    return request('/schools', {}, token);
+  listSchools(filtersOrToken, token) {
+    const filters = typeof filtersOrToken === 'string'
+      ? {}
+      : (filtersOrToken || {});
+    const authToken = typeof filtersOrToken === 'string'
+      ? filtersOrToken
+      : token;
+
+    return getWithFilters('/schools', filters, authToken);
   },
 
   getManagerSchoolOverview(id, token) {

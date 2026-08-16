@@ -46,43 +46,58 @@ function schoolFormFromData(school, secretaries) {
 export function ListaEscolasGestor({ token, user, onLogout }) {
   const [schools, setSchools] = useState([]);
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(25);
+  const [pagination, setPagination] = useState({
+    pagina: 1,
+    limite: 25,
+    total: 0,
+    totalPaginas: 1,
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     let active = true;
 
-    api.listSchools(token)
-      .then((data) => {
-        if (active) setSchools(data);
-      })
-      .catch((requestError) => {
-        if (active) setError(requestError.message);
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
+    const timeout = setTimeout(() => {
+      setLoading(true);
+      setError('');
+
+      api.listSchools({
+        busca: search.trim(),
+        page,
+        limit,
+      }, token)
+        .then((data) => {
+          if (!active) return;
+
+          setSchools(data.dados || []);
+          setPagination(data.paginacao || {
+            pagina: page,
+            limite: limit,
+            total: 0,
+            totalPaginas: 1,
+          });
+        })
+        .catch((requestError) => {
+          if (active) setError(requestError.message);
+        })
+        .finally(() => {
+          if (active) setLoading(false);
+        });
+    }, 300);
 
     return () => {
       active = false;
+      clearTimeout(timeout);
     };
-  }, [token]);
-
-  const filteredSchools = useMemo(() => {
-    const term = search.trim().toLocaleLowerCase('pt-BR');
-    if (!term) return schools;
-
-    return schools.filter((school) => [
-      school.codigo_rede,
-      school.nome,
-      school.categoria,
-      school.localidade,
-      school.diretor,
-    ].some((value) => String(value || '').toLocaleLowerCase('pt-BR').includes(term)));
-  }, [schools, search]);
+  }, [token, search, page, limit]);
 
   const linkedDirectors = schools.filter((school) => school.diretor_usuario_id).length;
-  const localities = new Set(schools.map((school) => school.localidade).filter(Boolean)).size;
+  const localities = new Set(
+    schools.map((school) => school.localidade).filter(Boolean),
+  ).size;
 
   return (
     <GestorSchoolShell user={user} onLogout={onLogout}>
@@ -102,15 +117,15 @@ export function ListaEscolasGestor({ token, user, onLogout }) {
 
       <section className="manager-school-stats">
         <article>
-          <span>Escolas cadastradas</span>
-          <strong>{schools.length}</strong>
+          <span>Escolas encontradas</span>
+          <strong>{pagination.total}</strong>
         </article>
         <article>
-          <span>Diretores vinculados</span>
+          <span>Diretores nesta página</span>
           <strong>{linkedDirectors}</strong>
         </article>
         <article>
-          <span>Localidades atendidas</span>
+          <span>Localidades nesta página</span>
           <strong>{localities}</strong>
         </article>
       </section>
@@ -125,7 +140,10 @@ export function ListaEscolasGestor({ token, user, onLogout }) {
             <span>⌕</span>
             <input
               value={search}
-              onChange={(event) => setSearch(event.target.value)}
+              onChange={(event) => {
+                setSearch(event.target.value);
+                setPage(1);
+              }}
               placeholder="Buscar por nome, código, localidade ou diretor"
             />
           </label>
@@ -134,9 +152,9 @@ export function ListaEscolasGestor({ token, user, onLogout }) {
         {loading && <p className="manager-state">Carregando unidades...</p>}
         {error && <p className="manager-error">{error}</p>}
 
-        {!loading && !error && (
+        {!loading && !error && schools.length > 0 && (
           <div className="manager-school-grid">
-            {filteredSchools.map((school) => (
+            {schools.map((school) => (
               <article className="manager-school-card" key={school.id}>
                 <div className="manager-school-code">
                   {school.codigo_rede || String(school.id).padStart(2, '0')}
@@ -162,8 +180,48 @@ export function ListaEscolasGestor({ token, user, onLogout }) {
           </div>
         )}
 
-        {!loading && !error && filteredSchools.length === 0 && (
+        {!loading && !error && schools.length === 0 && (
           <p className="manager-state">Nenhuma escola corresponde à busca.</p>
+        )}
+
+        {!loading && !error && pagination.total > 0 && (
+          <div className="manager-pagination">
+            <label>
+              Por página
+              <select
+                value={limit}
+                onChange={(event) => {
+                  setLimit(Number(event.target.value));
+                  setPage(1);
+                }}
+              >
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+            </label>
+
+            <span>
+              Página {pagination.pagina} de {Math.max(pagination.totalPaginas, 1)}
+            </span>
+
+            <div>
+              <button
+                type="button"
+                disabled={page <= 1}
+                onClick={() => setPage((current) => Math.max(current - 1, 1))}
+              >
+                Anterior
+              </button>
+              <button
+                type="button"
+                disabled={page >= pagination.totalPaginas}
+                onClick={() => setPage((current) => current + 1)}
+              >
+                Próxima
+              </button>
+            </div>
+          </div>
         )}
       </section>
     </GestorSchoolShell>
