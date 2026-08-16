@@ -20,6 +20,7 @@ import ProfessorCalendario from './ProfessorCalendario';
 import ProfessorPerfil from './ProfessorPerfil';
 import ProfessorMensagens from './ProfessorMensagens';
 import CoordenadorPlanos from './CoordenadorPlanos';
+import CoordenadorProfessores from './CoordenadorProfessores';
 import AlunoPortal from './AlunoPortal';
 import AprendizagemGestao from './AprendizagemGestao';
 import CalendarioEscolarGestao from './CalendarioEscolarGestao';
@@ -775,6 +776,7 @@ export default function App() {
           </Protected>
         }
       />
+      <Route path="/coordenacao/professores" element={<Protected token={session?.token}>{isMunicipalCoordinator(session?.user) ? <CoordenadorProfessores user={session?.user} onLogout={logout} /> : <AccessDenied user={session?.user} />}</Protected>} />
 
       <Route
         path="/superintendencia"
