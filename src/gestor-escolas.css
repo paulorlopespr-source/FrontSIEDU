@@ -56,16 +56,17 @@
 
 .manager-school-stats {
   display: grid;
-  grid-template-columns: repeat(3, minmax(160px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
 }
 
 .manager-school-stats.detail {
-  grid-template-columns: repeat(5, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
 }
 
 .manager-school-stats article {
-  padding: 18px 20px;
+  min-height: 0;
+  padding: 12px 14px;
   border: 1px solid #e0e8f4;
   border-radius: 10px;
   background: #ffffff;
@@ -83,8 +84,8 @@
 }
 
 .manager-school-stats strong {
-  margin-top: 7px;
-  font-size: 25px;
+  margin-top: 4px;
+  font-size: 21px;
 }
 
 .manager-school-panel {
@@ -354,11 +355,11 @@
 .manager-team-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(180px, 1fr));
-  gap: 12px;
+  gap: 10px;
 }
 
 .manager-team-card {
-  padding: 15px;
+  padding: 11px 12px;
   border: 1px solid #e1e9f5;
   border-radius: 8px;
   background: #f9fbff;
@@ -378,8 +379,8 @@
 }
 
 .manager-team-card strong {
-  margin: 7px 0 4px;
-  font-size: 13px;
+  margin: 5px 0 3px;
+  font-size: 12px;
 }
 
 .manager-team-card small {
