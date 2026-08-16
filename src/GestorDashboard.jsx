@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { api } from './services/api';
 import './gestor-dashboard.css';
 
@@ -118,15 +118,26 @@ export function GestorSidebar({ onLogout }) {
 }
 
 export function GestorTopbar({ user, onLogout, alertCount = 0 }) {
+  const navigate = useNavigate();
+  const [query, setQuery] = useState('');
+  const [helpOpen, setHelpOpen] = useState(false);
+  const search = (event) => {
+    event.preventDefault();
+    const value = query.trim().toLocaleLowerCase('pt-BR');
+    if (!value) return;
+    const target = value.includes('professor') ? '/gestor/rede/professores' : value.includes('aluno') || value.includes('matr') ? '/gestor/rede/alunos' : value.includes('turma') ? '/gestor/rede/turmas' : value.includes('escola') ? '/gestor/escolas' : value.includes('finance') || value.includes('orçamento') ? '/gestor/financeiro' : value.includes('transporte') ? '/transportes' : '/gestao-municipal?tab=relatorios';
+    navigate(target);
+  };
   return (
     <header className="dashboard-topbar">
       <button className="menu-trigger" type="button" disabled title="Menu já está aberto nesta versão">☰</button>
-      <div className="topbar-title"><strong>Portal do Gestor</strong><span>Secretaria Municipal de Educação</span></div>
-      <label className="dashboard-search" title="Pesquisa global em preparação"><span>⌕</span><input disabled placeholder="Pesquisa global — em preparação" /></label>
+      <div className="topbar-title"><img className="portal-header-logo" src="/images/prefeitura.png" alt="Prefeitura Municipal de Pindobaçu" /><div><strong>Portal do Gestor</strong><span>Secretaria Municipal de Educação</span></div></div>
+      <form className="dashboard-search" onSubmit={search} title="Pesquisar módulos da rede"><span>⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Pesquisar escolas, alunos e relatórios..." /></form>
       <div className="topbar-actions">
         <button type="button" disabled title="Use a seção de alertas do painel">🔔{alertCount > 0 && <i>{alertCount}</i>}</button>
-        <button type="button" disabled title="Mensagens em preparação">✉</button>
-        <button type="button" disabled title="Central de ajuda em preparação">?</button>
+        <button type="button" onClick={() => navigate('/gestor/demandas')} title="Abrir solicitações e notificações">✉</button>
+        <button type="button" onClick={() => setHelpOpen((value) => !value)} title="Ajuda rápida">?</button>
+        {helpOpen && <div className="topbar-help">Use a pesquisa para abrir escolas, alunos, professores, turmas, finanças e relatórios.</div>}
       </div>
       <div className="topbar-user">
         <div className="user-avatar">{user?.nome?.slice(0, 1) || 'G'}</div>
