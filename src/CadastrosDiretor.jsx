@@ -441,7 +441,7 @@ export default function CadastroDiretor({ type, token, onLogout }) {
               <TextField label="RG" name="rg" value={form.rg} onChange={change} required={false} />
               <TextField label="E-mail" name="email" value={form.email} onChange={change} type="email" />
               <TextField label="Telefone" name="telefone" value={form.telefone} onChange={change} required={false} />
-              <TextField label="Matrícula funcional" name="matriculaFuncional" value={form.matriculaFuncional} onChange={change} required={false} />
+              <TextField label="Matrícula da Secretaria de Educação" name="matriculaFuncional" value={form.matriculaFuncional} onChange={change} required={false} readOnly />
               <TextField label="Formação" name="formacao" value={form.formacao} onChange={change} required={false} />
               <TextField label="Disciplina/especialidade" name="disciplina" value={form.disciplina} onChange={change} required={false} />
               <TextField label="Tipo de vínculo" name="tipoVinculo" value={form.tipoVinculo} onChange={change} />
@@ -504,7 +504,7 @@ export default function CadastroDiretor({ type, token, onLogout }) {
               <TextField label="RG" name="rg" value={form.rg} onChange={change} required={false} />
               <TextField label="E-mail" name="email" value={form.email} onChange={change} type="email" />
               <TextField label="Telefone" name="telefone" value={form.telefone} onChange={change} />
-              <TextField label="Matrícula funcional" name="matriculaFuncional" value={form.matriculaFuncional} onChange={change} required={false} />
+              <TextField label="Matrícula da Secretaria de Educação" name="matriculaFuncional" value={form.matriculaFuncional} onChange={change} required={false} readOnly />
               <TextField label="Tipo de vínculo" name="tipoVinculo" value={form.tipoVinculo} onChange={change} />
               <TextField label="Data de admissão" name="dataAdmissao" value={form.dataAdmissao} onChange={change} type="date" required={false} />
             </>
