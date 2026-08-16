@@ -156,7 +156,7 @@ export default function CalendarioEscolarGestao({ user, token }) {
         {loading ? <p className="calendar-management-empty">Carregando calendário...</p> : data.eventos.map((event) => <article className={event.destaque ? 'highlight' : ''} key={event.id}>
           <time><b>{date(event.dataInicio).slice(0, 5)}</b>{event.dataFim && <span>até {date(event.dataFim).slice(0, 5)}</span>}</time>
           <div><small><Flag size={13} />{event.tipo} · {event.escopo}</small><h3>{event.titulo}</h3><p><MapPin size={14} />{event.turma || event.escola || 'Toda a rede'}{event.disciplina ? ` · ${event.disciplina}` : ''}</p>{event.horaInicio && <p><Clock3 size={14} />{event.horaInicio}{event.horaFim ? ` às ${event.horaFim}` : ''}</p>}</div>
-          <div className="calendar-row-actions"><button type="button" onClick={() => edit(event)} title="Editar"><Edit3 size={17} /></button><button type="button" onClick={() => remove(event)} title="Remover"><Trash2 size={17} /></button></div>
+          {canEdit && <div className="calendar-row-actions"><button type="button" onClick={() => edit(event)} title="Editar evento" aria-label={`Editar ${event.titulo}`}><Edit3 size={17} /><span>Editar</span></button><button type="button" onClick={() => remove(event)} title="Remover evento" aria-label={`Remover ${event.titulo}`}><Trash2 size={17} /><span>Remover</span></button></div>}
         </article>)}
         {!loading && !data.eventos.length && <p className="calendar-management-empty">Nenhuma data oficial cadastrada para {year}.</p>}
       </section>
