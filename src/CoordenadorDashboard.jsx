@@ -57,7 +57,15 @@ export default function CoordenadorDashboard({ user, token, onLogout }) {
     ['✓', 'Frequência média', '92,6%', '#14b7c8'],
     ['📋', 'Planos de aula pendentes', pendingPlans, pendingPlans ? '#dc3545' : '#16a34a'],
   ];
-  const actions = ['Ciclos, Trilhas e SAEB', 'Acompanhar turmas', 'Planos de aula', 'Gerar relatórios', 'Enviar comunicado', 'Agendar reunião', 'Ocorrências pedagógicas'];
+  const actions = [
+    ['📈', 'Ciclos, Trilhas e SAEB', '/aprendizagem'],
+    ['👥', 'Acompanhar turmas', '#acompanhamentos'],
+    ['📝', 'Planos de aula', '/coordenacao/planos'],
+    ['📊', 'Gerar relatórios', '/professor/relatorios'],
+    ['📣', 'Enviar comunicado', '#comunicacao'],
+    ['📅', 'Agendar reunião', '/gestao-municipal?tab=agenda'],
+    ['⚠️', 'Ocorrências pedagógicas', '#ocorrencias'],
+  ];
 
   return <div style={{ minHeight: '100vh', background: '#f4f7fc', color: '#09245a', fontFamily: 'Arial, sans-serif' }}>
     <header style={{ height: 78, background: '#fff', display: 'flex', alignItems: 'center', padding: '0 4%', gap: 24, boxShadow: '0 2px 12px #dbe4f255', position: 'sticky', top: 0, zIndex: 2 }}>
@@ -90,7 +98,7 @@ export default function CoordenadorDashboard({ user, token, onLogout }) {
           <article style={{ background: '#fff', padding: 22, borderRadius: 13, boxShadow: '0 2px 12px #dbe4f2' }}><h3 style={{ marginTop: 0 }}>Desempenho das turmas</h3><div style={{ height: 220, display: 'flex', alignItems: 'end', gap: 18, borderBottom: '1px solid #dce6f5', padding: '0 20px' }}>{[81, 76, 68, 72, 65, 59, 71, 67].map((score, i) => <div key={i} style={{ flex: 1, textAlign: 'center' }}><small>{(score / 10).toFixed(1)}</small><div style={{ height: score * 1.8, background: '#176fe3', borderRadius: '5px 5px 0 0', marginTop: 5 }} /><small>{i + 6}º Ano</small></div>)}</div><p style={{ color: '#176fe3', textAlign: 'right' }}>Ver relatório completo →</p></article>
           <article style={{ background: '#fff', padding: 22, borderRadius: 13, boxShadow: '0 2px 12px #dbe4f2' }}><h3 style={{ marginTop: 0 }}>Pendências e alertas</h3>{['Planos de aula aguardando aprovação', 'Turmas abaixo da média definida', 'Alunos com frequência abaixo de 75%', 'Diários de classe incompletos'].map((item, i) => <p key={item} style={{ color: '#435a80' }}><b style={{ color: '#f09b19' }}>• {i + 1}</b> &nbsp; {item}</p>)}<p style={{ borderTop: '1px solid #e3ebf6', paddingTop: 14, color: '#176fe3', textAlign: 'right' }}>Ver todas as pendências →</p></article>
           <article style={{ background: '#fff', padding: 22, borderRadius: 13, boxShadow: '0 2px 12px #dbe4f2' }}><h3 style={{ marginTop: 0 }}>Unidades e acompanhamentos</h3><p><b>{schools.length}</b> escolas disponíveis para acompanhamento pedagógico.</p>{schools.slice(0, 4).map((school) => <p key={school.id} style={{ borderTop: '1px solid #edf1f7', paddingTop: 9 }}><b>{school.nome}</b><br /><small>{school.localidade || 'Rede municipal'} · Solicitar orientação</small></p>)}</article>
-          <article style={{ background: '#fff', padding: 22, borderRadius: 13, boxShadow: '0 2px 12px #dbe4f2' }}><h3 style={{ marginTop: 0 }}>Ações rápidas</h3><div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 10 }}>{actions.map((action, i) => <button key={action} type="button" onClick={() => action === 'Ciclos, Trilhas e SAEB' ? window.location.assign('/aprendizagem') : setNotice(action + ' selecionado para acompanhamento pedagógico.')} style={{ minHeight: 75, border: 0, borderRadius: 9, background: ['#edf4ff', '#eaf9f3', '#f5f0ff', '#fff5e8'][i % 4], color: '#09245a', fontWeight: 700 }}>{action}</button>)}</div></article>
+          <article style={{ background: '#fff', padding: 22, borderRadius: 13, boxShadow: '0 2px 12px #dbe4f2' }}><h3 style={{ marginTop: 0 }}>Ações rápidas</h3><div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 10 }}>{actions.map(([icon, action, target], i) => <button key={action} type="button" onClick={() => target.startsWith('/') ? window.location.assign(target) : setNotice(`${action} selecionado para acompanhamento pedagógico.`)} style={{ minHeight: 75, border: 0, borderRadius: 9, background: ['#edf4ff', '#eaf9f3', '#f5f0ff', '#fff5e8'][i % 4], color: '#09245a', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, cursor: 'pointer' }}><span style={{ fontSize: 25 }} aria-hidden="true">{icon}</span><span>{action}</span></button>)}</div></article>
         </section>
       </section>
     </main>
