@@ -24,7 +24,7 @@ export default function ProfessorDashboard({ user, token, onLogout }) {
   const dark=profile.tema==='escuro'||(profile.tema==='sistema'&&window.matchMedia?.('(prefers-color-scheme: dark)').matches);const accent=profile.corDestaque||'#176fe3';
   return <div style={{minHeight:'100vh',background:dark?'#101827':'#f5f8fd',color:dark?'#edf4ff':'#071f52',fontFamily:'Arial,sans-serif'}}>
     <header style={{height:78,background:'#fff',display:'flex',alignItems:'center',gap:24,padding:'0 3%',boxShadow:'0 2px 12px #dbe4f270'}}>
-      <b style={{fontSize:22}}>☰ &nbsp; Portal do Professor</b>
+      <div style={{display:'flex',alignItems:'center',gap:10}}><img className="portal-header-logo" src="/images/prefeitura.png" alt="Prefeitura Municipal de Pindobaçu"/><b style={{fontSize:22}}>☰ &nbsp; Portal do Professor</b></div>
       <div style={{margin:'0 auto',width:'min(42vw,500px)',border:'1px solid #d5e0ef',borderRadius:11,padding:'13px 18px',color:'#7183a3'}}>⌕ &nbsp; Pesquisar alunos, turmas e conteúdos...</div>
       {profile.foto&&<img src={profile.foto} alt="Foto do professor" style={{width:46,height:46,borderRadius:'50%',objectFit:'cover'}}/>}<div><b>{profile.nome||user?.nome||'Professor(a)'}</b><small style={{display:'block',color:'#607399'}}>{data.professor?.disciplina||'Professor da Rede Municipal'}</small></div>
       <button type="button" onClick={onLogout}>Sair</button>

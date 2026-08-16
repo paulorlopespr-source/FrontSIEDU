@@ -70,7 +70,7 @@ export default function CoordenadorDashboard({ user, token, onLogout }) {
   return <div style={{ minHeight: '100vh', background: '#f4f7fc', color: '#09245a', fontFamily: 'Arial, sans-serif' }}>
     <header style={{ height: 78, background: '#fff', display: 'flex', alignItems: 'center', padding: '0 4%', gap: 24, boxShadow: '0 2px 12px #dbe4f255', position: 'sticky', top: 0, zIndex: 2 }}>
       <div style={{ fontSize: 24, color: '#0a3270' }}>☰</div>
-      <div><b style={{ fontSize: 21 }}>Portal do Coordenador</b><small style={{ display: 'block', color: '#607399' }}>Coordenação Pedagógica Municipal</small></div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><img className="portal-header-logo" src="/images/prefeitura.png" alt="Prefeitura Municipal de Pindobaçu" /><div><b style={{ fontSize: 21 }}>Portal do Coordenador</b><small style={{ display: 'block', color: '#607399' }}>Coordenação Pedagógica Municipal</small></div></div>
       <div style={{ margin: '0 auto', width: 'min(42vw, 510px)', border: '1px solid #d5e0ef', borderRadius: 11, padding: '13px 18px', color: '#7183a3' }}>⌕ &nbsp; Pesquisar turmas, professores, alunos e conteúdos...</div>
       <div style={{ textAlign: 'right' }}><b>{user?.nome || 'Coordenador(a)'}</b><small style={{ display: 'block', color: '#607399' }}>Coordenador(a) Pedagógico(a)</small></div>
       <button type="button" onClick={onLogout} aria-label="Sair e voltar para o login">Sair</button>
