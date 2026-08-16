@@ -464,6 +464,16 @@ export function DetalhesEscolaGestor({ token, user, onLogout }) {
                 member={displayedDirector}
                 emptyText="Diretor não vinculado"
               />
+              {data.viceDiretores?.map((viceDirector) => (
+                <TeamMember
+                  key={viceDirector.id}
+                  title="Vice-diretor(a)"
+                  member={viceDirector}
+                />
+              ))}
+              {!data.viceDiretores?.length && (
+                <TeamMember title="Vice-direção" emptyText="Vice-diretor não vinculado" />
+              )}
               {data.coordenadores.map((coordinator) => (
                 <TeamMember
                   key={coordinator.id}
