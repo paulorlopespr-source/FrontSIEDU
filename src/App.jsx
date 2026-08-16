@@ -100,6 +100,10 @@ function Layout({ children, onLogout, variant = 'gestor' }) {
     </main>
   );
 }
+
+function MunicipalBrand() {
+  return <div className="municipal-brand-stamp" aria-label="Prefeitura Municipal de Pindobaçu"><img src="/images/prefeitura.png" alt="Prefeitura Municipal de Pindobaçu" /><span>Prefeitura Municipal de Pindobaçu<br /><small>Secretaria Municipal de Educação · SIEDU</small></span></div>;
+}
 function Login({ onLogin }) {
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState('');
@@ -645,7 +649,7 @@ export default function App() {
   }
 
   return (
-    <Routes>
+    <><MunicipalBrand /><Routes>
       <Route path="/login" element={<Login onLogin={login} />} />
       <Route path="/recuperar-senha" element={<RecuperarSenha />} />
       <Route path="/" element={<Navigate to={destinationFor(session?.user)} replace />} />
@@ -1073,6 +1077,6 @@ export default function App() {
       />
 
       <Route path="*" element={<NotFound user={session?.user} />} />
-    </Routes>
+    </Routes></>
   );
 }
