@@ -101,8 +101,8 @@ function Layout({ children, onLogout, variant = 'gestor' }) {
   );
 }
 
-function MunicipalBrand() {
-  return <div className="municipal-brand-stamp" aria-label="Prefeitura Municipal de Pindobaçu"><img src="/images/prefeitura.png" alt="Prefeitura Municipal de Pindobaçu" /><span>Prefeitura Municipal de Pindobaçu<br /><small>Secretaria Municipal de Educação · SIEDU</small></span></div>;
+function MunicipalBrand({ user }) {
+  return <div className="municipal-brand-stamp" aria-label="Prefeitura Municipal de Pindobaçu"><img src="/images/prefeitura.png" alt="Prefeitura Municipal de Pindobaçu" /><span>Prefeitura Municipal de Pindobaçu<br /><small>Secretaria Municipal de Educação · SIEDU</small>{user?.nome && <small className="municipal-user-id">{user.nome} · {user.matriculaSecretaria || 'Matrícula em atualização'}</small>}</span></div>;
 }
 function Login({ onLogin }) {
   const navigate = useNavigate();
@@ -649,7 +649,7 @@ export default function App() {
   }
 
   return (
-    <><MunicipalBrand /><Routes>
+    <><MunicipalBrand user={session?.user} /><Routes>
       <Route path="/login" element={<Login onLogin={login} />} />
       <Route path="/recuperar-senha" element={<RecuperarSenha />} />
       <Route path="/" element={<Navigate to={destinationFor(session?.user)} replace />} />

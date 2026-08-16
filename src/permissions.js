@@ -3,7 +3,7 @@ export const profiles = Object.freeze({
   MUNICIPAL_SECRETARY: 'Secretário Municipal de Educação',
   SUPERINTENDENT: 'Superintendente / Diretor de Ensino',
   MUNICIPAL_COORDINATOR: 'Coordenador Pedagógico Municipal',
-  EDUCATION_ADMIN_TECHNICIAN: 'Técnico da Secretaria de Educação',
+  EDUCATION_ADMIN_TECHNICIAN: 'Secretaria Administrativa da Educação',
   DIRECTOR: 'Diretor',
   VICE_DIRECTOR: 'Vice-Diretor',
   SCHOOL_COORDINATOR: 'Coordenador Pedagógico',
@@ -38,7 +38,7 @@ const schoolAcademicProfiles = new Set([
 export const isMunicipalManager = (user) => municipalManagers.has(user?.perfil);
 export const isSuperintendent = (user) => user?.perfil === profiles.SUPERINTENDENT;
 export const isMunicipalCoordinator = (user) => user?.perfil === profiles.MUNICIPAL_COORDINATOR;
-export const isEducationAdministration = (user) => user?.perfil === profiles.EDUCATION_ADMIN_TECHNICIAN;
+export const isEducationAdministration = (user) => [profiles.EDUCATION_ADMIN_TECHNICIAN, 'Técnico da Secretaria de Educação'].includes(user?.perfil);
 export const isProfessor = (user) => user?.perfil === profiles.PROFESSOR;
 export const isStudent = (user) => user?.perfil === profiles.STUDENT;
 export const canManageSchoolCalendar = (user) => calendarManagers.has(user?.perfil);

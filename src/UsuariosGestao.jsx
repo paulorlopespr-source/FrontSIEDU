@@ -6,7 +6,7 @@ import './usuarios-vinculos.css';
 
 const profiles = [
   'Secretário Municipal de Educação', 'Superintendente / Diretor de Ensino',
-  'Coordenador Pedagógico Municipal', 'Técnico da Secretaria de Educação',
+  'Coordenador Pedagógico Municipal', 'Secretaria Administrativa da Educação',
   'Diretor', 'Vice-Diretor', 'Coordenador Pedagógico', 'Secretário Escolar',
   'Auxiliar/Assistente Administrativo', 'Professor',
   'Auxiliar de Vida Escolar / Cuidador', 'Auxiliar de Serviços Gerais',
@@ -246,8 +246,8 @@ export default function UsuariosGestao({ token, onLogout }) {
       if (form.emailPessoal && !isValidEmail(form.emailPessoal)) return 'E-mail pessoal inválido.';
     }
     if (tab === 'funcionais') {
-      if (!form.matriculaFuncional || !form.cargo || !form.funcaoExercida || !form.tipoVinculo || !form.dataAdmissao) {
-        return 'Preencha matrícula, cargo, função, vínculo e data de admissão.';
+      if (!form.cargo || !form.funcaoExercida || !form.tipoVinculo || !form.dataAdmissao) {
+        return 'Preencha cargo, função, vínculo e data de admissão.';
       }
       if (form.situacaoFuncional === 'desligado' && !form.dataDesligamento) return 'Informe a data de desligamento.';
       if (form.dataDesligamento && form.dataDesligamento < form.dataAdmissao) return 'A data de desligamento não pode ser anterior à admissão.';
@@ -379,7 +379,7 @@ export default function UsuariosGestao({ token, onLogout }) {
           {activeTab === 'funcionais' && (
             <section className="registration-step" role="tabpanel">
               <div className="registration-fields">
-                <Field label="Matrícula funcional" required><input name="matriculaFuncional" value={form.matriculaFuncional} onChange={change} /></Field>
+                <Field label="Matrícula da Secretaria de Educação"><input name="matriculaFuncional" value={form.matriculaFuncional} onChange={change} placeholder="Gerada automaticamente (SEdu####)" readOnly /></Field>
                 <Field label="Cargo" required><input name="cargo" value={form.cargo} onChange={change} /></Field>
                 <Field label="Função exercida" required><input name="funcaoExercida" value={form.funcaoExercida} onChange={change} /></Field>
                 <Field label="Tipo de vínculo" required><select name="tipoVinculo" value={form.tipoVinculo} onChange={change}><option value="">Selecione</option><option value="efetivo">Efetivo</option><option value="contratado">Contratado</option><option value="comissionado">Comissionado</option><option value="temporario">Temporário</option><option value="cedido">Cedido</option><option value="estagiario">Estagiário</option><option value="terceirizado">Terceirizado</option></select></Field>
