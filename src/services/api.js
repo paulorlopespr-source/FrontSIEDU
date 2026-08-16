@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://backendsiedu-production.up.railway.app/api';
 
 async function request(path, options = {}, token) {
   const response = await fetch(`${API_URL}${path}`, {
