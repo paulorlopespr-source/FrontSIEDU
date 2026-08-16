@@ -251,6 +251,15 @@ export const api = {
     return request(`/professor/classes/${classId}/students`, {}, token);
   },
 
+  listProfessorClassStudents(classId, filters = {}, token) {
+    const params = new URLSearchParams();
+    if (filters.busca) params.set('busca', filters.busca);
+    if (filters.page) params.set('page', filters.page);
+    if (filters.limit) params.set('limit', filters.limit);
+    const query = params.toString();
+    return request(`/professor/classes/${classId}/students${query ? `?${query}` : ''}`, {}, token);
+  },
+
   getProfessorStudentHistory(studentId, classId, token) {
     return request(`/professor/students/${studentId}/history?turmaId=${classId}`, {}, token);
   },
