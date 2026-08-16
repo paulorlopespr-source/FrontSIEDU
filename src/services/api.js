@@ -80,6 +80,10 @@ export const api = {
     return post('/auth/alterar-senha', { senhaAtual, novaSenha }, token);
   },
 
+  acceptTerms(token) {
+    return post('/auth/termos', {}, token);
+  },
+
   listUsers(filtersOrToken, token) {
     const filters = typeof filtersOrToken === 'string'
       ? {}

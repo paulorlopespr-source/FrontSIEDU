@@ -121,7 +121,7 @@ function Login({ onLogin }) {
     try {
       const result = await api.login(usuario, senha);
       onLogin(result, lembrar);
-      navigate(result.user.deveAlterarSenha ? '/alterar-senha' : destinationFor(result.user));
+      navigate(result.user.deveAlterarSenha ? '/alterar-senha' : (!result.user.termosAceitosEm ? '/termos' : destinationFor(result.user)));
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -601,6 +601,27 @@ function AlterarSenha({ token, user, onComplete }) {
     </main>
   );
 }
+
+function TermosUso({ token, user, onAccepted }) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  async function aceitar() {
+    setLoading(true); setError('');
+    try {
+      const result = await api.acceptTerms(token);
+      onAccepted({ ...user, termosAceitosEm: result.termosAceitosEm });
+      navigate(destinationFor({ ...user, termosAceitosEm: result.termosAceitosEm }), { replace: true });
+    } catch (requestError) { setError(requestError.message); } finally { setLoading(false); }
+  }
+  return <main className="login-page"><section className="login-card terms-card">
+    <h1>Termos de uso e privacidade</h1>
+    <p>O SIEDU utiliza os dados exclusivamente para a gestão educacional municipal, com acesso limitado ao perfil autorizado e registro de auditoria.</p>
+    <p>Ao continuar, você confirma que leu e aceita os <strong>Termos de Uso</strong> e a <strong>Política de Privacidade</strong> do SIEDU.</p>
+    {error && <p className="error">{error}</p>}
+    <div className="form-actions"><button onClick={aceitar} disabled={loading}>{loading ? 'Registrando...' : 'Li e aceito'}</button></div>
+  </section></main>;
+}
 function Protected({ token, children }) { return token ? children : <Navigate to="/login" replace />; }
 function Allowed({ allowed, user, children }) {
   return allowed ? children : <AccessDenied user={user} />;
@@ -639,6 +660,16 @@ export default function App() {
     storage.setItem('sigepin_session', JSON.stringify(data));
   }
 
+  function updateUser(updatedUser) {
+    setSession((current) => {
+      if (!current) return current;
+      const next = { ...current, user: updatedUser };
+      const storage = localStorage.getItem('sigepin_session') ? localStorage : sessionStorage;
+      storage.setItem('sigepin_session', JSON.stringify(next));
+      return next;
+    });
+  }
+
   function logout() {
     if (!window.confirm('Tem certeza que quer sair do sistema?')) {
       return;
@@ -651,6 +682,7 @@ export default function App() {
   return (
     <><MunicipalBrand user={session?.user} /><Routes>
       <Route path="/login" element={<Login onLogin={login} />} />
+      <Route path="/termos" element={<Protected token={session?.token}><TermosUso token={session?.token} user={session?.user} onAccepted={updateUser} /></Protected>} />
       <Route path="/recuperar-senha" element={<RecuperarSenha />} />
       <Route path="/" element={<Navigate to={destinationFor(session?.user)} replace />} />
       <Route path="/perfil-sem-portal" element={<Protected token={session?.token}><UnsupportedProfile user={session?.user} /></Protected>} />
