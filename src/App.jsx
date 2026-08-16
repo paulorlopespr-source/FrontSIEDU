@@ -22,6 +22,7 @@ import ProfessorMensagens from './ProfessorMensagens';
 import CoordenadorPlanos from './CoordenadorPlanos';
 import CoordenadorProfessores from './CoordenadorProfessores';
 import CoordenadorAlunos from './CoordenadorAlunos';
+import CoordenadorModulo from './CoordenadorModulo';
 import AlunoPortal from './AlunoPortal';
 import AprendizagemGestao from './AprendizagemGestao';
 import CalendarioEscolarGestao from './CalendarioEscolarGestao';
@@ -98,6 +99,10 @@ function Layout({ children, onLogout, variant = 'gestor' }) {
       {children}
     </main>
   );
+}
+
+function MunicipalBrand() {
+  return <div className="municipal-brand-stamp" aria-label="Prefeitura Municipal de Pindobaçu"><img src="/images/prefeitura.png" alt="Prefeitura Municipal de Pindobaçu" /><span>Prefeitura Municipal de Pindobaçu<br /><small>Secretaria Municipal de Educação · SIEDU</small></span></div>;
 }
 function Login({ onLogin }) {
   const navigate = useNavigate();
@@ -644,7 +649,7 @@ export default function App() {
   }
 
   return (
-    <Routes>
+    <><MunicipalBrand /><Routes>
       <Route path="/login" element={<Login onLogin={login} />} />
       <Route path="/recuperar-senha" element={<RecuperarSenha />} />
       <Route path="/" element={<Navigate to={destinationFor(session?.user)} replace />} />
@@ -779,6 +784,7 @@ export default function App() {
       />
       <Route path="/coordenacao/professores" element={<Protected token={session?.token}>{isMunicipalCoordinator(session?.user) ? <CoordenadorProfessores user={session?.user} onLogout={logout} /> : <AccessDenied user={session?.user} />}</Protected>} />
       <Route path="/coordenacao/alunos" element={<Protected token={session?.token}>{isMunicipalCoordinator(session?.user) ? <CoordenadorAlunos user={session?.user} onLogout={logout} /> : <AccessDenied user={session?.user} />}</Protected>} />
+      {['turmas', 'diario', 'frequencia', 'avaliacoes', 'relatorios', 'comunicacao', 'agenda', 'ocorrencias'].map((module) => <Route key={module} path={`/coordenacao/${module}`} element={<Protected token={session?.token}>{isMunicipalCoordinator(session?.user) ? <CoordenadorModulo type={module} user={session?.user} onLogout={logout} /> : <AccessDenied user={session?.user} />}</Protected>} />)}
 
       <Route
         path="/superintendencia"
@@ -1071,6 +1077,6 @@ export default function App() {
       />
 
       <Route path="*" element={<NotFound user={session?.user} />} />
-    </Routes>
+    </Routes></>
   );
 }
