@@ -20,7 +20,7 @@ const currentYear = new Date().getFullYear();
 const emptyForm = {
   escopo: 'Rede', escolaId: '', turmaId: '', titulo: '', tipo: 'Ano letivo',
   disciplina: '', dataInicio: '', dataFim: '', horaInicio: '', horaFim: '',
-  observacao: '', destaque: false, publicado: true,
+  observacao: '', destaque: false, cor: '#176fe3', publicado: true,
 };
 const date = (value) => value ? new Date(`${String(value).slice(0, 10)}T12:00:00`).toLocaleDateString('pt-BR') : '—';
 const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -90,6 +90,7 @@ export default function CalendarioEscolarGestao({ user, token }) {
       horaFim: event.horaFim || '',
       observacao: event.observacao || '',
       destaque: Boolean(event.destaque),
+      cor: event.cor || '#176fe3',
       publicado: true,
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -133,7 +134,7 @@ export default function CalendarioEscolarGestao({ user, token }) {
         <div className="calendar-form-title"><span><Plus /></span><div><small>{editingId ? 'EDIÇÃO' : 'NOVO EVENTO'}</small><h2>{editingId ? 'Atualizar data oficial' : 'Cadastrar data oficial'}</h2></div></div>
         <div className="calendar-form-fields">
           <label className="wide">Título<input name="titulo" value={form.titulo} onChange={change} placeholder="Ex.: 1º Bimestre" required /></label>
-          <label>Tipo<select name="tipo" value={form.tipo} onChange={change}>{data.tipos.map((type) => <option key={type}>{type}</option>)}</select></label>
+          <label>Tipo<select name="tipo" value={form.tipo} onChange={change}>{data.tipos.map((type) => <option key={type}>{type}</option>)}</select></label><label>Cor do evento<select name="cor" value={form.cor} onChange={change}><option value="#176fe3">🔵 Azul — atividade</option><option value="#16a06a">🟢 Verde — formação</option><option value="#f09b1b">🟠 Laranja — avaliação</option><option value="#d83b54">🔴 Vermelho — alerta</option><option value="#7a4fd6">🟣 Roxo — reunião</option></select></label>
           <label>Escopo<select name="escopo" value={form.escopo} onChange={change}><option>Rede</option><option>Escola</option><option>Turma</option></select></label>
           {form.escopo !== 'Rede' && <label>Escola<select name="escolaId" value={form.escolaId} onChange={change} required><option value="">Selecione</option>{data.escolas.map((school) => <option value={school.id} key={school.id}>{school.nome}</option>)}</select></label>}
           {form.escopo === 'Turma' && <label>Turma<select name="turmaId" value={form.turmaId} onChange={change} required><option value="">Selecione</option>{availableClasses.map((item) => <option value={item.id} key={item.id}>{item.nome} — {item.serieAno}</option>)}</select></label>}
