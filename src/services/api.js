@@ -125,6 +125,10 @@ export const api = {
     return request(`/schools/${id}/overview`, {}, token);
   },
 
+  listManagerSchoolStudents(id, filters, token) {
+    return getWithFilters(`/schools/${id}/students`, filters, token);
+  },
+
   updateSchool(id, data, token) {
     return request(`/schools/${id}`, {
       method: 'PATCH',
@@ -510,3 +514,4 @@ export const api = {
     return post('/academic/employees', data, token);
   },
 };
+

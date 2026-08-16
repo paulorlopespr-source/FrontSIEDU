@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { GestorSidebar, GestorTopbar } from './GestorDashboard';
 import { api } from './services/api';
@@ -248,6 +248,11 @@ export function DetalhesEscolaGestor({ token, user, onLogout }) {
   const { escolaId } = useParams();
   const [data, setData] = useState(null);
   const [studentSearch, setStudentSearch] = useState('');
+  const [studentPage, setStudentPage] = useState(1);
+  const [studentLimit, setStudentLimit] = useState(25);
+  const [studentPagination, setStudentPagination] = useState({ pagina: 1, limite: 25, total: 0, totalPaginas: 1 });
+  const [students, setStudents] = useState([]);
+  const [studentsLoading, setStudentsLoading] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [studentLoading, setStudentLoading] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -279,18 +284,22 @@ export function DetalhesEscolaGestor({ token, user, onLogout }) {
     };
   }, [escolaId, token]);
 
-  const filteredStudents = useMemo(() => {
-    const term = studentSearch.trim().toLocaleLowerCase('pt-BR');
-    const students = data?.alunos || [];
-    if (!term) return students;
-
-    return students.filter((student) => [
-      student.nome,
-      student.matricula,
-      student.turma,
-      student.responsavel,
-    ].some((value) => String(value || '').toLocaleLowerCase('pt-BR').includes(term)));
-  }, [data, studentSearch]);
+  useEffect(() => {
+    if (!data) return undefined;
+    let active = true;
+    const timeout = setTimeout(() => {
+      setStudentsLoading(true);
+      api.listManagerSchoolStudents(escolaId, { busca: studentSearch.trim(), page: studentPage, limit: studentLimit }, token)
+        .then((result) => {
+          if (!active) return;
+          setStudents(result.dados || []);
+          setStudentPagination(result.paginacao || { pagina: studentPage, limite: studentLimit, total: 0, totalPaginas: 1 });
+        })
+        .catch((requestError) => active && setError(requestError.message))
+        .finally(() => active && setStudentsLoading(false));
+    }, 300);
+    return () => { active = false; clearTimeout(timeout); };
+  }, [data, escolaId, studentSearch, studentPage, studentLimit, token]);
 
   async function openStudent(studentId) {
     setStudentLoading(true);
@@ -582,7 +591,7 @@ export function DetalhesEscolaGestor({ token, user, onLogout }) {
                 <span>⌕</span>
                 <input
                   value={studentSearch}
-                  onChange={(event) => setStudentSearch(event.target.value)}
+                  onChange={(event) => { setStudentSearch(event.target.value); setStudentPage(1); }}
                   placeholder="Buscar aluno, matrícula ou turma"
                 />
               </label>
@@ -600,7 +609,7 @@ export function DetalhesEscolaGestor({ token, user, onLogout }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredStudents.map((student) => (
+                  {students.map((student) => (
                     <tr key={student.id}>
                       <td><strong>{student.nome}</strong></td>
                       <td>{student.matricula}</td>
@@ -614,11 +623,16 @@ export function DetalhesEscolaGestor({ token, user, onLogout }) {
                       </td>
                     </tr>
                   ))}
-                  {!filteredStudents.length && (
+                  {!studentsLoading && !students.length && (
                     <tr><td colSpan="6" className="manager-empty-row">Nenhum aluno encontrado.</td></tr>
                   )}
                 </tbody>
               </table>
+            </div>
+            <div className="manager-pagination">
+              <label>Por página<select value={studentLimit} onChange={(event) => { setStudentLimit(Number(event.target.value)); setStudentPage(1); }}><option value={25}>25</option><option value={50}>50</option><option value={100}>100</option></select></label>
+              <span>{studentsLoading ? 'Carregando alunos...' : `Página ${studentPagination.pagina} de ${Math.max(studentPagination.totalPaginas, 1)} · ${studentPagination.total} aluno(s)`}</span>
+              <div><button type="button" disabled={studentPage <= 1 || studentsLoading} onClick={() => setStudentPage((current) => Math.max(current - 1, 1))}>Anterior</button><button type="button" disabled={studentPage >= studentPagination.totalPaginas || studentsLoading} onClick={() => setStudentPage((current) => current + 1)}>Próxima</button></div>
             </div>
           </section>
         </>
@@ -782,3 +796,4 @@ export function DetalhesEscolaGestor({ token, user, onLogout }) {
     </GestorSchoolShell>
   );
 }
+
