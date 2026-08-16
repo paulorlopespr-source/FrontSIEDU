@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { api } from './services/api';
 import { destinationFor } from './permissions';
+import { canManageSchoolCalendar } from './permissions';
 import './calendario-escolar-gestao.css';
 
 const currentYear = new Date().getFullYear();
@@ -22,9 +23,12 @@ const emptyForm = {
   observacao: '', destaque: false, publicado: true,
 };
 const date = (value) => value ? new Date(`${String(value).slice(0, 10)}T12:00:00`).toLocaleDateString('pt-BR') : '—';
+const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
 export default function CalendarioEscolarGestao({ user, token }) {
   const [year, setYear] = useState(currentYear);
+  const [month, setMonth] = useState(new Date().getMonth());
+  const [view, setView] = useState('month');
   const [data, setData] = useState({ eventos: [], escolas: [], turmas: [], tipos: [] });
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
@@ -45,6 +49,17 @@ export default function CalendarioEscolarGestao({ user, token }) {
   const availableClasses = useMemo(() => data.turmas.filter((item) => (
     !form.escolaId || String(item.escolaId) === String(form.escolaId)
   )), [data.turmas, form.escolaId]);
+  const canEdit = canManageSchoolCalendar(user);
+  const monthDays = useMemo(() => {
+    const first = new Date(year, month, 1).getDay();
+    const total = new Date(year, month + 1, 0).getDate();
+    return [...Array(first).fill(null), ...Array.from({ length: total }, (_, index) => index + 1)];
+  }, [month, year]);
+  const eventsByDay = useMemo(() => data.eventos.reduce((result, event) => {
+    const start = new Date(`${String(event.dataInicio).slice(0, 10)}T12:00:00`);
+    if (start.getFullYear() === year && start.getMonth() === month) (result[start.getDate()] ||= []).push(event);
+    return result;
+  }, {}), [data.eventos, month, year]);
 
   function change(event) {
     const { name, value, type, checked } = event.target;
@@ -81,6 +96,7 @@ export default function CalendarioEscolarGestao({ user, token }) {
   }
 
   async function save(event) {
+    if (!canEdit) return;
     event.preventDefault(); setSaving(true); setError(''); setNotice('');
     try {
       const payload = {
@@ -97,6 +113,7 @@ export default function CalendarioEscolarGestao({ user, token }) {
   }
 
   async function remove(event) {
+    if (!canEdit) return;
     if (!window.confirm(`Remover “${event.titulo}” do calendário dos alunos?`)) return;
     try { await api.deleteSchoolCalendarEvent(event.id, token); setNotice('Evento removido do calendário.'); await load(); }
     catch (requestError) { setError(requestError.message); }
@@ -112,7 +129,7 @@ export default function CalendarioEscolarGestao({ user, token }) {
     {error && <p className="calendar-management-error">{error}</p>}
 
     <section className="calendar-management-grid">
-      <form className="calendar-event-form" onSubmit={save}>
+      {canEdit ? <form className="calendar-event-form" onSubmit={save}>
         <div className="calendar-form-title"><span><Plus /></span><div><small>{editingId ? 'EDIÇÃO' : 'NOVO EVENTO'}</small><h2>{editingId ? 'Atualizar data oficial' : 'Cadastrar data oficial'}</h2></div></div>
         <div className="calendar-form-fields">
           <label className="wide">Título<input name="titulo" value={form.titulo} onChange={change} placeholder="Ex.: 1º Bimestre" required /></label>
@@ -129,10 +146,12 @@ export default function CalendarioEscolarGestao({ user, token }) {
           <label className="calendar-check wide"><input type="checkbox" name="destaque" checked={form.destaque} onChange={change} /> Destacar este evento no calendário do aluno</label>
         </div>
         <div className="calendar-form-actions"><button type="submit" disabled={saving}><Save size={18} />{saving ? 'Salvando...' : editingId ? 'Salvar alterações' : 'Publicar no calendário'}</button>{editingId && <button type="button" className="secondary" onClick={reset}>Cancelar edição</button>}</div>
-      </form>
+      </form> : <section className="calendar-event-form calendar-readonly"><div className="calendar-form-title"><span><CalendarDays /></span><div><small>CONSULTA</small><h2>Calendário somente leitura</h2></div></div><p>Seu perfil pode consultar os eventos, mas não pode cadastrá-los ou alterá-los.</p></section>}
 
       <section className="calendar-events-panel">
         <header><div><small>DATAS PUBLICADAS</small><h2>Calendário de {year}</h2></div><strong>{data.eventos.length}</strong></header>
+        <div className="calendar-view-toolbar"><div><button type="button" className={view === 'month' ? 'active' : ''} onClick={() => setView('month')}>Mensal</button><button type="button" className={view === 'year' ? 'active' : ''} onClick={() => setView('year')}>Anual</button></div>{view === 'month' && <label>Mês<select value={month} onChange={(event) => setMonth(Number(event.target.value))}>{monthNames.map((name, index) => <option value={index} key={name}>{name}</option>)}</select></label>}</div>
+        {view === 'month' ? <div className="calendar-month-grid"><div className="calendar-weekdays">{['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].map((day) => <b key={day}>{day}</b>)}</div><div className="calendar-month-days">{monthDays.map((day, index) => day ? <div key={day} className={eventsByDay[day] ? 'has-events' : ''}><b>{day}</b>{(eventsByDay[day] || []).slice(0, 2).map((event) => <small title={event.titulo} key={event.id}>{event.titulo}</small>)}</div> : <span key={`empty-${index}`} />)}</div></div> : <div className="calendar-year-grid">{monthNames.map((name, index) => <button type="button" key={name} onClick={() => { setMonth(index); setView('month'); }}>{name}<strong>{data.eventos.filter((event) => { const dateValue = new Date(`${String(event.dataInicio).slice(0, 10)}T12:00:00`); return dateValue.getFullYear() === year && dateValue.getMonth() === index; }).length}</strong></button>)}</div>}
         {loading ? <p className="calendar-management-empty">Carregando calendário...</p> : data.eventos.map((event) => <article className={event.destaque ? 'highlight' : ''} key={event.id}>
           <time><b>{date(event.dataInicio).slice(0, 5)}</b>{event.dataFim && <span>até {date(event.dataFim).slice(0, 5)}</span>}</time>
           <div><small><Flag size={13} />{event.tipo} · {event.escopo}</small><h3>{event.titulo}</h3><p><MapPin size={14} />{event.turma || event.escola || 'Toda a rede'}{event.disciplina ? ` · ${event.disciplina}` : ''}</p>{event.horaInicio && <p><Clock3 size={14} />{event.horaInicio}{event.horaFim ? ` às ${event.horaFim}` : ''}</p>}</div>

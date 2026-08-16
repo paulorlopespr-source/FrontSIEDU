@@ -27,6 +27,7 @@ const calendarManagers = new Set([
   profiles.MUNICIPAL_SECRETARY,
   profiles.SUPERINTENDENT,
   profiles.MUNICIPAL_COORDINATOR,
+  profiles.DIRECTOR,
 ]);
 const schoolAcademicProfiles = new Set([
   ...schoolManagers,
