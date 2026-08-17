@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from './services/api';
+import AdministracaoSidebar from './AdministracaoSidebar';
 import {
   canCreateSchoolDemand,
   canDecideSchoolDemand,
@@ -8,6 +9,7 @@ import {
   destinationFor,
 } from './permissions';
 import './demandas-escolares.css';
+import './administracao-dashboard.css';
 
 const initialForm = {
   escolaId: '',
@@ -183,7 +185,7 @@ export default function DemandasEscolares({ user, token, onLogout }) {
       ? 'Analise, autorize ou mantenha pendentes as solicitações encaminhadas pelas escolas.'
       : 'Registre necessidades patrimoniais, estruturais, tecnológicas, didáticas e de insumos.';
 
-  return <main className="demand-page">
+  const content = <main className={`demand-page ${administration ? 'administration-demand-page' : ''}`}>
     <header className="demand-header">
       <div><small>FLUXO INTEGRADO ENTRE ESCOLA E SECRETARIAS</small><h1>{title}</h1><p>{subtitle}</p></div>
       <div><Link to={destinationFor(user)}>← Voltar ao painel</Link><b>{user?.nome}</b><button type="button" onClick={onLogout}>Sair</button></div>
@@ -247,4 +249,10 @@ export default function DemandasEscolares({ user, token, onLogout }) {
       })}</div>}
     </section>
   </main>;
+
+  if (!administration) return content;
+  return <div className="administration-shell">
+    <AdministracaoSidebar user={user} onLogout={onLogout}/>
+    <div className="administration-main">{content}</div>
+  </div>;
 }
