@@ -120,6 +120,11 @@ export const api = {
     }, token);
   },
 
+  listPersonnelLeaves(token) { return request('/personnel-leaves', {}, token); },
+  createPersonnelLeave(data, token) { return post('/personnel-leaves', data, token); },
+  updatePersonnelLeaveStatus(id, status, token) { return request(`/personnel-leaves/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }, token); },
+  downloadPersonnelLeaveDocument(id, filename, token) { return download(`/personnel-leaves/${id}/document`, filename, token); },
+
   deleteUser(id, token) {
     return request(`/users/${id}`, { method: 'DELETE' }, token);
   },

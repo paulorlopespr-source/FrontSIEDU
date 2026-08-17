@@ -30,6 +30,7 @@ import GestaoMunicipal from './GestaoMunicipal';
 import DemandasEscolares from './DemandasEscolares';
 import AdministracaoDashboard from './AdministracaoDashboard';
 import AdministracaoPessoas from './AdministracaoPessoas';
+import AdministracaoAfastamentos from './AdministracaoAfastamentos';
 import {
   DetalhesEscolaGestor,
   ListaEscolasGestor,
@@ -888,6 +889,11 @@ export default function App() {
       <Route
         path="/administracao/vinculos"
         element={<Protected token={session?.token}><Allowed allowed={isEducationAdministration(session?.user)} user={session?.user}><AdministracaoPessoas token={session?.token} user={session?.user} onLogout={logout} bindingsOnly/></Allowed></Protected>}
+      />
+
+      <Route
+        path="/administracao/afastamentos"
+        element={<Protected token={session?.token}><Allowed allowed={isEducationAdministration(session?.user)} user={session?.user}><AdministracaoAfastamentos token={session?.token} user={session?.user} onLogout={logout}/></Allowed></Protected>}
       />
 
       <Route
