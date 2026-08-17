@@ -10,6 +10,7 @@ test('direciona cada perfil implementado ao portal correto', () => {
   assert.equal(destinationFor({ perfil: 'Diretor' }), '/diretor');
   assert.equal(destinationFor({ perfil: 'Professor' }), '/professor');
   assert.equal(destinationFor({ perfil: 'Aluno' }), '/aluno');
+  assert.equal(destinationFor({ perfil: 'Secretaria Administrativa da Educação' }), '/administracao');
 });
 
 test('isola o Portal do Aluno dos demais perfis', () => {
