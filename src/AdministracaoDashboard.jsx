@@ -10,10 +10,7 @@ import {
   PackageCheck,
   Search,
   Settings2,
-  ShoppingCart,
-  Truck,
   UsersRound,
-  Warehouse,
 } from 'lucide-react';
 import { api } from './services/api';
 import AdministracaoSidebar from './AdministracaoSidebar';
@@ -67,11 +64,8 @@ export default function AdministracaoDashboard({ token, user, onLogout }) {
     { label: 'Funcionários vinculados', value: overview.totals.employees, icon: UsersRound, detail: 'Toda a rede municipal', tone: 'blue' },
     { label: 'Escolas', value: overview.totals.schools, icon: Building2, detail: 'Unidades acompanhadas', tone: 'blue' },
     { label: 'Demandas abertas', value: demandSummary.open, icon: Megaphone, detail: 'Aguardando andamento', tone: demandSummary.open ? 'orange' : 'blue' },
-    { label: 'Execuções autorizadas', value: demandSummary.authorized, icon: ClipboardList, detail: 'Prontas para atendimento', tone: demandSummary.authorized ? 'green' : 'blue' },
-    { label: 'Patrimônio', value: '—', icon: PackageCheck, detail: 'Módulo em implantação', tone: 'muted' },
-    { label: 'Transportes', value: '—', icon: Truck, detail: 'Módulo em implantação', tone: 'muted' },
-    { label: 'Documentos pendentes', value: '—', icon: FolderClock, detail: 'Módulo em implantação', tone: 'muted' },
-    { label: 'Solicitações', value: '—', icon: ClipboardList, detail: 'Módulo em implantação', tone: 'muted' },
+    { label: 'Patrimônios com pendência', value: '—', icon: PackageCheck, detail: 'Módulo em implantação', tone: 'muted' },
+    { label: 'Solicitações pendentes', value: demandSummary.authorized, icon: ClipboardList, detail: 'Execuções aguardando atendimento', tone: demandSummary.authorized ? 'orange' : 'blue' },
   ];
 
   const recentDemands = demands.slice(0, 5);
@@ -90,7 +84,7 @@ export default function AdministracaoDashboard({ token, user, onLogout }) {
       <section className="administration-workspace">
         <article className="administration-panel administration-demands"><header><div><small>OPERAÇÃO PRIORITÁRIA</small><h2>Demandas das escolas</h2><p>Receba e execute as demandas autorizadas pela gestão municipal.</p></div><Link to="/administracao/demandas">Abrir módulo <ChevronRight aria-hidden="true"/></Link></header><div className="administration-demand-summary"><span><strong>{demandSummary.open}</strong>Em acompanhamento</span><span><strong>{demandSummary.authorized}</strong>Autorizadas</span><span className={demandSummary.urgent ? 'urgent' : ''}><strong>{demandSummary.urgent}</strong>Alta prioridade</span></div>{recentDemands.length ? <div className="administration-demand-list">{recentDemands.map((demand) => <div key={demand.id}><span><b>{demand.titulo}</b><small>{demand.escola || 'Rede municipal'} · {demand.status}</small></span><em>{demand.urgencia || demand.prioridade || 'Normal'}</em></div>)}</div> : <div className="administration-empty"><Boxes aria-hidden="true"/><p>Nenhuma demanda disponível neste momento.</p></div>}</article>
 
-        <article className="administration-panel administration-roadmap"><header><div><small>IMPLANTAÇÃO GRADUAL</small><h2>Próximos módulos operacionais</h2><p>A estrutura está preparada sem liberar funções incompletas.</p></div></header><div><span><PackageCheck aria-hidden="true"/><b>Patrimônio</b><small>Cadastro, tombamento e movimentação</small></span><span><Warehouse aria-hidden="true"/><b>Almoxarifado</b><small>Estoque, separação e entrega</small></span><span><FolderClock aria-hidden="true"/><b>Protocolo</b><small>Documentos e tramitação administrativa</small></span><span><ShoppingCart aria-hidden="true"/><b>Compras</b><small>Solicitação, aprovação e recebimento</small></span></div></article>
+        <article className="administration-panel administration-roadmap administration-quick-actions"><header><div><small>ACESSO DIRETO</small><h2>Ações rápidas</h2><p>Atalhos para as rotinas mais utilizadas.</p></div></header><div><Link to="/administracao/funcionarios"><UsersRound aria-hidden="true"/><b>Cadastrar funcionário</b><small>Cadastro funcional auditável</small></Link><Link to="/administracao/vinculos"><Building2 aria-hidden="true"/><b>Alterar lotação</b><small>Vínculos com escolas e setores</small></Link><Link to="/administracao/demandas"><Megaphone aria-hidden="true"/><b>Acompanhar demandas</b><small>Triagem e execução operacional</small></Link><span><FolderClock aria-hidden="true"/><b>Registrar documento</b><small>Em implantação</small></span></div></article>
       </section>
     </main>
   </div>;
