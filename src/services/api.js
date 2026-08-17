@@ -258,3 +258,288 @@ export const api = {
   createMunicipalDemand(data, token) { return post('/municipal/demands', data, token); },
   decideMunicipalDemand(id, data, token) { return post(`/municipal/demands/${id}/decision`, data, token); },
   executeMunicipalDemand(id, data, token) { return post(`/municipal/demands/${id}/execution`, data, token); },
+  listDemandNotifications(token) { return request('/municipal/demands/notifications', {}, token); },
+  readDemandNotification(id, token) { return request(`/municipal/demands/notifications/${id}/read`, { method: 'PATCH' }, token); },
+  downloadDemandAttachment(demandId, attachmentId, filename, token) { return download(`/municipal/demands/${demandId}/attachments/${attachmentId}`, filename, token); },
+  downloadMunicipalReport(type, token) { return download(`/municipal/reports/${type}.csv`, `relatorio-${type}.csv`, token); },
+
+  getProfessorDashboard(token) {
+    return request('/professor/dashboard', {}, token);
+  },
+
+  getProfessorClassStudents(classId, token) {
+    return request(`/professor/classes/${classId}/students`, {}, token);
+  },
+
+  listProfessorClassStudents(classId, filters = {}, token) {
+    const params = new URLSearchParams();
+    if (filters.busca) params.set('busca', filters.busca);
+    if (filters.page) params.set('page', filters.page);
+    if (filters.limit) params.set('limit', filters.limit);
+    const query = params.toString();
+    return request(`/professor/classes/${classId}/students${query ? `?${query}` : ''}`, {}, token);
+  },
+
+  getProfessorStudentHistory(studentId, classId, token) {
+    return request(`/professor/students/${studentId}/history?turmaId=${classId}`, {}, token);
+  },
+
+  listProfessorDiaries(token) {
+    return request('/professor/diaries', {}, token);
+  },
+
+  saveProfessorDiary(data, token) {
+    return post('/professor/diaries', data, token);
+  },
+
+  getProfessorGradebook(classId, token) {
+    return request(`/professor/gradebook/${classId}`, {}, token);
+  },
+
+  createProfessorAssessment(classId, data, token) {
+    return post(`/professor/gradebook/${classId}/assessments`, data, token);
+  },
+
+  saveProfessorGrades(classId, notas, token) {
+    return request(`/professor/gradebook/${classId}/grades`, { method: 'PUT', body: JSON.stringify({ notas }) }, token);
+  },
+
+  listProfessorLessonPlans(token) {
+    return request('/professor/lesson-plans', {}, token);
+  },
+
+  createProfessorLessonPlan(data, token) {
+    return post('/professor/lesson-plans', data, token);
+  },
+
+  updateProfessorLessonPlan(id, data, token) {
+    return request(`/professor/lesson-plans/${id}`, { method: 'PUT', body: JSON.stringify(data) }, token);
+  },
+
+  submitProfessorLessonPlan(id, token) {
+    return post(`/professor/lesson-plans/${id}/submit`, {}, token);
+  },
+
+  getProfessorLessonPlanHistory(id, token) {
+    return request(`/professor/lesson-plans/${id}/history`, {}, token);
+  },
+
+  listLessonPlansForReview(status, token) {
+    return request(`/professor/lesson-plans/review${status ? `?status=${encodeURIComponent(status)}` : ''}`, {}, token);
+  },
+
+  reviewProfessorLessonPlan(id, acao, parecer, token) {
+    return request(`/professor/lesson-plans/${id}/review`, { method: 'PUT', body: JSON.stringify({ acao, parecer }) }, token);
+  },
+
+  getProfessorSchedule(token) {
+    return request('/professor/schedule', {}, token);
+  },
+
+  listProfessorActivities(token) {
+    return request('/professor/activities', {}, token);
+  },
+
+  createProfessorActivity(data, token) {
+    return post('/professor/activities', data, token);
+  },
+
+  updateProfessorActivity(id, data, token) {
+    return request(`/professor/activities/${id}`, { method: 'PUT', body: JSON.stringify(data) }, token);
+  },
+
+  cancelProfessorActivity(id, motivo, token) {
+    return request(`/professor/activities/${id}/cancel`, { method: 'PATCH', body: JSON.stringify({ motivo }) }, token);
+  },
+
+  listProfessorQuestions(token) {
+    return request('/professor/questions', {}, token);
+  },
+
+  createProfessorQuestion(data, token) {
+    return post('/professor/questions', data, token);
+  },
+
+  listProfessorExams(token) {
+    return request('/professor/exams', {}, token);
+  },
+
+  createProfessorExam(data, token) {
+    return post('/professor/exams', data, token);
+  },
+
+  getProfessorExam(id, token) {
+    return request(`/professor/exams/${id}`, {}, token);
+  },
+
+  listClassMaterials(turmaId, token) {
+    return request(`/professor/materials${turmaId ? `?turmaId=${turmaId}` : ''}`, {}, token);
+  },
+
+  createClassMaterial(data, token) {
+    return post('/professor/materials', data, token);
+  },
+
+  updateClassMaterial(id, data, token) {
+    return request(`/professor/materials/${id}`, { method: 'PUT', body: JSON.stringify(data) }, token);
+  },
+
+  deleteClassMaterial(id, token) {
+    return request(`/professor/materials/${id}`, { method: 'DELETE' }, token);
+  },
+
+  downloadClassMaterial(id, filename, token) {
+    return download(`/professor/materials/${id}/attachment`, filename, token);
+  },
+
+  getProfessorProfile(token) { return request('/professor/profile', {}, token); },
+  updateProfessorProfile(data, token) { return request('/professor/profile', { method: 'PUT', body: JSON.stringify(data) }, token); },
+  updateProfessorPhoto(foto, token) { return request('/professor/profile/photo', { method: 'PUT', body: JSON.stringify({ foto }) }, token); },
+  deleteProfessorPhoto(token) { return request('/professor/profile/photo', { method: 'DELETE' }, token); },
+  listProfessorMessageContacts(token) { return request('/professor/messages/contacts', {}, token); },
+  listProfessorMessages(token) { return request('/professor/messages', {}, token); },
+  sendProfessorMessage(data, token) { return post('/professor/messages', data, token); },
+  readProfessorMessage(id, token) { return request(`/professor/messages/${id}/read`, { method: 'PATCH' }, token); },
+  getProfessorHistory(token) { return request('/professor/history', {}, token); },
+
+  getProfessorClassReports(token) {
+    return request('/professor/reports/classes', {}, token);
+  },
+
+  getProfessorClassReport(classId, token) {
+    return request(`/professor/reports/classes/${classId}`, {}, token);
+  },
+
+  getProfessorStudentReport(studentId, classId, token) {
+    return request(`/professor/reports/students/${studentId}?turmaId=${classId}`, {}, token);
+  },
+
+  getProfessorCalendar(year, token) {
+    return request(`/professor/calendar?year=${year}`, {}, token);
+  },
+
+  getStudentPortal(token) {
+    return request('/student/portal', {}, token);
+  },
+
+  getLearningManagement(token) {
+    return request('/learning/management', {}, token);
+  },
+
+  createCycleAssessment(data, token) {
+    return post('/learning/cycles', data, token);
+  },
+
+  getCycleResults(id, token) {
+    return request(`/learning/cycles/${id}/results`, {}, token);
+  },
+
+  saveCycleResult(id, data, token) {
+    return request(`/learning/cycles/${id}/results`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }, token);
+  },
+
+  createRevisionTrail(data, token) {
+    return post('/learning/trails', data, token);
+  },
+
+  updateRevisionTrail(id, data, token) {
+    return request(`/learning/trails/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }, token);
+  },
+
+  createSaebSimulation(data, token) {
+    return post('/learning/saeb', data, token);
+  },
+
+  getCalendarManagement(year, token) {
+    return request(`/calendar/management?year=${year}`, {}, token);
+  },
+
+  createSchoolCalendarEvent(data, token) {
+    return post('/calendar/events', data, token);
+  },
+
+  updateSchoolCalendarEvent(id, data, token) {
+    return request(`/calendar/events/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }, token);
+  },
+
+  deleteSchoolCalendarEvent(id, token) {
+    return request(`/calendar/events/${id}`, { method: 'DELETE' }, token);
+  },
+
+  createProfessorCalendarEvent(data, token) {
+    return post('/professor/calendar-events', data, token);
+  },
+
+  deleteProfessorCalendarEvent(id, token) {
+    return request(`/professor/calendar-events/${id}`, { method: 'DELETE' }, token);
+  },
+
+  listAudit(filters, token) {
+    return getWithFilters('/audit', filters, token);
+  },
+
+  getAcademicSummary(filters, token) {
+    return getWithFilters('/academic/summary', filters, token);
+  },
+
+  getAcademicContext(token) {
+    return request('/academic/context', {}, token);
+  },
+
+  listAcademicClasses(filters, token) {
+    return getWithFilters('/academic/classes', filters, token);
+  },
+
+  getAcademicClass(id, token) {
+    return request(`/academic/classes/${id}`, {}, token);
+  },
+
+  createAcademicClass(data, token) {
+    return post('/academic/classes', data, token);
+  },
+
+  assignTeacherToClass(classId, data, token) {
+    return post(`/academic/classes/${classId}/teachers`, data, token);
+  },
+
+  listAcademicStudents(filters, token) {
+    return getWithFilters('/academic/students', filters, token);
+  },
+
+  getAcademicStudent(id, token) {
+    return request(`/academic/students/${id}`, {}, token);
+  },
+
+  enrollNewStudent(data, token) {
+    return post('/academic/students/enroll', data, token);
+  },
+
+  enrollExistingStudent(data, token) {
+    return post('/academic/enrollments', data, token);
+  },
+
+  listAcademicTeachers(filters, token) {
+    return getWithFilters('/academic/teachers', filters, token);
+  },
+
+  createAcademicTeacher(data, token) {
+    return post('/academic/teachers', data, token);
+  },
+
+  listAcademicEmployees(filters, token) {
+    return getWithFilters('/academic/employees', filters, token);
+  },
+
+  createAcademicEmployee(data, token) {
+    return post('/academic/employees', data, token);
+  },
+};
