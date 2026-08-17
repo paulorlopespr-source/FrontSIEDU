@@ -1,0 +1,18 @@
+.leave-header-actions{display:flex;align-items:center;gap:9px}
+.leave-secondary-action{margin:0;padding:10px 14px;border:1px solid #b9cce3;border-radius:9px;background:#fff;color:#176bc2;font-weight:800}
+.leave-kind{margin-top:14px}
+.calendar-period{margin-top:14px;padding:15px;border:1px solid #dbe5f0;border-radius:12px;background:#f8fbff}
+.calendar-period>.leave-date-grid{margin-top:0}
+.calendar-period>label{display:grid;gap:7px;color:#294765;font-size:11px;font-weight:800}
+.period-summary{display:flex;align-items:center;gap:10px;margin-top:13px;padding:11px;border-radius:9px;background:#eaf4ff;color:#175fa8}
+.period-summary.warning{background:#fff0e7;color:#a84d22}
+.period-summary svg{width:20px}.period-summary strong,.period-summary small{display:block}.period-summary small{margin-top:2px;font-size:9px}
+.medical-warning{display:flex;align-items:flex-start;gap:8px;margin:11px 0 0;padding:10px;border:1px solid #efc09e;border-radius:9px;background:#fff5ed;color:#9b421d;font-size:11px;font-weight:800}
+.medical-warning svg{flex:0 0 auto;width:18px}
+.medical-alerts{margin-top:16px;padding:16px;border:1px solid #efb996;border-radius:13px;background:#fff7f1}
+.medical-alerts>header{display:flex;align-items:center;gap:10px;color:#a94d20}.medical-alerts>header svg{width:22px}
+.medical-alerts strong,.medical-alerts small{display:block}.medical-alerts small{margin-top:3px;color:#8e664f}
+.medical-alerts>div{display:flex;gap:9px;margin-top:12px;overflow:auto}.medical-alerts>div>span{min-width:240px;padding:11px;border:1px solid #f2d7c7;border-radius:9px;background:#fff}
+.medical-alerts b,.medical-alerts>div small{display:block}.medical-alerts button{margin:9px 0 0;padding:7px 9px;border:0;border-radius:7px;background:#fff0e7;color:#a94d20;font-size:9px;font-weight:900}
+.long-medical-row{background:#fffaf6}.long-medical-row td:nth-child(2) small{color:#b35125;font-weight:800}
+@media(max-width:760px){.leave-header-actions{width:100%;flex-direction:column}.leave-header-actions button{width:100%;justify-content:center}.leave-secondary-action{order:2}}

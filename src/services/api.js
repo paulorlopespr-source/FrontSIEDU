@@ -122,6 +122,7 @@ export const api = {
 
   listPersonnelLeaves(token) { return request('/personnel-leaves', {}, token); },
   createPersonnelLeave(data, token) { return post('/personnel-leaves', data, token); },
+  updatePersonnelLeave(id, data, token) { return request(`/personnel-leaves/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, token); },
   updatePersonnelLeaveStatus(id, status, token) { return request(`/personnel-leaves/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }, token); },
   downloadPersonnelLeaveDocument(id, filename, token) { return download(`/personnel-leaves/${id}/document`, filename, token); },
 
