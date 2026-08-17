@@ -258,6 +258,7 @@ export const api = {
   createMunicipalDemand(data, token) { return post('/municipal/demands', data, token); },
   decideMunicipalDemand(id, data, token) { return post(`/municipal/demands/${id}/decision`, data, token); },
   executeMunicipalDemand(id, data, token) { return post(`/municipal/demands/${id}/execution`, data, token); },
+  actOnMunicipalDemand(id, data, token) { return post(`/municipal/demands/${id}/action`, data, token); },
   listDemandNotifications(token) { return request('/municipal/demands/notifications', {}, token); },
   readDemandNotification(id, token) { return request(`/municipal/demands/notifications/${id}/read`, { method: 'PATCH' }, token); },
   downloadDemandAttachment(demandId, attachmentId, filename, token) { return download(`/municipal/demands/${demandId}/attachments/${attachmentId}`, filename, token); },
