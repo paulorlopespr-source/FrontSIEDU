@@ -309,3 +309,222 @@
 }
 .municipal-dashboard-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;width:min(1320px,calc(100% - 48px));margin:24px auto 16px}.municipal-dashboard-metric{background:#fff;border:1px solid #dce7f5;border-radius:13px;padding:17px;box-shadow:0 3px 12px #173b7010;min-width:0}.municipal-dashboard-metric span{font-size:24px}.municipal-dashboard-metric small{display:block;color:#607399;margin-top:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.municipal-dashboard-metric strong{display:block;font-size:27px;color:#09245a;margin-top:4px}.municipal-dashboard-metric em{display:block;font-style:normal;color:#7b8ca9;font-size:11px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.municipal-dashboard-columns{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;width:min(1320px,calc(100% - 48px));margin:0 auto 16px}.municipal-dashboard-columns .municipal-card{width:100%;max-width:none;margin:0}.municipal-bar-row{display:grid;grid-template-columns:minmax(110px,1fr) 42px;gap:8px;align-items:center;font-size:12px;margin:13px 0}.municipal-bar-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.municipal-bar-row b{text-align:right}.municipal-bar-row i{grid-column:1/3;height:8px;background:#e8eef7;border-radius:99px}.municipal-bar-row i strong{display:block;height:100%;background:#176fe3;border-radius:99px}.municipal-status-chart{display:flex;justify-content:space-around;gap:10px;text-align:center;padding:22px 0}.municipal-status-chart div{display:flex;flex-direction:column;gap:5px}.municipal-status-chart strong{font-size:28px;color:#176fe3}.municipal-status-chart span{font-size:12px;color:#607399}.municipal-dashboard-note{color:#607399;font-size:12px;border-top:1px solid #edf1f7;padding-top:12px}@media(max-width:800px){.municipal-dashboard-grid,.municipal-dashboard-columns{width:calc(100% - 32px)}.municipal-dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.municipal-dashboard-columns{grid-template-columns:1fr}}
 .municipal-page .municipal-dashboard-grid{gap:10px}.municipal-page .municipal-dashboard-metric{padding:14px}.municipal-page .municipal-dashboard-metric span{font-size:19px}.municipal-page .municipal-dashboard-metric strong{font-size:23px}.municipal-page .municipal-table{max-height:360px;overflow:auto}.municipal-page .municipal-table table{min-width:860px}@media(max-width:900px){.municipal-page .municipal-dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.municipal-page .municipal-dashboard-columns{grid-template-columns:1fr}}
+
+/* Indicadores municipais — painel executivo */
+.municipal-overview-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(500px, 1.15fr);
+  gap: 18px;
+  width: min(1320px, calc(100% - 48px));
+  margin: 22px auto 18px;
+}
+.municipal-overview-row .municipal-ideb-highlight,
+.municipal-overview-row .municipal-summary {
+  width: auto;
+  max-width: none;
+  margin: 0;
+  box-sizing: border-box;
+}
+.municipal-overview-row .municipal-ideb-highlight {
+  grid-template-columns: minmax(180px, 1fr) minmax(210px, .95fr);
+  grid-template-rows: 1fr auto;
+  padding: 20px 22px;
+  min-height: 164px;
+  border: 1px solid #2c6dc2;
+  box-shadow: 0 12px 28px #123a7426;
+}
+.municipal-year-copy strong { line-height: 1; }
+.municipal-ideb-summaries { display: flex; gap: 8px; }
+.municipal-ideb-summaries article { min-width: 0; }
+.municipal-ideb-summaries article small,
+.municipal-ideb-summaries article span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.municipal-overview-row .municipal-ideb-highlight button {
+  grid-column: 2;
+  justify-self: start;
+  padding: 10px 15px;
+}
+.municipal-overview-row .municipal-summary {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  padding: 15px;
+  background: #fff;
+  border: 1px solid #dce5f1;
+  border-radius: 16px;
+  box-shadow: 0 3px 12px #264b7610;
+}
+.municipal-overview-row .municipal-summary article {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 13px 7px;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: none;
+}
+.municipal-overview-row .municipal-summary svg { width: 22px; height: 22px; color: #176bc2; }
+.municipal-overview-row .municipal-summary .tone-orange svg { color: #d65322; }
+.municipal-overview-row .municipal-summary strong { margin: 10px 0 5px; font-size: 25px; color: #0d3974; }
+.municipal-overview-row .municipal-summary span { color: #596d8d; font-size: 11px; line-height: 1.3; }
+
+.municipal-indicators {
+  width: min(1320px, calc(100% - 48px));
+  margin: 18px auto 32px;
+}
+.municipal-indicator-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(340px, .85fr);
+  gap: 16px;
+}
+.municipal-indicators .municipal-card { max-width: none; margin: 0; padding: 20px; }
+.municipal-indicators .municipal-card > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 13px;
+}
+.municipal-indicators h2 { margin: 0 0 5px; font-size: 16px; color: #153961; }
+.municipal-indicators p { margin: 0; color: #71819b; font-size: 11px; line-height: 1.45; }
+.municipal-school-table-card > header > span {
+  flex: none;
+  padding: 6px 9px;
+  border-radius: 99px;
+  background: #eef5ff;
+  color: #176bc2;
+  font-size: 11px;
+  font-weight: 800;
+}
+.municipal-school-table-card .municipal-table { max-height: none; }
+.municipal-school-table-card table { min-width: 720px; }
+.municipal-school-table-card th { padding: 9px 7px; font-size: 10px; text-transform: uppercase; letter-spacing: .02em; }
+.municipal-school-table-card td { padding: 10px 7px; font-size: 11px; }
+.municipal-school-table-card td:first-child { width: 31%; }
+.municipal-school-table-card footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 12px;
+  color: #71819b;
+  font-size: 10px;
+}
+.municipal-school-table-card footer a,
+.municipal-card-link {
+  padding: 7px 10px;
+  border-radius: 7px;
+  background: #edf5ff;
+  color: #1462ad;
+  font-size: 11px;
+  font-weight: 800;
+  text-decoration: none;
+}
+.municipal-school-bars > header svg { color: #176bc2; }
+.municipal-school-bars .municipal-bar-row { margin: 15px 0; }
+.municipal-school-bars .municipal-bar-row i { height: 7px; }
+.municipal-school-bars .municipal-bar-row i strong { background: linear-gradient(90deg, #91b9ed, #2174cc); }
+.municipal-card-link { display: block; width: max-content; margin: 18px 0 0 auto; }
+
+.municipal-indicator-secondary {
+  display: grid;
+  grid-template-columns: 1.03fr .96fr .96fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+.municipal-compact-panel,
+.municipal-quick-panel { min-height: 145px; }
+.municipal-status-chart {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 9px 0 0;
+}
+.municipal-status-chart > div {
+  position: relative;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #e4ebf4;
+  border-radius: 9px;
+  text-align: left;
+}
+.municipal-status-chart svg { width: 18px; height: 18px; margin-bottom: 2px; }
+.municipal-status-chart strong { font-size: 21px; }
+.municipal-status-chart small { color: #8794a8; font-size: 9px; }
+.municipal-status-chart .status-active { background: #f2fbf6; color: #198c50; }
+.municipal-status-chart .status-inactive { background: #fffaf0; color: #bd8013; }
+.municipal-status-chart .status-first { background: #f2f7fd; color: #246eb8; }
+.municipal-performance { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 14px; }
+.municipal-performance > div { display: flex; gap: 10px; padding: 12px; border: 1px solid #e0eaf3; border-radius: 9px; background: #f7fbff; }
+.municipal-performance svg { flex: none; width: 19px; color: #2085d8; }
+.municipal-performance span,
+.municipal-performance b,
+.municipal-performance small { display: block; }
+.municipal-performance strong { color: #0e8150; font-size: 20px; }
+.municipal-performance b { margin: 2px 0; color: #526985; font-size: 10px; }
+.municipal-performance small { color: #8794a8; font-size: 9px; }
+.municipal-quick-panel > div { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; }
+.municipal-quick-panel button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 13px 5px;
+  border: 1px solid #e2e9f2;
+  border-radius: 9px;
+  background: #fff;
+  color: #506783;
+  font-size: 9px;
+}
+.municipal-quick-panel button:hover { border-color: #9fc5ee; background: #f6faff; }
+.municipal-quick-panel button svg { width: 20px; color: #176bc2; }
+.municipal-quick-panel button:nth-child(3) svg { color: #d65322; }
+.municipal-data-source {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  margin-top: 16px;
+  padding: 14px 18px;
+  border: 1px solid #cfe2f7;
+  border-radius: 10px;
+  background: #eaf4ff;
+  color: #315879;
+}
+.municipal-data-source > span { display: flex; align-items: center; gap: 11px; }
+.municipal-data-source > span:last-child { text-align: right; }
+.municipal-data-source svg { flex: none; width: 18px; color: #176bc2; }
+.municipal-data-source b,
+.municipal-data-source small { display: block; }
+.municipal-data-source b { font-size: 10px; }
+.municipal-data-source small { margin-top: 3px; font-size: 9px; color: #66809a; }
+.municipal-data-source button { display: grid; place-items: center; padding: 7px; border: 0; background: transparent; cursor: pointer; }
+
+@media (max-width: 1100px) {
+  .municipal-overview-row { grid-template-columns: 1fr; }
+  .municipal-indicator-main { grid-template-columns: 1fr; }
+  .municipal-indicator-secondary { grid-template-columns: 1fr 1fr; }
+  .municipal-quick-panel { grid-column: 1 / -1; }
+}
+@media (max-width: 720px) {
+  .municipal-overview-row,
+  .municipal-indicators { width: calc(100% - 28px); }
+  .municipal-overview-row .municipal-summary { grid-template-columns: repeat(2, 1fr); }
+  .municipal-overview-row .municipal-summary article:last-child { grid-column: 1 / -1; }
+  .municipal-overview-row .municipal-ideb-highlight { grid-template-columns: 1fr; }
+  .municipal-overview-row .municipal-ideb-highlight button { grid-column: 1; }
+  .municipal-indicator-secondary { grid-template-columns: 1fr; }
+  .municipal-quick-panel { grid-column: auto; }
+  .municipal-data-source { align-items: flex-start; flex-direction: column; }
+  .municipal-data-source > span:last-child { width: 100%; justify-content: space-between; text-align: left; }
+}
+@media (max-width: 480px) {
+  .municipal-ideb-summaries { flex-direction: column; }
+  .municipal-status-chart { grid-template-columns: 1fr; }
+  .municipal-performance { grid-template-columns: 1fr; }
+  .municipal-quick-panel > div { grid-template-columns: repeat(2, 1fr); }
+  .municipal-school-table-card footer { align-items: flex-start; flex-direction: column; }
+}
