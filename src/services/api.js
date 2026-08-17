@@ -1,7 +1,17 @@
-const API_URL = import.meta.env.VITE_API_URL || 'https://backendsiedu-production.up.railway.app/api';
+import { API_CONFIGURATION_ERROR, resolveApiUrl } from './api-config.js';
+
+const API_URL = resolveApiUrl({
+  configuredUrl: import.meta.env.VITE_API_URL,
+  hostname: typeof window === 'undefined' ? '' : window.location.hostname,
+});
+
+function requireApiUrl() {
+  if (!API_URL) throw new Error(API_CONFIGURATION_ERROR);
+  return API_URL;
+}
 
 async function request(path, options = {}, token) {
-  const response = await fetch(`${API_URL}${path}`, {
+  const response = await fetch(`${requireApiUrl()}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -50,7 +60,7 @@ function post(path, data, token) {
 }
 
 async function download(path, filename, token) {
-  const response = await fetch(`${API_URL}${path}`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+  const response = await fetch(`${requireApiUrl()}${path}`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
   if (!response.ok) {
     let message = 'Não foi possível baixar o arquivo.';
     try { message = (await response.json()).message || message; } catch { /* resposta sem JSON */ }
@@ -527,4 +537,3 @@ export const api = {
     return post('/academic/employees', data, token);
   },
 };
-
