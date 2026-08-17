@@ -105,8 +105,22 @@ function Layout({ children, onLogout, variant = 'gestor' }) {
   );
 }
 
-function MunicipalBrand({ user }) {
-  return <div className="municipal-brand-stamp" aria-label="Prefeitura Municipal de Pindobaçu"><img src="/images/prefeitura.png" alt="Prefeitura Municipal de Pindobaçu" /><span>Prefeitura Municipal de Pindobaçu<br /><small>Secretaria Municipal de Educação · SIEDU</small>{user?.nome && <small className="municipal-user-id">{user.nome} · {user.matriculaSecretaria || 'Matrícula em atualização'}</small>}</span></div>;
+function MunicipalBrand({ user, onLogout }) {
+  return (
+    <aside className="municipal-brand-stamp" aria-label="Identidade institucional do SIEDU">
+      <div className="municipal-brand-logos">
+        <img className="municipal-system-icon" src="/siedu-icon.png" alt="Ícone do SIEDU" />
+        <img src="/images/prefeitura.png" alt="Prefeitura Municipal de Pindobaçu" />
+      </div>
+      <span>
+        <strong>SIEDU</strong>
+        <small>Prefeitura Municipal de Pindobaçu</small>
+        <small>Secretaria Municipal de Educação</small>
+        {user?.nome && <small className="municipal-user-id">{user.nome} · {user.matriculaSecretaria || 'Matrícula em atualização'}</small>}
+      </span>
+      {user && <button className="global-logout-button" type="button" onClick={onLogout} aria-label="Sair do sistema e voltar para a tela de login">Sair</button>}
+    </aside>
+  );
 }
 function Login({ onLogin }) {
   const navigate = useNavigate();
@@ -684,7 +698,7 @@ export default function App() {
   }
 
   return (
-    <><MunicipalBrand user={session?.user} /><Routes>
+    <><MunicipalBrand user={session?.user} onLogout={logout} /><Routes>
       <Route path="/login" element={<Login onLogin={login} />} />
       <Route path="/termos" element={<Protected token={session?.token}><TermosUso token={session?.token} user={session?.user} onAccepted={updateUser} /></Protected>} />
       <Route path="/recuperar-senha" element={<RecuperarSenha />} />
