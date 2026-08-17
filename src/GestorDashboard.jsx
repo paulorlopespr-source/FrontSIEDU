@@ -1,5 +1,28 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {
+  BarChart3,
+  Bell,
+  BookOpenCheck,
+  Building2,
+  Bus,
+  CalendarDays,
+  ChevronRight,
+  CircleDollarSign,
+  ClipboardCheck,
+  FileBarChart,
+  GraduationCap,
+  HelpCircle,
+  LayoutDashboard,
+  LogOut,
+  Mail,
+  Menu,
+  Search,
+  ShieldCheck,
+  Target,
+  TrendingUp,
+  UsersRound,
+} from 'lucide-react';
 import { api } from './services/api';
 import './gestor-dashboard.css';
 
@@ -53,15 +76,15 @@ const menuLinks = {
 };
 
 const quickActions = [
-  ['Consultar escolas', '/gestor/escolas', '\u{1F3EB}'],
-  ['Gerenciar professores', '/usuarios', '\u{1F469}\u200D\u{1F3EB}'],
-  ['Gestão financeira', '/gestor/financeiro', '\u{1F4B0}'],
-  ['Indicadores municipais', '/gestao-municipal', '\u{1F4C8}'],
-  ['Auditoria do sistema', '/gestor/auditoria', '\u{1F6E1}\uFE0F'],
-  ['Prestação de contas', '/gestor/financeiro', '\u{1F4C4}'],
-  ['Convênios e recursos', '/gestor/financeiro', '\u{1F91D}'],
-  ['Transporte escolar', '/transportes', '\u{1F68C}'],
-  ['Solicitações e demandas', '/gestor/demandas', '\u{1F4E8}'],
+  ['Consultar escolas', '/gestor/escolas', Building2],
+  ['Gerenciar professores', '/usuarios', UsersRound],
+  ['Gestão financeira', '/gestor/financeiro', CircleDollarSign],
+  ['Indicadores municipais', '/gestao-municipal', BarChart3],
+  ['Auditoria do sistema', '/gestor/auditoria', ShieldCheck],
+  ['Prestação de contas', '/gestor/financeiro', FileBarChart],
+  ['Convênios e recursos', '/gestor/financeiro', ClipboardCheck],
+  ['Transporte escolar', '/transportes', Bus],
+  ['Solicitações e demandas', '/gestor/demandas', Mail],
 ];
 
 function number(value) {
@@ -91,7 +114,7 @@ export function GestorSidebar({ onLogout }) {
         <div><strong>SIEDU-PINDOBAÇU</strong><span>Sistema Integrado de Educação</span></div>
       </div>
 
-      <Link className={`sidebar-current ${current === '/gestor' ? 'active' : ''}`} to="/gestor"><span>⌂</span> Dashboard</Link>
+      <Link className={`sidebar-current ${current === '/gestor' ? 'active' : ''}`} to="/gestor"><LayoutDashboard size={18} /> Painel executivo</Link>
 
       <nav className="sidebar-menu">
         {menuGroups.map((group) => (
@@ -106,7 +129,7 @@ export function GestorSidebar({ onLogout }) {
         <span>Configurações</span>
         <Link to="/usuarios">Usuários e perfis</Link>
         <Link to="/gestor/auditoria">Auditoria do sistema</Link>
-        <button type="button" onClick={onLogout}>Sair do sistema</button>
+        <button type="button" onClick={onLogout}><LogOut size={15} /> Sair do sistema</button>
       </section>
 
       <div className="sidebar-city">
@@ -130,13 +153,13 @@ export function GestorTopbar({ user, onLogout, alertCount = 0 }) {
   };
   return (
     <header className="dashboard-topbar">
-      <button className="menu-trigger" type="button" disabled title="Menu já está aberto nesta versão">☰</button>
+      <button className="menu-trigger" type="button" disabled title="Menu já está aberto nesta versão"><Menu size={21} /></button>
       <div className="topbar-title"><img className="portal-header-logo" src="/images/prefeitura.png" alt="Prefeitura Municipal de Pindobaçu" /><div><strong>Portal do Gestor</strong><span>Secretaria Municipal de Educação</span></div></div>
-      <form className="dashboard-search" onSubmit={search} title="Pesquisar módulos da rede"><span>⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Pesquisar escolas, alunos e relatórios..." /></form>
+      <form className="dashboard-search" onSubmit={search} title="Pesquisar módulos da rede"><Search size={17} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Pesquisar escolas, alunos e relatórios..." /></form>
       <div className="topbar-actions">
-        <button type="button" disabled title="Use a seção de alertas do painel">🔔{alertCount > 0 && <i>{alertCount}</i>}</button>
-        <button type="button" onClick={() => navigate('/gestor/demandas')} title="Abrir solicitações e notificações">✉</button>
-        <button type="button" onClick={() => setHelpOpen((value) => !value)} title="Ajuda rápida">?</button>
+        <button type="button" disabled title="Use a seção de alertas do painel"><Bell size={19} />{alertCount > 0 && <i>{alertCount}</i>}</button>
+        <button type="button" onClick={() => navigate('/gestor/demandas')} title="Abrir solicitações e notificações"><Mail size={19} /></button>
+        <button type="button" onClick={() => setHelpOpen((value) => !value)} title="Ajuda rápida"><HelpCircle size={19} /></button>
         {helpOpen && <div className="topbar-help">Use a pesquisa para abrir escolas, alunos, professores, turmas, finanças e relatórios.</div>}
       </div>
       <div className="topbar-user">
@@ -149,11 +172,12 @@ export function GestorTopbar({ user, onLogout, alertCount = 0 }) {
 }
 
 function StatCard({ stat }) {
+  const Icon = stat.icon;
   return (
-    <article className={`stat-card ${stat.color}`}>
-      <div className="stat-icon">{stat.icon}</div>
+    <article className={`stat-card status-${stat.color}`}>
+      <div className="stat-icon"><Icon size={22} strokeWidth={1.8} /></div>
       <div><span>{stat.label}</span><strong>{stat.value}</strong><small>{stat.detail}</small></div>
-      <footer>{stat.link ? <Link to={stat.link}><b>Abrir solicitações</b><span>Ver fluxo e notificações →</span></Link> : <><b>Banco de dados</b><span>atualização automática</span></>}</footer>
+      <footer>{stat.link ? <Link to={stat.link}><b>Abrir solicitações</b><span>Ver fluxo e notificações <ChevronRight size={13} /></span></Link> : <><b>Dados consolidados</b><span>Atualização automática</span></>}</footer>
     </article>
   );
 }
@@ -270,16 +294,16 @@ export default function GestorDashboard({ user, onLogout, token }) {
   }, [token]);
 
   const stats = useMemo(() => [
-    { label: 'Escolas ativas', value: number(dashboard.summary.schools), detail: 'Total de escolas', color: 'blue', icon: '🏫' },
-    { label: 'Alunos matriculados', value: number(dashboard.summary.students), detail: 'Total no banco', color: 'green', icon: '👥' },
-    { label: 'Professores', value: number(dashboard.summary.professors), detail: 'Usuários ativos', color: 'purple', icon: '👩‍🏫' },
-    { label: 'Turmas ativas', value: number(dashboard.summary.classes), detail: 'Total no banco', color: 'orange', icon: '🎓' },
-    { label: 'Investimento', value: money(dashboard.summary.investment), detail: `Utilizado: ${money(dashboard.summary.spent)}`, color: 'cyan', icon: '📈' },
-    { label: 'Meta IDEB', value: Number(dashboard.summary.idebTarget).toFixed(1), detail: dashboard.academic.ideb.length ? 'Última meta oficial registrada' : 'Sem meta cadastrada', color: 'pink', icon: '🎯' },
-    { label: 'Frequência média', value: `${Number(dashboard.summary.attendance||0).toFixed(1)}%`, detail: 'Consolidado dos diários', color: 'cyan', icon: '✓' },
-    { label: 'Média geral da rede', value: Number(dashboard.summary.average||0).toFixed(1), detail: 'Consolidado das avaliações', color: 'orange', icon: '📊' },
-    { label: 'Planos de aula pendentes', value: number(dashboard.summary.pendingPlans), detail: 'Aguardando coordenação', color: 'pink', icon: '📋' },
-    { label: 'Solicitações e Demandas', value: number(demands.filter((item) => item.status !== 'Demanda resolvida').length), detail: demandNotifications.some((item) => !item.lidaEm) ? `${demandNotifications.filter((item) => !item.lidaEm).length} nova(s) notificação(ões)` : 'Nenhuma nova notificação', color: demandNotifications.some((item) => !item.lidaEm) ? 'pink' : 'green', icon: '📨', link: '/gestor/demandas' },
+    { label: 'Escolas ativas', value: number(dashboard.summary.schools), detail: 'Total de escolas', color: 'info', icon: Building2 },
+    { label: 'Alunos matriculados', value: number(dashboard.summary.students), detail: 'Total no banco', color: 'success', icon: GraduationCap },
+    { label: 'Professores', value: number(dashboard.summary.professors), detail: 'Usuários ativos', color: 'info', icon: UsersRound },
+    { label: 'Turmas ativas', value: number(dashboard.summary.classes), detail: 'Total no banco', color: 'info', icon: BookOpenCheck },
+    { label: 'Investimento', value: money(dashboard.summary.investment), detail: `Utilizado: ${money(dashboard.summary.spent)}`, color: 'info', icon: TrendingUp },
+    { label: 'Meta IDEB', value: Number(dashboard.summary.idebTarget).toFixed(1), detail: dashboard.academic.ideb.length ? 'Última meta oficial registrada' : 'Sem meta cadastrada', color: 'attention', icon: Target },
+    { label: 'Frequência média', value: `${Number(dashboard.summary.attendance||0).toFixed(1)}%`, detail: 'Consolidado dos diários', color: 'success', icon: ClipboardCheck },
+    { label: 'Média geral da rede', value: Number(dashboard.summary.average||0).toFixed(1), detail: 'Consolidado das avaliações', color: 'info', icon: BarChart3 },
+    { label: 'Planos de aula pendentes', value: number(dashboard.summary.pendingPlans), detail: 'Aguardando coordenação', color: 'attention', icon: CalendarDays },
+    { label: 'Solicitações e demandas', value: number(demands.filter((item) => item.status !== 'Demanda resolvida').length), detail: demandNotifications.some((item) => !item.lidaEm) ? `${demandNotifications.filter((item) => !item.lidaEm).length} nova(s) notificação(ões)` : 'Nenhuma nova notificação', color: demandNotifications.some((item) => !item.lidaEm) ? 'attention' : 'success', icon: Mail, link: '/gestor/demandas' },
   ], [dashboard, demands, demandNotifications]);
 
   const today = new Date();
@@ -294,7 +318,7 @@ export default function GestorDashboard({ user, onLogout, token }) {
         <GestorTopbar user={user} onLogout={onLogout} alertCount={dashboard.alerts.length + demandNotifications.filter((item) => !item.lidaEm).length} />
         <main className="dashboard-content" id="indicadores">
           <section className="dashboard-welcome">
-            <div><h1>Bom dia, Gestor! 👋</h1><p>Visão geral da Rede Municipal de Ensino de Pindobaçu.</p><small>{writtenDate}</small></div>
+            <div><span className="dashboard-kicker">PAINEL DO SECRETÁRIO</span><h1>Visão geral da rede</h1><p>Rede Municipal de Ensino de Pindobaçu</p><small>{writtenDate}</small></div>
             <div><button type="button" disabled title="Período atual do relatório">{startOfYear} - {todayLabel}</button><button className="export-button" type="button" onClick={() => window.print()}>⇩ Exportar relatório</button></div>
           </section>
 
@@ -310,7 +334,7 @@ export default function GestorDashboard({ user, onLogout, token }) {
 
           <section className="dashboard-management" style={{ marginTop: 20 }}>
             <div><span className="eyebrow">ACOMPANHAMENTO PEDAGÓGICO</span><h2>Calendário, IDEB e aprendizagem</h2><p>Ano letivo vigente: <b>{idebAnalysis?.currentSchoolYear || new Date().getFullYear()}</b>. Último ciclo oficial: <b>{idebAnalysis?.latestOfficialYear || 2025}</b>.</p></div>
-            <div className="dashboard-management-actions"><Link to="/gestao-municipal?tab=ideb-analise">📈 Análise do IDEB — 10 anos</Link><Link to="/aprendizagem">🧭 Simulado SAEB e aprendizagem</Link><Link to="/calendario-escolar">📅 Gestão do calendário escolar</Link></div>
+            <div className="dashboard-management-actions"><Link to="/gestao-municipal?tab=ideb-analise">Análise do IDEB — 10 anos</Link><Link to="/aprendizagem">Simulado SAEB e aprendizagem</Link><Link to="/calendario-escolar">Gestão do calendário escolar</Link></div>
           </section>
 
           <section className="dashboard-charts">
@@ -327,7 +351,7 @@ export default function GestorDashboard({ user, onLogout, token }) {
 
           <section className="dashboard-lower dashboard-real-lower"><UsersPanel users={dashboard.users} /></section>
 
-          <section className="quick-actions"><h2>Ações rápidas</h2><div>{quickActions.map(([label, link, icon]) => <Link key={label} to={link}><span>{icon}</span><b>{label}</b></Link>)}</div></section>
+          <section className="quick-actions"><h2>Ações rápidas</h2><div>{quickActions.map(([label, link, Icon]) => <Link key={label} to={link}><span><Icon size={20} strokeWidth={1.8} /></span><b>{label}</b></Link>)}</div></section>
           <footer className="dashboard-footer">© 2026 SIEDU-PINDOBAÇU — Sistema Integrado de Educação de Pindobaçu. Todos os direitos reservados.<span>Versão 0.0.1 · Dados atualizados automaticamente</span></footer>
         </main>
       </div>
