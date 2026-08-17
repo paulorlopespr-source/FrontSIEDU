@@ -730,3 +730,9 @@
   .registration-step { padding: 18px; }
   .registration-actions .form-return { margin-left: 0; }
 }
+.user-management-embedded{padding:24px 30px 40px}
+.user-management-embedded .user-management-grid{margin-top:0}
+.user-management-embedded .final-registration-grid.bindings-only{grid-template-columns:1fr}
+.user-management-embedded .user-list-panel{min-width:0}
+.administration-people-page .user-feedback{margin-top:0}
+@media(max-width:760px){.user-management-embedded{padding:18px 16px 32px}}

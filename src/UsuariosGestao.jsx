@@ -119,7 +119,7 @@ function Field({ label, required, help, children, wide = false }) {
   );
 }
 
-export default function UsuariosGestao({ token, onLogout }) {
+export default function UsuariosGestao({ token, onLogout, embedded = false, administrationMode = false, bindingsOnly = false }) {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
@@ -181,7 +181,7 @@ export default function UsuariosGestao({ token, onLogout }) {
       .then(([schoolList, typeList]) => {
         if (!active) return;
 
-        const visible = typeList.filter((type) => profiles.includes(type.nome));
+        const visible = typeList.filter((type) => profiles.includes(type.nome) && (!administrationMode || Number(type.nivel) > 3));
         setSchools(schoolList);
         setTypes([...new Map(visible.map((type) => [type.nome, type])).values()]);
       })
@@ -325,17 +325,17 @@ export default function UsuariosGestao({ token, onLogout }) {
   }
 
   return (
-    <main className="app-page user-management-page">
-      <header className="user-management-header">
+    <main className={`${embedded ? 'user-management-embedded' : 'app-page'} user-management-page`}>
+      {!embedded && <header className="user-management-header">
         <strong>SIEDU-PINDOBAÇU · Portal do Gestor</strong>
         <nav><Link to="/gestor">Painel</Link><Link to="/gestor/escolas">Escolas</Link><button type="button" onClick={onLogout}>Sair</button></nav>
-      </header>
+      </header>}
 
-      <section className="hero">
+      {!embedded && <section className="hero">
         <span className="eyebrow">GESTÃO DE PESSOAS E ACESSOS</span>
         <h1>Cadastro funcional</h1>
         <p>Dados pessoais, vínculo profissional e permissões organizados em um único cadastro auditável.</p>
-      </section>
+      </section>}
 
       {(error || message) && <section className="user-feedback" aria-live="polite">{error && <p className="error">{error}</p>}{message && <p className="success">{message}</p>}</section>}
 
@@ -347,8 +347,8 @@ export default function UsuariosGestao({ token, onLogout }) {
         </section>
       )}
 
-      <section className="user-management-grid final-registration-grid">
-        <form className="panel user-create-panel final-registration" onSubmit={create}>
+      <section className={`user-management-grid final-registration-grid ${bindingsOnly ? 'bindings-only' : ''}`}>
+        {!bindingsOnly && <form id="novo-funcionario" className="panel user-create-panel final-registration" onSubmit={create}>
           <div className="registration-title"><div><span>NOVO FUNCIONÁRIO</span><h2>Formulário de cadastro</h2></div><em>* Campos obrigatórios</em></div>
           <div className="registration-tabs" role="tablist" aria-label="Etapas do cadastro">
             {tabs.map((tab) => <button key={tab.id} type="button" role="tab" aria-selected={activeTab === tab.id} className={activeTab === tab.id ? 'active' : ''} onClick={() => setActiveTab(tab.id)}><b>{tab.number}</b><span>{tab.label}</span></button>)}
@@ -414,16 +414,16 @@ export default function UsuariosGestao({ token, onLogout }) {
           <div className="registration-actions">
             {activeTab !== 'pessoais' && <button className="button-secondary" type="button" onClick={() => setActiveTab(activeTab === 'acesso' ? 'funcionais' : 'pessoais')}>Voltar</button>}
             {activeTab !== 'acesso' ? <button type="button" onClick={goNext}>Continuar</button> : <button type="submit" disabled={saving}>{saving ? 'Salvando...' : 'Concluir cadastro'}</button>}
-            <Link className="form-return" to="/gestor">Cancelar</Link>
+            <Link className="form-return" to={administrationMode ? '/administracao/funcionarios' : '/gestor'}>Cancelar</Link>
           </div>
           <small className="privacy-note">Colete apenas os dados necessários à finalidade administrativa. Informações pessoais e observações restritas são protegidas pelos controles de acesso e auditoria do SIEDU.</small>
-        </form>
+        </form>}
 
         <section className="panel user-list-panel">
           <div className="user-list-heading">
             <div>
-              <h2>Funcionários cadastrados</h2>
-              <p>Perfis profissionais da rede municipal.</p>
+              <h2>{bindingsOnly ? 'Lotações da rede' : 'Funcionários cadastrados'}</h2>
+              <p>{bindingsOnly ? 'Selecione “Alterar lotação” para registrar a unidade autorizada.' : 'Perfis profissionais da rede municipal.'}</p>
             </div>
 
             <div className="user-list-tools">
@@ -439,7 +439,7 @@ export default function UsuariosGestao({ token, onLogout }) {
               <span>{loading ? 'Carregando...' : pagination.total + ' cadastro(s)'}</span>
             </div>
           </div>
-          <div className="user-table-scroll"><table><thead><tr><th>Funcionário</th><th>Perfil</th><th>Unidades</th><th>Acesso</th><th>Ações</th></tr></thead><tbody>{users.map((item) => <tr key={item.id}><td><div className="employee-cell"><span className="employee-avatar">{initials(item.nome)}</span><div><strong>{item.nomeSocial || item.nome}</strong><small>{item.matriculaFuncional || item.usuario}</small></div></div></td><td>{item.perfil}</td><td><div className="school-tags">{(item.escolas || []).map((school) => <span key={school.id}>{school.nome}</span>)}{!item.escolas?.length && <em>Sem vínculo</em>}</div></td><td><span className={`access-status status-${item.situacaoAcesso || 'pendente'}`}>{item.deve_alterar_senha ? 'Primeiro acesso' : item.situacaoAcesso || (item.ativo ? 'Ativo' : 'Inativo')}</span>{item.doisFatoresObrigatorio && <small>2FA obrigatório</small>}</td><td><div className="user-row-actions">{schoolProfiles.has(item.perfil) && <button className="button-secondary" type="button" onClick={() => setEditingBinding({ id: item.id, nome: item.nome, perfil: item.perfil, escolaIds: (item.escolas || []).map((school) => school.id) })}>Escolas</button>}<button className="button-secondary" type="button" onClick={()=>toggleAccess(item)}>{item.situacaoAcesso==='ativo'&&item.ativo?'Bloquear':'Reativar'}</button><button className="danger" type="button" onClick={() => remove(item.id)}>Excluir</button></div></td></tr>)}</tbody></table></div>
+          <div className="user-table-scroll"><table><thead><tr><th>Funcionário</th><th>Perfil</th><th>Unidades</th><th>Acesso</th><th>Ações</th></tr></thead><tbody>{users.map((item) => <tr key={item.id}><td><div className="employee-cell"><span className="employee-avatar">{initials(item.nome)}</span><div><strong>{item.nomeSocial || item.nome}</strong><small>{item.matriculaFuncional || item.usuario}</small></div></div></td><td>{item.perfil}</td><td><div className="school-tags">{(item.escolas || []).map((school) => <span key={school.id}>{school.nome}</span>)}{!item.escolas?.length && <em>Sem lotação</em>}</div></td><td><span className={`access-status status-${item.situacaoAcesso || 'pendente'}`}>{item.deve_alterar_senha ? 'Primeiro acesso' : item.situacaoAcesso || (item.ativo ? 'Ativo' : 'Inativo')}</span>{item.doisFatoresObrigatorio && <small>2FA obrigatório</small>}</td><td><div className="user-row-actions">{schoolProfiles.has(item.perfil) && <button className="button-secondary" type="button" onClick={() => setEditingBinding({ id: item.id, nome: item.nome, perfil: item.perfil, escolaIds: (item.escolas || []).map((school) => school.id) })}>{bindingsOnly ? 'Alterar lotação' : 'Escolas'}</button>}{!bindingsOnly && <button className="button-secondary" type="button" onClick={()=>toggleAccess(item)}>{item.situacaoAcesso==='ativo'&&item.ativo?'Inativar':'Reativar'}</button>}{!administrationMode && !bindingsOnly && <button className="danger" type="button" onClick={() => remove(item.id)}>Excluir</button>}</div></td></tr>)}</tbody></table></div>
           <div className="user-pagination">
             <label>
               Por página

@@ -8,7 +8,7 @@ import {
 
 const navigationGroups = [
   { label: 'GESTÃO DE PESSOAS', items: [
-    { label: 'Funcionários', icon: UsersRound }, { label: 'Vínculos e Lotações', icon: Building2 },
+    { label: 'Funcionários', icon: UsersRound, to: '/administracao/funcionarios' }, { label: 'Vínculos e Lotações', icon: Building2, to: '/administracao/vinculos' },
     { label: 'Férias e Afastamentos', icon: CalendarDays }, { label: 'Documentos Funcionais', icon: FileArchive },
   ] },
   { label: 'OPERAÇÕES', items: [
