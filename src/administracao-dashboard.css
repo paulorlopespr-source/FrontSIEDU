@@ -22,3 +22,12 @@
   .administration-brand{padding:15px 18px}
   .administration-user{display:none}
 }
+.administration-page-actions{display:flex;align-items:center;gap:9px}
+.administration-page-actions a{display:flex;align-items:center;gap:7px;padding:10px 12px;border:1px solid #d8e3ef;border-radius:9px;background:#fff;color:#176bc2;font-size:11px;font-weight:800;text-decoration:none}
+.administration-page-actions a.primary{border-color:#176bc2;background:#176bc2;color:#fff}
+.administration-page-actions svg{width:16px}
+.administration-quick-actions>div>a{display:grid;grid-template-columns:34px 1fr;column-gap:10px;padding:11px;border:1px solid #e5ebf2;border-radius:9px;color:#18395f;text-decoration:none}
+.administration-quick-actions>div>a:hover{border-color:#176bc2;background:#f7fbff}
+.administration-quick-actions>div>a svg{grid-row:1/3;width:18px;padding:7px;border-radius:8px;background:#eef5ff;color:#176bc2}
+.administration-quick-actions>div>a b{font-size:11px}.administration-quick-actions>div>a small{color:#8391a3;font-size:8px}
+@media(max-width:760px){.administration-page-actions{width:100%;overflow:auto}.administration-page-actions a{min-width:max-content}}
