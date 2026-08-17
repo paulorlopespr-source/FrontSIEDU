@@ -1,7 +1,11 @@
 .leave-header-actions{display:flex;align-items:center;gap:9px}
 .leave-secondary-action{margin:0;padding:10px 14px;border:1px solid #b9cce3;border-radius:9px;background:#fff;color:#176bc2;font-weight:800}
+.leave-secondary-action.medical{border-color:#e3b49e;color:#a84d22;background:#fff9f5}
 .leave-kind{margin-top:14px}
+.leave-steps.four-steps{grid-template-columns:repeat(4,1fr)}
+.sensitive-field small{color:#7b6a61;font-size:9px;font-weight:500}.sensitive-field input{border-color:#ddc3b6}
 .calendar-period{margin-top:14px;padding:15px;border:1px solid #dbe5f0;border-radius:12px;background:#f8fbff}
+.calendar-period h3{margin:0 0 4px;color:#244664;font-size:14px}
 .calendar-period>.leave-date-grid{margin-top:0}
 .calendar-period>label{display:grid;gap:7px;color:#294765;font-size:11px;font-weight:800}
 .period-summary{display:flex;align-items:center;gap:10px;margin-top:13px;padding:11px;border-radius:9px;background:#eaf4ff;color:#175fa8}
