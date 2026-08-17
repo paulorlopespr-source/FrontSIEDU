@@ -28,6 +28,7 @@ import AprendizagemGestao from './AprendizagemGestao';
 import CalendarioEscolarGestao from './CalendarioEscolarGestao';
 import GestaoMunicipal from './GestaoMunicipal';
 import DemandasEscolares from './DemandasEscolares';
+import AdministracaoDashboard from './AdministracaoDashboard';
 import {
   DetalhesEscolaGestor,
   ListaEscolasGestor,
@@ -56,6 +57,7 @@ import {
   canExecuteSchoolDemand,
   destinationFor,
   isMunicipalCoordinator,
+  isEducationAdministration,
   isMunicipalManager,
   isProfessor,
   isStudent,
@@ -869,6 +871,11 @@ export default function App() {
 
       <Route
         path="/administracao"
+        element={<Protected token={session?.token}><Allowed allowed={isEducationAdministration(session?.user)} user={session?.user}><AdministracaoDashboard token={session?.token} user={session?.user} onLogout={logout} /></Allowed></Protected>}
+      />
+
+      <Route
+        path="/administracao/demandas"
         element={<Protected token={session?.token}><Allowed allowed={canExecuteSchoolDemand(session?.user)} user={session?.user}><DemandasEscolares token={session?.token} user={session?.user} onLogout={logout} /></Allowed></Protected>}
       />
 
