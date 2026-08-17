@@ -1,29 +1,22 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Bell,
   Boxes,
   Building2,
-  CalendarDays,
   ChevronRight,
   ClipboardList,
-  FileArchive,
-  FileBarChart,
   FolderClock,
-  LayoutDashboard,
-  LogOut,
   Megaphone,
   PackageCheck,
   Search,
   Settings2,
   ShoppingCart,
   Truck,
-  UserRound,
   UsersRound,
   Warehouse,
-  Wrench,
 } from 'lucide-react';
 import { api } from './services/api';
+import AdministracaoSidebar from './AdministracaoSidebar';
 import './administracao-dashboard.css';
 
 const emptyOverview = {
@@ -31,57 +24,8 @@ const emptyOverview = {
   upcomingMeetings: 0,
 };
 
-const navigationGroups = [
-  {
-    label: 'GESTÃO DE PESSOAS',
-    items: [
-      { label: 'Funcionários', icon: UsersRound, planned: true },
-      { label: 'Vínculos e Lotações', icon: Building2, planned: true },
-      { label: 'Férias e Afastamentos', icon: CalendarDays, planned: true },
-      { label: 'Documentos Funcionais', icon: FileArchive, planned: true },
-    ],
-  },
-  {
-    label: 'OPERAÇÕES',
-    items: [
-      { label: 'Demandas', icon: Megaphone, to: '/administracao/demandas' },
-      { label: 'Patrimônio', icon: PackageCheck, planned: true },
-      { label: 'Almoxarifado', icon: Warehouse, planned: true },
-      { label: 'Transporte', icon: Truck, planned: true },
-      { label: 'Manutenção', icon: Wrench, planned: true },
-    ],
-  },
-  {
-    label: 'ADMINISTRATIVO',
-    items: [
-      { label: 'Documentos e Protocolo', icon: FolderClock, planned: true },
-      { label: 'Solicitações', icon: ClipboardList, planned: true },
-      { label: 'Compras', icon: ShoppingCart, planned: true },
-      { label: 'Contratos', icon: FileArchive, planned: true },
-      { label: 'Agenda', icon: CalendarDays, planned: true },
-    ],
-  },
-  {
-    label: 'REDE MUNICIPAL',
-    items: [
-      { label: 'Escolas', icon: Building2, planned: true },
-      { label: 'Turmas', icon: UsersRound, planned: true },
-      { label: 'Alunos (consulta)', icon: UserRound, planned: true },
-      { label: 'Indicadores (consulta)', icon: FileBarChart, planned: true },
-    ],
-  },
-];
-
 function PlannedBadge() {
   return <small className="administration-planned">Em implantação</small>;
-}
-
-function NavigationItem({ item }) {
-  const Icon = item.icon;
-  if (item.to) {
-    return <Link to={item.to}><Icon aria-hidden="true"/><span>{item.label}</span><ChevronRight aria-hidden="true"/></Link>;
-  }
-  return <span className="administration-nav-disabled" aria-disabled="true"><Icon aria-hidden="true"/><span>{item.label}</span><PlannedBadge/></span>;
 }
 
 export default function AdministracaoDashboard({ token, user, onLogout }) {
@@ -133,15 +77,7 @@ export default function AdministracaoDashboard({ token, user, onLogout }) {
   const recentDemands = demands.slice(0, 5);
 
   return <div className="administration-shell">
-    <aside className="administration-sidebar">
-      <div className="administration-brand"><span>S</span><div><strong>SIEDU</strong><small>Secretaria Administrativa</small></div></div>
-      <nav aria-label="Navegação da Secretaria Administrativa">
-        <Link className="active" to="/administracao"><LayoutDashboard aria-hidden="true"/><span>Visão Geral</span></Link>
-        {navigationGroups.map((group) => <section key={group.label}><h2>{group.label}</h2>{group.items.map((item) => <NavigationItem item={item} key={item.label}/>)}</section>)}
-        <section><h2>GESTÃO</h2><span className="administration-nav-disabled" aria-disabled="true"><FileBarChart aria-hidden="true"/><span>Relatórios</span><PlannedBadge/></span><span className="administration-nav-disabled" aria-disabled="true"><Bell aria-hidden="true"/><span>Notificações</span><PlannedBadge/></span></section>
-      </nav>
-      <div className="administration-user"><div><UserRound aria-hidden="true"/><span><strong>{user?.nome || 'Usuário administrativo'}</strong><small>{user?.perfil}</small></span></div><button type="button" onClick={onLogout}><LogOut aria-hidden="true"/> Sair</button></div>
-    </aside>
+    <AdministracaoSidebar user={user} onLogout={onLogout}/>
 
     <main className="administration-main">
       <header className="administration-topbar"><div><small>GESTÃO ADMINISTRATIVA MUNICIPAL</small><h1>Visão Geral Administrativa</h1><p>Operação, atendimento e acompanhamento de toda a rede municipal.</p></div><div className="administration-top-actions"><label><Search aria-hidden="true"/><input aria-label="Pesquisar no portal" placeholder="Pesquisar" disabled/><PlannedBadge/></label><button type="button" disabled aria-label="Configurações em implantação"><Settings2 aria-hidden="true"/></button></div></header>
