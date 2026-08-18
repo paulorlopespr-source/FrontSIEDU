@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './styles.css';
 import './siedu-ui.css';
+import './responsive-institutional-panel.css';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
