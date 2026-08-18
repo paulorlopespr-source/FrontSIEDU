@@ -14,7 +14,7 @@ const navigationGroups = [
   { label: 'OPERAÇÕES', items: [
     { label: 'Demandas', icon: Megaphone, to: '/administracao/demandas' },
     { label: 'Patrimônio', icon: PackageCheck, to: '/administracao/patrimonio' }, { label: 'Almoxarifado', icon: Warehouse, to: '/administracao/almoxarifado' },
-    { label: 'Transporte', icon: Truck }, { label: 'Manutenção', icon: Wrench, to: '/administracao/manutencao' },
+    { label: 'Transporte', icon: Truck, to: '/administracao/transporte' }, { label: 'Manutenção', icon: Wrench, to: '/administracao/manutencao' },
   ] },
   { label: 'ADMINISTRATIVO', items: [
     { label: 'Documentos e Protocolo', icon: FolderClock, to: '/administracao/protocolo' }, { label: 'Solicitações', icon: ClipboardList },
