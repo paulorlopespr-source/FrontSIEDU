@@ -1,0 +1,127 @@
+/* Correção isolada: identidade institucional nunca deve sobrepor o conteúdo. */
+.municipal-brand-stamp {
+  box-sizing: border-box;
+  max-width: calc(100vw - 32px);
+}
+
+.municipal-contractor,
+.municipal-contractor span,
+.municipal-session,
+.municipal-user-id {
+  min-width: 0;
+}
+
+.municipal-contractor strong,
+.municipal-contractor small,
+.municipal-user-id {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.municipal-contractor strong {
+  white-space: normal;
+}
+
+.municipal-system-brand img {
+  max-width: 100%;
+  height: auto;
+  max-height: 48px;
+}
+
+.municipal-user-id {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+/* Em larguras nas quais o selo flutuante começa a disputar espaço com
+   cabeçalhos e conteúdo, ele deixa de ser uma coluna lateral sobreposta e
+   vira uma faixa institucional compacta no fluxo visual superior. */
+@media (max-width: 1199px) {
+  .municipal-brand-stamp {
+    position: relative;
+    inset: auto;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(150px, 220px) auto;
+    align-items: center;
+    gap: 12px;
+    width: auto;
+    max-width: none;
+    margin: 12px 16px 0;
+    padding: 9px 12px;
+  }
+
+  .municipal-system-brand {
+    min-height: 46px;
+  }
+
+  .municipal-system-brand img {
+    max-height: 40px;
+  }
+
+  .municipal-session {
+    border-top: 0;
+    border-left: 1px solid rgba(255,255,255,.15);
+    padding: 0 0 0 12px;
+  }
+}
+
+/* Mobile: identidade compacta no topo; nenhuma coluna fixa ou flutuante. */
+@media (max-width: 767px) {
+  .municipal-brand-stamp {
+    grid-template-columns: minmax(0, 1fr) auto;
+    margin: 8px 8px 0;
+    border-radius: 12px;
+  }
+
+  .municipal-contractor img {
+    width: 38px;
+    height: 32px;
+  }
+
+  .municipal-contractor strong {
+    font-size: 10px;
+  }
+
+  .municipal-contractor small {
+    margin-top: 2px;
+    font-size: 8px;
+  }
+
+  .municipal-system-brand {
+    display: none;
+  }
+
+  .municipal-session {
+    max-width: 46vw;
+  }
+
+  .municipal-user-id {
+    max-width: none;
+    font-size: 9px;
+  }
+
+  .global-logout-button {
+    padding: 7px 8px;
+  }
+}
+
+@media (max-width: 430px) {
+  .municipal-brand-stamp {
+    grid-template-columns: 1fr;
+  }
+
+  .municipal-session {
+    max-width: none;
+    border-top: 1px solid rgba(255,255,255,.15);
+    border-left: 0;
+    padding: 7px 0 0;
+  }
+}
+
+@media print {
+  .municipal-brand-stamp {
+    display: none !important;
+  }
+}
