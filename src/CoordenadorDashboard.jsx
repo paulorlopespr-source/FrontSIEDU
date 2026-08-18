@@ -61,7 +61,7 @@ export default function CoordenadorDashboard({ user, token, onLogout }) {
     ['📈', 'Ciclos, Trilhas e SAEB', '/aprendizagem'],
     ['👥', 'Acompanhar turmas', '#acompanhamentos'],
     ['📝', 'Planos de aula', '/coordenacao/planos'],
-    ['📊', 'Gerar relatórios', '/professor/relatorios'],
+    ['📊', 'Gerar relatórios', '/coordenacao/relatorios'],
     ['📣', 'Enviar comunicado', '#comunicacao'],
     ['📅', 'Agendar reunião', '/gestao-municipal?tab=agenda'],
     ['⚠️', 'Ocorrências pedagógicas', '#ocorrencias'],
