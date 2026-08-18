@@ -63,7 +63,7 @@ export default function RecuperarSenha() {
   return (
     <main className="security-page">
       <section className="security-card">
-        <div className="security-logo"><img src="/images/sigepin.png" alt="SIEDU-PINDOBAÇU" /></div>
+        <div className="security-logo"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU" /></div>
         <span>SEGURANÇA DA CONTA</span>
         <h1>Recuperar senha</h1>
         <p>Use seu usuário ou e-mail cadastrado na Secretaria de Educação.</p>

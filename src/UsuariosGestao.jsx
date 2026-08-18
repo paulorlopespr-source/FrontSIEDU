@@ -329,7 +329,7 @@ export default function UsuariosGestao({ token, onLogout, embedded = false, admi
   return (
     <main className={`${embedded ? 'user-management-embedded' : 'app-page'} user-management-page`}>
       {!embedded && <header className="user-management-header">
-        <strong>SIEDU-PINDOBAÇU · Portal do Gestor</strong>
+        <strong>SIEDU · Portal do Gestor</strong>
         <nav><Link to="/gestor">Painel</Link><Link to="/gestor/escolas">Escolas</Link><button type="button" onClick={onLogout}>Sair</button></nav>
       </header>}
 

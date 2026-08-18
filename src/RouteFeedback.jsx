@@ -6,7 +6,7 @@ function FeedbackPage({ code, title, description, user }) {
   return (
     <main className="route-feedback">
       <section>
-        <img src="/images/sigepin.png" alt="SIEDU-PINDOBAÇU" />
+        <img src="/images/siedu-logo-transparent.svg" alt="SIEDU" />
         <span>{code}</span>
         <h1>{title}</h1>
         <p>{description}</p>

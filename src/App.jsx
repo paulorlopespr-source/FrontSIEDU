@@ -89,7 +89,7 @@ function Layout({ children, onLogout, variant = 'gestor' }) {
     <main className="app-page">
       <header>
         <strong>
-          SIEDU-PINDOBAÇU &middot; {isDirectorPortal ? 'Portal do Diretor' : 'Portal do Gestor'}
+          SIEDU &middot; {isDirectorPortal ? 'Portal do Diretor' : 'Portal do Gestor'}
         </strong>
         <nav>
           <Link to={isDirectorPortal ? '/diretor' : '/gestor'}>Painel</Link>
@@ -115,8 +115,9 @@ function Layout({ children, onLogout, variant = 'gestor' }) {
   );
 }
 
-function MunicipalBrand({ user }) {
-  return <div className="municipal-brand-stamp" aria-label="Prefeitura Municipal de Pindobaçu"><img src="/images/prefeitura-transparent.svg" alt="Prefeitura Municipal de Pindobaçu" /><span>Prefeitura Municipal de Pindobaçu<br /><small>Secretaria Municipal de Educação · SIEDU</small>{user?.nome && <small className="municipal-user-id">{user.nome} · {user.matriculaSecretaria || 'Matrícula em atualização'}</small>}</span></div>;
+function MunicipalBrand({ user, onLogout }) {
+  if (!user) return null;
+  return <aside className="municipal-brand-stamp" aria-label="Identificação e sessão do SIEDU"><div className="municipal-brand-logos"><img src="/images/prefeitura-transparent.svg" alt="Prefeitura Municipal de Pindobaçu"/><Link to={destinationFor(user)} aria-label="Voltar ao painel inicial"><img className="municipal-system-icon" src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link></div><span><strong>SIEDU</strong><small>Prefeitura Municipal de Pindobaçu</small><small className="municipal-user-id">{user.nome} · {user.matriculaSecretaria || user.perfil}</small></span><button className="global-logout-button" type="button" onClick={onLogout}>Sair</button></aside>;
 }
 function Login({ onLogin }) {
   const navigate = useNavigate();
@@ -158,9 +159,9 @@ function Login({ onLogin }) {
         </div>
 
         <div className="brand-top">
-          <img src="/images/sigepin.png" alt="SIEDU-PINDOBAÇU" className="system-logo" />
+          <img src="/images/siedu-logo-transparent.svg" alt="SIEDU" className="system-logo" />
           <div>
-            <h1>SIEDU-PINDOBAÇU</h1>
+            <h1>SIEDU</h1>
             <p>
               Sistema Integrado de Educa&ccedil;&atilde;o
               <br />
@@ -179,7 +180,7 @@ function Login({ onLogin }) {
           </h2>
           <i />
           <p>
-            O SIEDU-PINDOBAÇU integra escolas, alunos, professores, gestores e comunidade
+            O SIEDU integra escolas, alunos, professores, gestores e comunidade
             em uma plataforma moderna, segura e eficiente.
           </p>
         </div>
@@ -224,7 +225,7 @@ function Login({ onLogin }) {
       <section className="login-form-area">
         <form className="login-card" onSubmit={entrar}>
           <div className="login-icon">
-            <img src="/images/sigepin.png" alt="" />
+            <img src="/images/siedu-logo-transparent.svg" alt="" />
           </div>
           <h2>Acesse sua conta</h2>
           <p>Digite seu usu&aacute;rio e senha para entrar no sistema</p>
@@ -694,7 +695,7 @@ export default function App() {
   }
 
   return (
-    <><MunicipalBrand user={session?.user} /><Routes>
+    <><MunicipalBrand user={session?.user} onLogout={logout}/><Routes>
       <Route path="/login" element={<Login onLogin={login} />} />
       <Route path="/termos" element={<Protected token={session?.token}><TermosUso token={session?.token} user={session?.user} onAccepted={updateUser} /></Protected>} />
       <Route path="/recuperar-senha" element={<RecuperarSenha />} />
