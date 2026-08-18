@@ -120,6 +120,17 @@ function MunicipalBrand({ user, onLogout }) {
   if (!user) return null;
   return <aside className="municipal-brand-stamp" aria-label="Identificação institucional e sessão do SIEDU"><div className="municipal-contractor"><img src="/images/prefeitura-transparent.svg" alt="Prefeitura Municipal de Pindobaçu"/><span><strong>Prefeitura Municipal de Pindobaçu</strong><small>Contratante institucional</small></span></div><Link className="municipal-system-brand" to={destinationFor(user)} aria-label="Voltar ao painel inicial do SIEDU"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link><div className="municipal-session"><small className="municipal-user-id">{user.nome} · {user.matriculaSecretaria || user.perfil}</small><button className="global-logout-button" type="button" onClick={onLogout}>Sair</button></div></aside>;
 }
+function ConnectionStatus() {
+  const [online, setOnline] = useState(() => navigator.onLine);
+  useEffect(() => {
+    const update = () => setOnline(navigator.onLine);
+    window.addEventListener('online', update);
+    window.addEventListener('offline', update);
+    return () => { window.removeEventListener('online', update); window.removeEventListener('offline', update); };
+  }, []);
+  if (online) return null;
+  return <div className="connection-status connection-status-offline" role="status">Sem conexão. Confira a internet e tente novamente antes de enviar dados.</div>;
+}
 function Login({ onLogin }) {
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState('');
@@ -232,12 +243,12 @@ function Login({ onLogin }) {
           <p>Digite seu usu&aacute;rio e senha para entrar no sistema</p>
 
           <label>
-            Usu&aacute;rio ou e-mail
+            Usu&aacute;rio / CPF
             <input
               value={usuario}
               onChange={(event) => setUsuario(event.target.value)}
               required
-              placeholder="Digite seu usu&aacute;rio ou e-mail"
+              placeholder="Digite seu usu&aacute;rio ou CPF"
             />
           </label>
 
@@ -290,7 +301,8 @@ function Login({ onLogin }) {
         </form>
 
         <footer>
-          &copy; Olhos de &Aacute;guia Desenvolvimento &middot; Vers&atilde;o Beta &middot; Todos os direitos reservados
+          <span>Ano letivo 2026 &middot; SIEDU Beta &middot; <b className="connection-online">Conexão ativa</b></span>
+          <span>&copy; Olhos de &Aacute;guia Desenvolvimento &middot; Prefeitura Municipal de Pindoba&ccedil;u</span>
         </footer>
       </section>
     </main>
@@ -696,7 +708,7 @@ export default function App() {
   }
 
   return (
-    <><MunicipalBrand user={session?.user} onLogout={logout}/><MobileNavigation user={session?.user} onLogout={logout}/><Routes>
+    <><ConnectionStatus/><MunicipalBrand user={session?.user} onLogout={logout}/><MobileNavigation user={session?.user} onLogout={logout}/><Routes>
       <Route path="/login" element={<Login onLogin={login} />} />
       <Route path="/termos" element={<Protected token={session?.token}><TermosUso token={session?.token} user={session?.user} onAccepted={updateUser} /></Protected>} />
       <Route path="/recuperar-senha" element={<RecuperarSenha />} />
