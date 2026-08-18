@@ -12,7 +12,7 @@ export default function ProfessorProvaImpressao({token}){
   <div className="no-print" style={{display:'flex',gap:12,marginBottom:20}}><Link to="/professor/atividades">← Voltar</Link><button onClick={()=>window.print()} style={{marginLeft:'auto',background:'#176fe3',color:'#fff',border:0,padding:'10px 18px',borderRadius:7}}>🖨️ Imprimir prova</button></div>
   <article className="print-page">
    <header style={{display:'grid',gridTemplateColumns:'110px 1fr',gap:18,alignItems:'center',borderBottom:'2px solid #111',paddingBottom:12}}>
-    <img src="/images/prefeitura.png" alt="Prefeitura Municipal de Pindobaçu" style={{width:105,height:85,objectFit:'contain'}}/>
+    <img src="/images/prefeitura-transparent.svg" alt="Prefeitura Municipal de Pindobaçu" style={{width:105,height:85,objectFit:'contain'}}/>
     <div style={{textAlign:'center'}}><b>PREFEITURA MUNICIPAL DE PINDOBAÇU</b><div>SECRETARIA MUNICIPAL DE EDUCAÇÃO — SIEDU</div><h2 style={{margin:'8px 0'}}>{exam.titulo}</h2></div>
    </header>
    <div style={{display:'grid',gridTemplateColumns:'2fr 1fr',gap:10,margin:'16px 0'}}>

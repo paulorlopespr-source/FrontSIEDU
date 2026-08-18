@@ -4,7 +4,7 @@
 .administration-sidebar{overflow-x:hidden;overflow-y:auto}
 .administration-brand{color:#fff;text-decoration:none}
 .administration-brand small,.administration-sidebar small{margin-top:0}
-.administration-city-brand{display:grid;place-items:center;margin:12px 14px 2px;padding:9px;border:1px solid #ffffff26;border-radius:12px;background:#fff;box-shadow:0 5px 16px #001a3d24}.administration-city-brand img{display:block;width:100%;max-width:150px;height:76px;object-fit:contain}
+.administration-city-brand{display:grid;place-items:center;margin:12px 14px 2px;padding:9px;border:1px solid #ffffff26;border-radius:12px;background:transparent}.administration-city-brand img{display:block;width:100%;max-width:172px;height:82px;object-fit:contain;filter:drop-shadow(0 2px 5px #001a3d55)}
 .administration-sidebar nav{display:block;flex:none;gap:0;width:100%}
 .administration-sidebar nav section{display:block;width:100%}
 .administration-sidebar nav a,.administration-nav-disabled{width:100%;margin:0}
