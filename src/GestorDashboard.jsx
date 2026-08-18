@@ -348,7 +348,7 @@ export default function GestorDashboard({ user, onLogout, token }) {
           <section className="dashboard-lower dashboard-real-lower"><UsersPanel users={dashboard.users} /></section>
 
           <section className="quick-actions"><h2>Ações rápidas</h2><div>{quickActions.map(([label, link, Icon]) => <Link key={label} to={link}><span><Icon size={20} strokeWidth={1.8} /></span><b>{label}</b></Link>)}</div></section>
-          <footer className="dashboard-footer">© 2026 SIEDU-PINDOBAÇU — Sistema Integrado de Educação de Pindobaçu. Todos os direitos reservados.<span>Versão 0.0.1 · Dados atualizados automaticamente</span></footer>
+          <footer className="dashboard-footer">© 2026 SIEDU — Sistema Integrado de Educação de Pindobaçu. Todos os direitos reservados.<span>Versão 0.0.1 · Dados atualizados automaticamente</span></footer>
         </main>
       </div>
     </div>
