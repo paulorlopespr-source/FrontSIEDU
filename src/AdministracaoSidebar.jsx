@@ -17,7 +17,7 @@ const navigationGroups = [
     { label: 'Transporte', icon: Truck }, { label: 'Manutenção', icon: Wrench, to: '/administracao/manutencao' },
   ] },
   { label: 'ADMINISTRATIVO', items: [
-    { label: 'Documentos e Protocolo', icon: FolderClock }, { label: 'Solicitações', icon: ClipboardList },
+    { label: 'Documentos e Protocolo', icon: FolderClock, to: '/administracao/protocolo' }, { label: 'Solicitações', icon: ClipboardList },
     { label: 'Compras', icon: ShoppingCart }, { label: 'Contratos', icon: FileArchive }, { label: 'Agenda', icon: CalendarDays },
   ] },
   { label: 'REDE MUNICIPAL', items: [
