@@ -148,6 +148,10 @@ export const api = {
   createMaintenance(data, token) { return post('/maintenance', data, token); },
   actOnMaintenance(id, data, token) { return request(`/maintenance/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, token); },
   downloadMaintenanceAttachment(orderId, attachment, token) { return download(`/maintenance/${orderId}/attachments/${attachment.id}`, attachment.nome, token); },
+  listProtocols(token) { return request('/protocols', {}, token); },
+  getProtocolReferences(token) { return request('/protocols/references', {}, token); },
+  createProtocol(data, token) { return post('/protocols', data, token); },
+  actOnProtocol(id, data, token) { return request(`/protocols/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, token); },
 
   deleteUser(id, token) {
     return request(`/users/${id}`, { method: 'DELETE' }, token);
