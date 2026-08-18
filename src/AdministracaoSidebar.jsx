@@ -4,7 +4,7 @@ import { prefeituraLogo } from './prefeitura-logo';
 import {
   Bell, Building2, CalendarDays, ChevronRight, ClipboardList, FileArchive,
   FileBarChart, FolderClock, LayoutDashboard, LogOut, Megaphone, PackageCheck,
-  Menu, ShoppingCart, Truck, UserRound, UsersRound, Warehouse, Wrench, X,
+  Menu, Truck, UserRound, UsersRound, Warehouse, Wrench, X,
 } from 'lucide-react';
 
 const navigationGroups = [
@@ -19,12 +19,6 @@ const navigationGroups = [
   ] },
   { label: 'ADMINISTRATIVO', items: [
     { label: 'Documentos e Protocolo', icon: FolderClock, to: '/administracao/protocolo' }, { label: 'Solicitações', icon: ClipboardList, to: '/administracao/solicitacoes' },
-    { label: 'Compras', icon: ShoppingCart }, { label: 'Contratos', icon: FileArchive }, { label: 'Agenda', icon: CalendarDays },
-  ] },
-  { label: 'REDE MUNICIPAL', items: [
-    { label: 'Escolas', icon: Building2 }, { label: 'Turmas', icon: UsersRound },
-    { label: 'Alunos (consulta)', icon: UserRound }, { label: 'Indicadores (consulta)', icon: FileBarChart },
-  ] },
   { label: 'GESTÃO', items: [
     { label: 'Relatórios', icon: FileBarChart }, { label: 'Notificações', icon: Bell },
   ] },
