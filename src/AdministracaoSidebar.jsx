@@ -34,6 +34,7 @@ export default function AdministracaoSidebar({ user, onLogout }) {
   <aside className={`administration-sidebar ${open ? 'is-open' : ''}`} id="administration-navigation">
     <div className="administration-city-brand">
       <img src={prefeituraLogo} alt="Prefeitura Municipal de Pindobaçu — Governo que cuida da gente"/>
+      <span><strong>Prefeitura Municipal de Pindobaçu</strong><small>Contratante institucional</small></span>
     </div>
     <Link className="sidebar-system-home" to="/administracao" aria-label="Voltar à página inicial da Secretaria Administrativa"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link>
     <nav aria-label="Navegação da Secretaria Administrativa">
