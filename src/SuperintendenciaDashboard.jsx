@@ -12,8 +12,6 @@ export default function SuperintendenciaDashboard({ user, token, onLogout }) {
   const [schools, setSchools] = useState([]);
   const [academic, setAcademic] = useState(null);
   const [finance, setFinance] = useState(emptyFinance);
-  const [records, setRecords] = useState([]);
-  const [notice, setNotice] = useState('');
 
   useEffect(() => {
     Promise.all([
@@ -47,11 +45,6 @@ export default function SuperintendenciaDashboard({ user, token, onLogout }) {
     };
   }, [finance]);
 
-  function register(type, target) {
-    setRecords((items) => [{ id: Date.now(), type, target, date: new Date().toLocaleDateString('pt-BR') }, ...items]);
-    setNotice(type + ' registrado para acompanhamento.');
-  }
-
   const card = { background: '#fff', padding: 22, borderRadius: 14, border: '1px solid #e2e9f3' };
   const th = { textAlign: 'left', padding: 10, color: '#627492', fontSize: 13 };
   const td = { padding: 10, borderTop: '1px solid #edf1f7' };
@@ -68,20 +61,19 @@ export default function SuperintendenciaDashboard({ user, token, onLogout }) {
         <div><small>REDE MUNICIPAL DE ENSINO</small><h2 style={{ fontSize: 28, margin: '8px 0' }}>Acompanhamento pedagógico, financeiro e institucional</h2><p>Consulte resultados, acompanhe demandas, recursos e prestações de contas das unidades.</p></div>
         <Link to="/gestao-municipal" style={{background:'#fff',color:'#1263bd',padding:12,borderRadius:8,fontWeight:800}}>Indicadores, agenda e demandas</Link>
       </section>
-      {notice && <p style={{ background: '#e4f6eb', color: '#176d3d', padding: 12 }}>{notice}</p>}
       <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(190px,1fr))', gap: 15, margin: '22px 0' }}>
         {indicators.map(([label, value, detail]) => <article key={label} style={{ background: '#fff', padding: 20, borderRadius: 14, border: '1px solid #e2e9f3' }}><small>{label}</small><strong style={{ display: 'block', fontSize: 28, color: '#1263bd', margin: '10px 0' }}>{value}</strong><small>{detail}</small></article>)}
       </section>
       <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(330px,1fr))', gap: 18 }}>
         <article id="demandas" style={{ ...card, gridColumn: '1/-1' }}>
           <small style={{ color: '#1872d3', fontWeight: 800 }}>DEMANDAS ESCOLARES</small><h2>Unidades sob acompanhamento</h2>
-          <div style={{ overflow: 'auto' }}><table style={{ width: '100%', borderCollapse: 'collapse' }}><thead><tr><th style={th}>Unidade</th><th style={th}>Localidade</th><th style={th}>Direção</th><th style={th}>Encaminhamento</th></tr></thead><tbody>{schools.map((school) => <tr key={school.id}><td style={td}><b>{school.nome}</b></td><td style={td}>{school.localidade || 'Não informada'}</td><td style={td}>{school.diretor || 'Sem diretor vinculado'}</td><td style={td}><button onClick={() => register('Visita técnica', school.nome)}>Registrar visita</button> <button onClick={() => register('Solicitação de correção', school.nome)}>Solicitar correção</button></td></tr>)}</tbody></table></div>
+          <div style={{ overflow: 'auto' }}><table style={{ width: '100%', borderCollapse: 'collapse' }}><thead><tr><th style={th}>Unidade</th><th style={th}>Localidade</th><th style={th}>Direção</th><th style={th}>Encaminhamento</th></tr></thead><tbody>{schools.map((school) => <tr key={school.id}><td style={td}><b>{school.nome}</b></td><td style={td}>{school.localidade || 'Não informada'}</td><td style={td}>{school.diretor || 'Sem diretor vinculado'}</td><td style={td}><Link to="/gestao-municipal?tab=agenda">Agendar visita</Link> · <Link to="/gestao-municipal?tab=demandas">Acompanhar demandas</Link></td></tr>)}</tbody></table></div>
           {!schools.length && <p>Nenhuma escola cadastrada para acompanhamento.</p>}
         </article>
         <article id="pedagogico" style={card}><small style={{ color: '#1872d3', fontWeight: 800 }}>INDICADORES PEDAGÓGICOS</small><h2>Frequência, rendimento e evasão</h2><p>{academic?.summary ? 'Indicadores acadêmicos consolidados disponíveis.' : 'Os indicadores serão apresentados por escola, turma, etapa e período quando houver lançamentos acadêmicos.'}</p><a href="#demandas">Consultar escolas acompanhadas ›</a></article>
-        <article style={card}><small style={{ color: '#1872d3', fontWeight: 800 }}>PLANEJAMENTO E ORIENTAÇÕES</small><h2>Registros pedagógicos</h2><p><button onClick={() => register('Orientação pedagógica', 'Rede Municipal')}>Registrar orientação</button> <button onClick={() => register('Parecer técnico', 'Rede Municipal')}>Emitir parecer</button></p><p>Planejamentos, relatórios pedagógicos e calendários podem ser consultados por escola.</p></article>
+        <article style={card}><small style={{ color: '#1872d3', fontWeight: 800 }}>PLANEJAMENTO E ORIENTAÇÕES</small><h2>Registros pedagógicos</h2><p><Link to="/gestao-municipal?tab=indicadores">Consultar indicadores</Link> · <Link to="/gestao-municipal?tab=relatorios">Emitir relatório</Link></p><p>Indicadores, relatórios pedagógicos e calendários ficam vinculados aos registros oficiais.</p></article>
         <article style={card}><small style={{ color: '#1872d3', fontWeight: 800 }}>IDEB E RESULTADOS</small><h2>Desempenho da rede</h2>{dashboard.academic?.ideb?.length ? dashboard.academic.ideb.map((item) => <p key={item.ano}><b>{item.ano}</b>: {item.valor}</p>) : <p>Ainda não existem avaliações IDEB registradas no banco.</p>}</article>
-        <article style={card}><small style={{ color: '#1872d3', fontWeight: 800 }}>REGISTROS DA SESSÃO</small><h2>Visitas, orientações e pareceres</h2>{records.length ? <ul>{records.map((record) => <li key={record.id}><b>{record.type}</b> — {record.target} <small>({record.date})</small></li>)}</ul> : <p>Registre visitas técnicas, orientações, pareceres e pedidos de correção para acompanhar as demandas da rede.</p>}</article>
+        <article style={card}><small style={{ color: '#1872d3', fontWeight: 800 }}>REGISTROS OFICIAIS</small><h2>Visitas, orientações e pareceres</h2><p>Utilize Agenda, Demandas e Relatórios para que cada ação permaneça registrada no banco e no histórico de auditoria.</p><Link to="/gestao-municipal">Abrir gestão municipal</Link></article>
       </section>
       <section id="financeiro" style={{ ...card, marginTop: 18 }}>
         <small style={{ color: '#1872d3', fontWeight: 800 }}>GESTÃO FINANCEIRA E PRESTAÇÃO DE CONTAS</small>
@@ -91,7 +83,7 @@ export default function SuperintendenciaDashboard({ user, token, onLogout }) {
           {[['Recursos alocados', money(financeSummary.allocated)], ['Despesas registradas', money(financeSummary.used)], ['Saldo disponível', money(financeSummary.balance)], ['Pendências', number(financeSummary.pending)]].map(([label, value]) => <div key={label} style={{ background: '#f4f8fe', borderRadius: 10, padding: 16 }}><small>{label}</small><strong style={{ display: 'block', fontSize: 22, color: '#1263bd', marginTop: 8 }}>{value}</strong></div>)}
         </div>
         <h3>Recursos por unidade</h3>
-        <div style={{ overflow: 'auto' }}><table style={{ width: '100%', borderCollapse: 'collapse' }}><thead><tr><th style={th}>Escola</th><th style={th}>Categoria</th><th style={th}>Alocado</th><th style={th}>Utilizado</th><th style={th}>Saldo</th><th style={th}>Situação</th><th style={th}>Parecer</th></tr></thead><tbody>{(finance.allocations || []).map((item) => <tr key={item.id}><td style={td}>{item.escola}</td><td style={td}>{item.categoria}</td><td style={td}>{money(item.valor_alocado)}</td><td style={td}>{money(item.valor_utilizado)}</td><td style={td}>{money(item.saldo)}</td><td style={td}>{item.status}</td><td style={td}><button onClick={() => register('Parecer técnico financeiro', item.escola + ' — ' + item.categoria)}>Registrar parecer</button></td></tr>)}</tbody></table></div>
+        <div style={{ overflow: 'auto' }}><table style={{ width: '100%', borderCollapse: 'collapse' }}><thead><tr><th style={th}>Escola</th><th style={th}>Categoria</th><th style={th}>Alocado</th><th style={th}>Utilizado</th><th style={th}>Saldo</th><th style={th}>Situação</th></tr></thead><tbody>{(finance.allocations || []).map((item) => <tr key={item.id}><td style={td}>{item.escola}</td><td style={td}>{item.categoria}</td><td style={td}>{money(item.valor_alocado)}</td><td style={td}>{money(item.valor_utilizado)}</td><td style={td}>{money(item.saldo)}</td><td style={td}>{item.status}</td></tr>)}</tbody></table></div>
         {!(finance.allocations || []).length && <p>Não há recursos financeiros lançados para o período selecionado.</p>}
         <h3 style={{ marginTop: 24 }}>Prestação de contas</h3>
         <div style={{ overflow: 'auto' }}><table style={{ width: '100%', borderCollapse: 'collapse' }}><thead><tr><th style={th}>Competência</th><th style={th}>Escola</th><th style={th}>Categoria</th><th style={th}>Responsável</th><th style={th}>Situação</th></tr></thead><tbody>{(finance.statements || []).map((item) => <tr key={item.id}><td style={td}>{item.competencia}</td><td style={td}>{item.escola}</td><td style={td}>{item.categoria}</td><td style={td}>{item.enviada_por || 'Não informado'}</td><td style={td}>{item.status}</td></tr>)}</tbody></table></div>
