@@ -697,3 +697,5 @@
     display: none !important;
   }
 }
+
+.siedu-global-brand{position:fixed;right:18px;top:8px;z-index:90;width:clamp(118px,11vw,180px);height:auto;pointer-events:none;line-height:0}.siedu-global-brand img{display:block;width:100%;height:auto;object-fit:contain;filter:drop-shadow(0 0 1px #fff) drop-shadow(0 0 5px rgba(255,255,255,.96)) drop-shadow(0 3px 7px rgba(4,31,79,.22))}@media(max-width:760px){.siedu-global-brand{right:10px;top:8px;width:104px}}@media print{.siedu-global-brand{position:fixed;top:7mm;right:8mm;width:42mm}.siedu-global-brand img{filter:none}}
