@@ -711,6 +711,7 @@
 /* Portais com sidebar já exibem contratante e sistema no próprio topo. */
 .municipal-brand-stamp:has(~ .administration-shell),
 .municipal-brand-stamp:has(~ .finance-shell),
+.municipal-brand-stamp:has(~ .finance-page),
 .municipal-brand-stamp:has(~ .student-portal),
 .municipal-brand-stamp:has(~ .director-dashboard),
 .municipal-brand-stamp:has(~ .director-area),
