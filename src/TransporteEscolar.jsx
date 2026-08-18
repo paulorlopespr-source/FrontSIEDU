@@ -28,6 +28,7 @@ const emptyRoute = {
   veiculoId: '',
   motoristaId: '',
   acompanhanteId: '',
+  escolaIds: [],
 };
 
 const emptyStudent = {
@@ -226,6 +227,7 @@ export default function TransporteEscolar({ token, user, onLogout }) {
       veiculoId: Number(route.veiculoId),
       motoristaId: Number(route.motoristaId),
       acompanhanteId: route.acompanhanteId ? Number(route.acompanhanteId) : null,
+      escolaIds: route.escolaIds.map(Number),
     };
     delete payload.pontosTexto;
     perform(
@@ -367,6 +369,7 @@ export default function TransporteEscolar({ token, user, onLogout }) {
               <Field label="Veículo"><select name="veiculoId" value={route.veiculoId} onChange={update(setRoute)} required><option value="">Selecione</option>{data.vehicles.map((item) => <option key={item.id} value={item.id}>{item.prefixo} · {item.marca_modelo}</option>)}</select></Field>
               <Field label="Motorista"><select name="motoristaId" value={route.motoristaId} onChange={update(setRoute)} required><option value="">Selecione</option>{data.drivers.map((item) => <option key={item.id} value={item.id}>{item.nome}</option>)}</select></Field>
               <Field label="Acompanhante"><select name="acompanhanteId" value={route.acompanhanteId} onChange={update(setRoute)}><option value="">Sem acompanhante</option>{data.attendants.map((item) => <option key={item.id} value={item.id}>{item.nome}</option>)}</select></Field>
+              <Field label="Escolas atendidas" wide><select multiple required value={route.escolaIds.map(String)} onChange={(event) => setRoute((current) => ({ ...current, escolaIds: Array.from(event.target.selectedOptions, (option) => Number(option.value)) }))}>{data.schools.map((item) => <option key={item.id} value={item.id}>{item.nome}</option>)}</select><small>Use Ctrl para selecionar mais de uma escola.</small></Field>
               <Field label="Paradas — uma por linha" wide><textarea name="pontosTexto" value={route.pontosTexto} onChange={update(setRoute)} placeholder={'Praça Central\nPovoado de Carnaíba\nEscola Municipal'} /></Field>
               <Field label="Descrição" wide><textarea name="descricao" value={route.descricao} onChange={update(setRoute)} /></Field>
             </div>
