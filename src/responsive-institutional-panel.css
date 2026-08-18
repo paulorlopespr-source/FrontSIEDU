@@ -1,7 +1,7 @@
-/* Correção isolada: identidade institucional nunca deve sobrepor o conteúdo. */
+/* Identidade institucional: nunca deve sobrepor navegação ou conteúdo. */
 .municipal-brand-stamp {
   box-sizing: border-box;
-  max-width: calc(100vw - 32px);
+  max-width: 100%;
 }
 
 .municipal-contractor,
@@ -23,9 +23,11 @@
 }
 
 .municipal-system-brand img {
+  display: block;
   max-width: 100%;
   height: auto;
   max-height: 48px;
+  object-fit: contain;
 }
 
 .municipal-user-id {
@@ -34,44 +36,96 @@
   white-space: normal;
 }
 
-/* Em larguras nas quais o selo flutuante começa a disputar espaço com
-   cabeçalhos e conteúdo, ele deixa de ser uma coluna lateral sobreposta e
-   vira uma faixa institucional compacta no fluxo visual superior. */
-@media (max-width: 1199px) {
+/* Desktop: o antigo painel lateral flutuante vira uma faixa institucional
+   compacta no fluxo. Assim ele nunca cobre topbar, botão Sair ou conteúdo. */
+@media (min-width: 768px) {
   .municipal-brand-stamp {
-    position: relative;
-    inset: auto;
-    z-index: 1;
+    position: relative !important;
+    inset: auto !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    z-index: 1 !important;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(150px, 220px) auto;
+    grid-template-columns: minmax(220px, 1fr) minmax(180px, 260px) minmax(220px, auto);
     align-items: center;
-    gap: 12px;
-    width: auto;
-    max-width: none;
-    margin: 12px 16px 0;
-    padding: 9px 12px;
+    gap: 18px;
+    width: auto !important;
+    height: auto !important;
+    min-height: 78px;
+    margin: 14px clamp(16px, 3vw, 48px) 0 !important;
+    padding: 12px 18px !important;
+    border-radius: 14px;
+  }
+
+  .municipal-contractor {
+    align-items: center;
   }
 
   .municipal-system-brand {
-    min-height: 46px;
+    min-height: 48px;
+    padding: 6px 10px;
   }
 
   .municipal-system-brand img {
-    max-height: 40px;
+    max-height: 42px;
   }
 
   .municipal-session {
-    border-top: 0;
-    border-left: 1px solid rgba(255,255,255,.15);
-    padding: 0 0 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    border-top: 0 !important;
+    border-left: 1px solid rgba(255,255,255,.18);
+    padding: 0 0 0 16px !important;
+  }
+
+  .municipal-user-id {
+    max-width: 230px;
+    text-align: right;
+  }
+
+  .global-logout-button {
+    flex: 0 0 auto;
+    margin: 0 !important;
+  }
+}
+
+/* Tablet: mesma faixa, com menos informação secundária e sem comprimir a tela. */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .municipal-brand-stamp {
+    grid-template-columns: minmax(0, 1fr) minmax(140px, 190px) auto;
+    gap: 12px;
+    margin: 10px 14px 0 !important;
+    padding: 10px 12px !important;
+  }
+
+  .municipal-contractor small {
+    display: none;
+  }
+
+  .municipal-user-id {
+    max-width: 180px;
+    font-size: 9px;
   }
 }
 
 /* Mobile: identidade compacta no topo; nenhuma coluna fixa ou flutuante. */
 @media (max-width: 767px) {
   .municipal-brand-stamp {
+    position: relative !important;
+    inset: auto !important;
+    z-index: 1 !important;
+    display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    margin: 8px 8px 0;
+    align-items: center;
+    gap: 10px;
+    width: auto !important;
+    height: auto !important;
+    margin: 8px 8px 0 !important;
+    padding: 9px 10px !important;
     border-radius: 12px;
   }
 
@@ -95,6 +149,8 @@
 
   .municipal-session {
     max-width: 46vw;
+    border-top: 0 !important;
+    padding-top: 0 !important;
   }
 
   .municipal-user-id {
@@ -114,9 +170,9 @@
 
   .municipal-session {
     max-width: none;
-    border-top: 1px solid rgba(255,255,255,.15);
+    border-top: 1px solid rgba(255,255,255,.15) !important;
     border-left: 0;
-    padding: 7px 0 0;
+    padding: 7px 0 0 !important;
   }
 }
 
