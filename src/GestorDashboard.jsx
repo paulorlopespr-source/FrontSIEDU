@@ -109,6 +109,11 @@ export function GestorSidebar({ onLogout }) {
   const active = (path) => path === '/gestor' ? current === '/gestor' : current === path || (!path.includes('?') && location.pathname.startsWith(path));
   return (
     <aside className="dashboard-sidebar">
+      <div className="sidebar-city">
+        <img src="/images/prefeitura-transparent.svg" alt="Prefeitura de Pindobaçu" />
+        <span>Prefeitura Municipal de Pindobaçu</span>
+      </div>
+      <Link className="sidebar-system-home" to="/gestor" aria-label="Voltar ao painel executivo"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link>
       <Link className={`sidebar-current ${current === '/gestor' ? 'active' : ''}`} to="/gestor"><LayoutDashboard size={18} /> Painel executivo</Link>
 
       <nav className="sidebar-menu">
@@ -127,11 +132,6 @@ export function GestorSidebar({ onLogout }) {
         <button type="button" onClick={onLogout}><LogOut size={15} /> Sair do sistema</button>
       </section>
 
-      <div className="sidebar-city">
-        <img src="/images/prefeitura-transparent.svg" alt="Prefeitura de Pindobaçu" />
-        <span>Prefeitura Municipal de Pindobaçu</span>
-      </div>
-      <Link className="sidebar-system-home" to="/gestor" aria-label="Voltar ao painel executivo"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link>
     </aside>
   );
 }
