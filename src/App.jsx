@@ -117,7 +117,7 @@ function Layout({ children, onLogout, variant = 'gestor' }) {
 
 function MunicipalBrand({ user, onLogout }) {
   if (!user) return null;
-  return <aside className="municipal-brand-stamp" aria-label="Identificação e sessão do SIEDU"><div className="municipal-brand-logos"><img src="/images/prefeitura-transparent.svg" alt="Prefeitura Municipal de Pindobaçu"/><Link to={destinationFor(user)} aria-label="Voltar ao painel inicial"><img className="municipal-system-icon" src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link></div><span><strong>SIEDU</strong><small>Prefeitura Municipal de Pindobaçu</small><small className="municipal-user-id">{user.nome} · {user.matriculaSecretaria || user.perfil}</small></span><button className="global-logout-button" type="button" onClick={onLogout}>Sair</button></aside>;
+  return <aside className="municipal-brand-stamp" aria-label="Identificação institucional e sessão do SIEDU"><div className="municipal-contractor"><img src="/images/prefeitura-transparent.svg" alt="Prefeitura Municipal de Pindobaçu"/><span><strong>Prefeitura Municipal de Pindobaçu</strong><small>Contratante institucional</small></span></div><Link className="municipal-system-brand" to={destinationFor(user)} aria-label="Voltar ao painel inicial do SIEDU"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link><div className="municipal-session"><small className="municipal-user-id">{user.nome} · {user.matriculaSecretaria || user.perfil}</small><button className="global-logout-button" type="button" onClick={onLogout}>Sair</button></div></aside>;
 }
 function Login({ onLogin }) {
   const navigate = useNavigate();
