@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { prefeituraLogo } from './prefeitura-logo';
 import {
-  Bell, Building2, CalendarDays, ChevronRight, ClipboardList, FileArchive,
-  FileBarChart, FolderClock, LayoutDashboard, LogOut, Megaphone, PackageCheck,
+  Building2, CalendarDays, ChevronRight, ClipboardList, FileArchive,
+  FolderClock, LayoutDashboard, LogOut, Megaphone, PackageCheck,
   Menu, Truck, UserRound, UsersRound, Warehouse, Wrench, X,
 } from 'lucide-react';
 
@@ -19,21 +19,11 @@ const navigationGroups = [
   ] },
   { label: 'ADMINISTRATIVO', items: [
     { label: 'Documentos e Protocolo', icon: FolderClock, to: '/administracao/protocolo' }, { label: 'Solicitações', icon: ClipboardList, to: '/administracao/solicitacoes' },
-  { label: 'GESTÃO', items: [
-    { label: 'Relatórios', icon: FileBarChart }, { label: 'Notificações', icon: Bell },
-  ] },
 ];
-
-function PlannedBadge() {
-  return <small className="administration-planned">Em implantação</small>;
-}
 
 function NavigationItem({ item }) {
   const Icon = item.icon;
-  if (item.to) {
-    return <NavLink to={item.to} className={({ isActive }) => isActive ? 'active' : undefined}><Icon aria-hidden="true"/><span>{item.label}</span><ChevronRight aria-hidden="true"/></NavLink>;
-  }
-  return <span className="administration-nav-disabled" aria-disabled="true"><Icon aria-hidden="true"/><span>{item.label}</span><PlannedBadge/></span>;
+  return <NavLink to={item.to} className={({ isActive }) => isActive ? 'active' : undefined}><Icon aria-hidden="true"/><span>{item.label}</span><ChevronRight aria-hidden="true"/></NavLink>;
 }
 
 export default function AdministracaoSidebar({ user, onLogout }) {
