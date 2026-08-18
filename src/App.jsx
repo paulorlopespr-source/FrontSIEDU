@@ -960,7 +960,7 @@ export default function App() {
         path="/transportes"
         element={
           <Protected token={session?.token}>
-            {isMunicipalManager(session?.user) ? (
+            {isMunicipalManager(session?.user) || isFinanceFiscal(session?.user) ? (
               <TransporteEscolar
                 token={session?.token}
                 user={session?.user}
