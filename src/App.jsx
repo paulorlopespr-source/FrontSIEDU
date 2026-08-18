@@ -76,6 +76,7 @@ import {
   isSuperintendent,
 } from './permissions';
 import { AccessDenied, NotFound, UnsupportedProfile } from './RouteFeedback';
+import MobileNavigation from './MobileNavigation';
 import {
   ConsultaTurmas,
   DetalhesAluno,
@@ -695,7 +696,7 @@ export default function App() {
   }
 
   return (
-    <><MunicipalBrand user={session?.user} onLogout={logout}/><Routes>
+    <><MunicipalBrand user={session?.user} onLogout={logout}/><MobileNavigation user={session?.user} onLogout={logout}/><Routes>
       <Route path="/login" element={<Login onLogin={login} />} />
       <Route path="/termos" element={<Protected token={session?.token}><TermosUso token={session?.token} user={session?.user} onAccepted={updateUser} /></Protected>} />
       <Route path="/recuperar-senha" element={<RecuperarSenha />} />

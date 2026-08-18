@@ -1,0 +1,58 @@
+.mobile-bottom-nav,.mobile-drawer-layer{display:none}
+
+@media (max-width:760px){
+  :root{--mobile-nav-height:72px}
+  body{padding-bottom:calc(var(--mobile-nav-height) + env(safe-area-inset-bottom));overflow-x:hidden}
+  body.mobile-nav-open{overflow:hidden}
+  .municipal-brand-stamp{display:none!important}
+  .mobile-bottom-nav{position:fixed;z-index:1900;right:0;bottom:0;left:0;display:grid;grid-template-columns:repeat(5,1fr);height:calc(var(--mobile-nav-height) + env(safe-area-inset-bottom));padding:7px 5px env(safe-area-inset-bottom);border-top:1px solid #d8e3ef;background:#fff;box-shadow:0 -8px 30px #092b5918}
+  .mobile-bottom-nav a,.mobile-bottom-nav button{display:flex;min-width:0;min-height:52px;margin:0;padding:4px 2px;align-items:center;justify-content:center;flex-direction:column;gap:3px;border:0;border-radius:12px;background:transparent;color:#68798f;font:700 10px Inter,Arial,sans-serif;text-decoration:none}
+  .mobile-bottom-nav svg{width:21px;height:21px;stroke-width:2}
+  .mobile-bottom-nav .active{color:#075eb8;background:#eef6ff}
+  .mobile-bottom-nav .mobile-quick-action{position:relative;top:-20px;width:62px;height:62px;min-height:62px;margin:auto;border:5px solid #f5f8fc;border-radius:50%;background:linear-gradient(145deg,#0b73df,#064c9c);color:#fff;box-shadow:0 8px 20px #064c9c40}
+  .mobile-quick-action span{position:absolute;top:64px;width:100px;color:#68798f;font-size:9px}
+  .mobile-drawer-layer{position:fixed;z-index:1950;inset:0;display:flex;align-items:flex-end;background:#061b366b;backdrop-filter:blur(3px)}
+  .mobile-drawer{width:100%;max-height:min(82vh,720px);padding-bottom:calc(18px + env(safe-area-inset-bottom));overflow:auto;border-radius:22px 22px 0 0;background:#fff;box-shadow:0 -18px 50px #061b3640;animation:mobile-drawer-in .2s ease-out}
+  .mobile-drawer>header{position:sticky;z-index:2;top:0;display:flex;min-height:64px;padding:12px 16px;align-items:center;justify-content:space-between;border-bottom:1px solid #e7edf4;background:#fff}
+  .mobile-drawer>header span{display:flex;align-items:center;gap:10px;color:#0a3568}.mobile-drawer>header svg{width:21px}.mobile-drawer>header button{display:grid;width:44px;height:44px;margin:0;padding:0;place-items:center;border:0;border-radius:12px;background:#f0f4f8;color:#284a70}
+  .mobile-module-list{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:14px}
+  .mobile-module-list a{display:grid;grid-template-columns:36px 1fr auto;min-height:66px;padding:10px;align-items:center;gap:7px;border:1px solid #dce6f0;border-radius:13px;background:#fbfdff;color:#173b65;font-size:11px;font-weight:750;text-decoration:none}
+  .mobile-module-list a.active{border-color:#79acd8;background:#eef7ff;color:#075eb8}.mobile-module-list svg{width:19px}.mobile-module-list a>svg:last-child{width:15px;color:#8b9bae}
+  .mobile-empty-state,.mobile-profile-panel{display:grid;gap:12px;padding:22px 18px;color:#42617f;text-align:center}.mobile-empty-state>svg{width:40px;height:40px;margin:auto;color:#1477d4}.mobile-empty-state strong{color:#0b2f57}.mobile-empty-state p{margin:0 0 8px;font-size:13px;line-height:1.55}.mobile-empty-state a,.mobile-profile-panel>a{display:flex;min-height:48px;padding:11px 13px;align-items:center;justify-content:space-between;border:1px solid #dce6f0;border-radius:11px;color:#144f89;font-size:12px;font-weight:750;text-decoration:none}.mobile-empty-state a svg,.mobile-profile-panel>a svg{width:16px}
+  .mobile-profile-identity{display:flex;padding:14px;align-items:center;gap:12px;border-radius:14px;background:#eef6ff;text-align:left}.mobile-profile-identity>span{display:grid;width:48px;height:48px;place-items:center;border-radius:50%;background:#0a64bd;color:#fff;font-weight:850}.mobile-profile-identity strong,.mobile-profile-identity small{display:block}.mobile-profile-identity small{margin-top:4px;color:#657a90;font-size:11px}
+  .mobile-profile-panel .mobile-logout{width:100%;min-height:48px;margin:3px 0 0;background:#fff0ef;color:#a1322c;border:1px solid #ffd0cc}
+  @keyframes mobile-drawer-in{from{transform:translateY(35px);opacity:.4}to{transform:none;opacity:1}}
+
+  /* Regras globais de legibilidade e toque para os portais existentes. */
+  button,a,input,select,textarea{touch-action:manipulation}
+  input,select{min-height:44px;font-size:16px!important}textarea{font-size:16px!important}
+  main,.dashboard-main,.admin-main,.coordinator-main,.professor-main{min-width:0;max-width:100vw}
+  table{min-width:680px}.panel:has(table),[class*="table"],[class*="-list"]{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  form [class*="grid"],form [class*="columns"]{grid-template-columns:1fr!important}
+  dialog,[role="dialog"],.modal,.drawer{max-width:100vw}
+
+  /* Login móvel: identidade institucional sempre visível, sem o painel promocional extenso. */
+  .login-page{display:block;min-height:100dvh;background:linear-gradient(180deg,#07366e 0,#07559d 235px,#f5f8fc 235px)}
+  .login-brand{min-height:235px;padding:20px 18px 72px;align-items:center;background:transparent;text-align:center}
+  .login-brand::after,.login-brand .brand-message,.login-brand .benefits,.login-brand .city-brand{display:none}
+  .login-brand .prefeitura-highlight{width:100%;padding:0 0 13px;align-items:center;flex-direction:row;justify-content:center;gap:10px;border-bottom-color:#ffffff32;text-align:left}
+  .login-brand .prefeitura-highlight img{width:54px;height:54px;filter:brightness(0) invert(1)}
+  .login-brand .prefeitura-highlight span{font-size:13px}.login-brand .prefeitura-highlight small{font-size:9px}
+  .login-brand .brand-top{margin-top:14px;justify-content:center;text-align:left}.login-brand .system-logo{width:52px;height:52px}.login-brand .brand-top h1{font-size:27px}.login-brand .brand-top p{font-size:11px}
+  .login-form-area{min-height:calc(100dvh - 235px);margin-top:-48px;padding:0 14px 24px;background:transparent}
+  .login-card{padding:24px 18px;border:1px solid #e0e8f1;border-radius:18px;box-shadow:0 14px 38px #06264d29}
+  .login-icon{display:none}.login-card h2{font-size:22px}.login-card>p{margin:8px 0 20px;font-size:12px}
+  .login-card>label{font-size:12px}.login-card input:not([type='checkbox']){height:50px}.login-card>button{height:50px}
+  .login-divider,.social-buttons{display:none}.login-form-area footer{padding:18px 8px 0;font-size:9px;line-height:1.5}
+}
+
+@media (max-width:480px){
+  .mobile-module-list{grid-template-columns:1fr}.mobile-module-list a{min-height:58px}
+}
+
+@media (min-width:761px) and (max-width:1024px){
+  .dashboard-content,.admin-content,.coordinator-content,.professor-content{padding-right:20px!important;padding-left:20px!important}
+  table{font-size:11px}
+}
+
+@media print{.mobile-bottom-nav,.mobile-drawer-layer{display:none!important}}
