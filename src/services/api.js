@@ -125,6 +125,11 @@ export const api = {
   updatePersonnelLeave(id, data, token) { return request(`/personnel-leaves/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, token); },
   updatePersonnelLeaveStatus(id, status, token) { return request(`/personnel-leaves/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }, token); },
   downloadPersonnelLeaveDocument(id, filename, token) { return download(`/personnel-leaves/${id}/document`, filename, token); },
+  listAssets(token) { return request('/assets', {}, token); },
+  listAssetReferences(token) { return request('/assets/references', {}, token); },
+  createAsset(data, token) { return post('/assets', data, token); },
+  updateAsset(id, data, token) { return request(`/assets/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, token); },
+  transferAsset(id, data, token) { return post(`/assets/${id}/transfer`, data, token); },
 
   deleteUser(id, token) {
     return request(`/users/${id}`, { method: 'DELETE' }, token);
