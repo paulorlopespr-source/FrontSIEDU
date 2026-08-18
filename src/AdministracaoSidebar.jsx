@@ -38,6 +38,7 @@ export default function AdministracaoSidebar({ user, onLogout }) {
     <div className="administration-city-brand">
       <img src={prefeituraLogo} alt="Prefeitura Municipal de Pindobaçu — Governo que cuida da gente"/>
     </div>
+    <Link className="sidebar-system-home" to="/administracao" aria-label="Voltar à página inicial da Secretaria Administrativa"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link>
     <nav aria-label="Navegação da Secretaria Administrativa">
       <NavLink to="/administracao" end className={({ isActive }) => isActive ? 'active' : undefined}><LayoutDashboard aria-hidden="true"/><span>Visão Geral</span></NavLink>
       {navigationGroups.map((group) => <section key={group.label}><h2>{group.label}</h2>{group.items.map((item) => <NavigationItem item={item} key={item.label}/>)}</section>)}
