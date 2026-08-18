@@ -1,44 +1,71 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { api } from './services/api';
 
 const modules = {
-  turmas: { icon: '👥', title: 'Turmas acompanhadas', description: 'Acompanhe rendimento, frequência e encaminhamentos por turma.' },
-  diario: { icon: '📖', title: 'Diário de classe', description: 'Consulte registros de aulas, conteúdos e frequência lançados pelos professores.' },
-  frequencia: { icon: '✅', title: 'Frequência', description: 'Monitore presença, faltas recorrentes e alunos em risco.' },
-  avaliacoes: { icon: '📊', title: 'Avaliações e IDEB', description: 'Analise resultados por etapa, disciplina e período.' },
-  relatorios: { icon: '📑', title: 'Relatórios', description: 'Gere relatórios consolidados para orientar decisões pedagógicas.' },
-  comunicacao: { icon: '📣', title: 'Comunicação', description: 'Registre comunicados e encaminhamentos com escolas e professores.' },
-  agenda: { icon: '📅', title: 'Agenda', description: 'Organize reuniões, visitas técnicas e formações continuadas.' },
-  ocorrencias: { icon: '⚠️', title: 'Ocorrências pedagógicas', description: 'Analise ocorrências e acompanhe planos de intervenção.' },
+  turmas: ['Turmas acompanhadas', 'Acompanhe rendimento e frequência consolidados por unidade.'],
+  diario: ['Diário de classe', 'Consulte a consolidação dos registros acadêmicos lançados.'],
+  frequencia: ['Frequência', 'Monitore presença e unidades que exigem acompanhamento.'],
+  avaliacoes: ['Avaliações e IDEB', 'Analise médias oficiais e resultados consolidados.'],
+  relatorios: ['Relatórios', 'Emita arquivos oficiais com rastreabilidade.'],
+  comunicacao: ['Comunicação', 'Consulte comunicações recebidas e enviadas.'],
+  agenda: ['Agenda', 'Organize reuniões, visitas técnicas e formações.'],
+  ocorrencias: ['Ocorrências pedagógicas', 'Área reservada para integração com o fluxo oficial de ocorrências.'],
 };
+const reportTypes = [['escolas', 'Escolas'], ['funcionarios', 'Funcionários'], ['demandas', 'Demandas'], ['ideb', 'IDEB']];
+const formatDate = (value) => value ? new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(value)) : '—';
 
-const baseRows = [
-  ['6º Ano A', 'Escola Municipal Pindobaçu', '92%', '7,8', 'Acompanhamento regular'],
-  ['7º Ano B', 'Colégio Caminhos do Saber', '88%', '6,9', 'Plano de intervenção'],
-  ['9º Ano A', 'Escola Municipal Pindobaçu', '95%', '8,1', 'Meta atingida'],
-];
-
-export default function CoordenadorModulo({ type = 'turmas', user, onLogout }) {
-  const module = modules[type] || modules.turmas;
+export default function CoordenadorModulo({ type = 'turmas', user, token, onLogout }) {
+  const [dashboard, setDashboard] = useState({ summary: {}, academic: { performance: [] } });
+  const [meetings, setMeetings] = useState([]);
+  const [messages, setMessages] = useState({ recebidas: [], enviadas: [] });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [query, setQuery] = useState('');
-  const [items, setItems] = useState([]);
-  const [form, setForm] = useState({ titulo: '', data: '', responsavel: '', descricao: '' });
-  const rows = useMemo(() => baseRows.filter((row) => row.join(' ').toLowerCase().includes(query.toLowerCase())), [query]);
-  const save = (event) => {
-    event.preventDefault();
-    if (!form.titulo || !form.descricao) return;
-    setItems((current) => [{ ...form, id: Date.now() }, ...current]);
-    setForm({ titulo: '', data: '', responsavel: '', descricao: '' });
-    setNotice(`${module.title}: registro salvo com sucesso.`);
-  };
-  const metricCards = type === 'turmas' ? [['Turmas monitoradas', '12', '👥'], ['Frequência média', '92,6%', '✅'], ['Média geral', '7,4', '📈'], ['Alertas ativos', '18', '⚠️']] : [['Registros no período', '48', '📋'], ['Pendências', type === 'ocorrencias' ? '6' : '4', '⏳'], ['Concluídos', '82%', '✅'], ['Última atualização', 'Hoje', '🕒']];
-  return <div style={{ minHeight: '100vh', background: '#f4f7fc', color: '#09245a', fontFamily: 'Arial, sans-serif' }}>
-    <header style={{ display: 'flex', alignItems: 'center', gap: 18, padding: '16px 4%', background: '#fff', borderBottom: '1px solid #dce5f0' }}><Link to="/coordenacao">← Portal do Coordenador</Link><b style={{ fontSize: 22 }}>{module.icon} {module.title}</b><span style={{ marginLeft: 'auto' }}>{user?.nome}</span><button type="button" onClick={onLogout}>Sair</button></header>
-    <main style={{ maxWidth: 1250, margin: 'auto', padding: '30px 4%' }}><small style={{ color: '#1476ef', fontWeight: 900, letterSpacing: '.12em' }}>COORDENAÇÃO PEDAGÓGICA</small><h1 style={{ margin: '8px 0' }}>{module.title}</h1><p style={{ color: '#607399' }}>{module.description}</p>{notice && <p style={{ padding: 12, borderRadius: 8, background: '#e8f7ef', color: '#17633f' }}>{notice}</p>}
-      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 12, margin: '22px 0' }}>{metricCards.map(([label, value, icon]) => <article key={label} style={{ background: '#fff', border: '1px solid #dce7f5', borderRadius: 12, padding: 16 }}><span style={{ fontSize: 22 }}>{icon}</span><small style={{ display: 'block', color: '#607399', marginTop: 8 }}>{label}</small><strong style={{ display: 'block', fontSize: 26, marginTop: 4 }}>{value}</strong></article>)}</section>
-      <section style={{ display: 'grid', gridTemplateColumns: 'minmax(300px,1.5fr) minmax(280px,1fr)', gap: 16 }}><article style={{ background: '#fff', border: '1px solid #dce7f5', borderRadius: 13, padding: 20 }}><div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}><h2 style={{ marginTop: 0 }}>Visão consolidada</h2><input aria-label="Pesquisar" placeholder="Pesquisar..." value={query} onChange={(event) => setQuery(event.target.value)} style={{ padding: 9, border: '1px solid #cbd8e9', borderRadius: 7, maxWidth: 170 }} /></div>{type === 'turmas' || type === 'frequencia' || type === 'avaliacoes' ? <div style={{ overflowX: 'auto' }}><table style={{ width: '100%', borderCollapse: 'collapse' }}><thead><tr>{['Turma', 'Escola', 'Frequência', 'Média', 'Situação'].map((head) => <th key={head} style={{ textAlign: 'left', padding: 9, borderBottom: '2px solid #e7eef7', fontSize: 12 }}>{head}</th>)}</tr></thead><tbody>{rows.map((row) => <tr key={row[0]}>{row.map((cell) => <td key={cell} style={{ padding: 10, borderBottom: '1px solid #edf1f7', fontSize: 13 }}>{cell}</td>)}</tr>)}</tbody></table></div> : <div style={{ padding: '25px 5px', color: '#607399' }}>Use o formulário ao lado para registrar e acompanhar ações deste módulo.</div>}</article>
-        <article style={{ background: '#fff', border: '1px solid #dce7f5', borderRadius: 13, padding: 20 }}><h2 style={{ marginTop: 0 }}>Novo registro</h2><form onSubmit={save}><input required placeholder="Título ou referência" value={form.titulo} onChange={(e) => setForm({ ...form, titulo: e.target.value })} style={{ width: '100%', boxSizing: 'border-box', padding: 10, marginBottom: 9 }} /><input type="date" value={form.data} onChange={(e) => setForm({ ...form, data: e.target.value })} style={{ width: '100%', boxSizing: 'border-box', padding: 10, marginBottom: 9 }} /><input placeholder="Responsável / unidade" value={form.responsavel} onChange={(e) => setForm({ ...form, responsavel: e.target.value })} style={{ width: '100%', boxSizing: 'border-box', padding: 10, marginBottom: 9 }} /><textarea required placeholder="Descrição, análise ou encaminhamento" value={form.descricao} onChange={(e) => setForm({ ...form, descricao: e.target.value })} style={{ width: '100%', boxSizing: 'border-box', minHeight: 105, padding: 10 }} /><button style={{ marginTop: 10, padding: '10px 15px', border: 0, borderRadius: 8, background: '#176fe3', color: '#fff', fontWeight: 800 }}>Salvar registro</button></form></article></section>
-      {items.length > 0 && <section style={{ marginTop: 16, background: '#fff', border: '1px solid #dce7f5', borderRadius: 13, padding: 20 }}><h2>Registros recentes</h2>{items.map((item) => <article key={item.id} style={{ padding: '11px 0', borderTop: '1px solid #edf1f7' }}><b>{item.titulo}</b> · {item.responsavel || 'Coordenação'}<p style={{ margin: '5px 0', color: '#607399' }}>{item.descricao}</p></article>)}</section>}
-    </main></div>;
+  const [meeting, setMeeting] = useState({ titulo: '', tipo: 'Reunião pedagógica', inicio: '', local: '', pauta: '' });
+  const [saving, setSaving] = useState(false);
+  const [title, description] = modules[type] || modules.turmas;
+
+  async function load() {
+    setLoading(true); setError('');
+    try {
+      const base = await api.getManagerDashboard(token);
+      setDashboard(base || { summary: {}, academic: { performance: [] } });
+      if (type === 'agenda') setMeetings(await api.listMunicipalMeetings(token) || []);
+      if (type === 'comunicacao') setMessages(await api.listProfessorMessages(token) || { recebidas: [], enviadas: [] });
+    } catch (requestError) { setError(requestError.message); }
+    finally { setLoading(false); }
+  }
+  useEffect(() => { load(); }, [token, type]);
+
+  const performance = useMemo(() => (dashboard.academic?.performance || []).filter((item) => `${item.nome} ${item.frequencia} ${item.media}`.toLowerCase().includes(query.toLowerCase())), [dashboard, query]);
+  const summary = dashboard.summary || {};
+  const cards = [['Turmas', summary.classes || 0], ['Alunos', summary.students || 0], ['Frequência média', `${Number(summary.attendance || 0).toFixed(1)}%`], ['Média geral', Number(summary.average || 0).toFixed(1)]];
+
+  async function createMeeting(event) {
+    event.preventDefault(); setSaving(true); setError(''); setNotice('');
+    try {
+      await api.createMunicipalMeeting({ ...meeting, inicio: new Date(meeting.inicio).toISOString(), fim: null, escolaId: null, linkVirtual: null, participantes: null }, token);
+      setMeeting({ titulo: '', tipo: 'Reunião pedagógica', inicio: '', local: '', pauta: '' });
+      setNotice('Reunião incluída na agenda municipal.'); await load();
+    } catch (requestError) { setError(requestError.message); }
+    finally { setSaving(false); }
+  }
+
+  return <div style={{ minHeight: '100vh', background: '#f4f7fc', color: '#09245a' }}>
+    <header style={{ display: 'flex', alignItems: 'center', gap: 18, padding: '16px 4%', background: '#fff', borderBottom: '1px solid #dce5f0' }}><Link to="/coordenacao">← Portal do Coordenador</Link><b style={{ fontSize: 22 }}>{title}</b><span style={{ marginLeft: 'auto' }}>{user?.nome}</span><button type="button" onClick={onLogout}>Sair</button></header>
+    <main style={{ maxWidth: 1250, margin: 'auto', padding: '30px 4%' }}><small style={{ color: '#1476ef', fontWeight: 900, letterSpacing: '.12em' }}>COORDENAÇÃO PEDAGÓGICA</small><h1>{title}</h1><p style={{ color: '#607399' }}>{description}</p>
+      {error && <div role="alert" style={{ padding: 14, background: '#fff0f0', border: '1px solid #efb8b8', borderRadius: 10 }}><b>Não foi possível carregar os dados.</b><p>{error}</p><button type="button" onClick={load}>Tentar novamente</button></div>}
+      {notice && <p role="status" style={{ padding: 12, background: '#e8f7ef', color: '#17633f', borderRadius: 8 }}>{notice}</p>}
+      {loading ? <p style={{ padding: 28, background: '#fff', borderRadius: 12 }}>Carregando dados oficiais…</p> : <>
+        <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 12, margin: '22px 0' }}>{cards.map(([label, value]) => <article key={label} style={{ background: '#fff', border: '1px solid #dce7f5', borderRadius: 12, padding: 16 }}><small style={{ color: '#607399' }}>{label}</small><strong style={{ display: 'block', fontSize: 26, marginTop: 5 }}>{value}</strong></article>)}</section>
+        {['turmas', 'diario', 'frequencia', 'avaliacoes'].includes(type) && <section style={{ background: '#fff', border: '1px solid #dce7f5', borderRadius: 13, padding: 20 }}><div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}><h2>Indicadores por unidade</h2><input aria-label="Pesquisar unidade" placeholder="Pesquisar unidade" value={query} onChange={(event) => setQuery(event.target.value)} /></div>{performance.length ? <div style={{ overflowX: 'auto' }}><table style={{ width: '100%', borderCollapse: 'collapse' }}><thead><tr>{['Unidade', 'Frequência', 'Média', 'Situação'].map((head) => <th key={head} style={{ textAlign: 'left', padding: 10, borderBottom: '2px solid #e7eef7' }}>{head}</th>)}</tr></thead><tbody>{performance.map((item) => <tr key={item.id}><td style={{ padding: 10 }}>{item.nome}</td><td>{Number(item.frequencia || 0).toFixed(1)}%</td><td>{Number(item.media || 0).toFixed(1)}</td><td>{Number(item.frequencia || 0) < 75 || Number(item.media || 0) < 6 ? 'Requer acompanhamento' : 'Regular'}</td></tr>)}</tbody></table></div> : <p>Nenhum indicador acadêmico disponível para o período.</p>}</section>}
+        {type === 'relatorios' && <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(210px,1fr))', gap: 14 }}>{reportTypes.map(([key, label]) => <article key={key} style={{ background: '#fff', border: '1px solid #dce7f5', borderRadius: 12, padding: 18 }}><h2>{label}</h2><p>Arquivo CSV emitido e registrado no histórico oficial.</p><button type="button" onClick={() => api.downloadMunicipalReport(key, token).catch((requestError) => setError(requestError.message))}>Baixar relatório</button></article>)}</section>}
+        {type === 'agenda' && <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 16 }}><article style={{ background: '#fff', padding: 20, borderRadius: 12 }}><h2>Nova reunião</h2><form onSubmit={createMeeting}><input required placeholder="Título" value={meeting.titulo} onChange={(e) => setMeeting({ ...meeting, titulo: e.target.value })}/><input required type="datetime-local" value={meeting.inicio} onChange={(e) => setMeeting({ ...meeting, inicio: e.target.value })}/><input placeholder="Local" value={meeting.local} onChange={(e) => setMeeting({ ...meeting, local: e.target.value })}/><textarea required minLength={5} placeholder="Pauta" value={meeting.pauta} onChange={(e) => setMeeting({ ...meeting, pauta: e.target.value })}/><button disabled={saving}>{saving ? 'Salvando…' : 'Agendar'}</button></form></article><article style={{ background: '#fff', padding: 20, borderRadius: 12 }}><h2>Agenda municipal</h2>{meetings.length ? meetings.map((item) => <p key={item.id}><b>{item.titulo}</b><br/><small>{formatDate(item.inicio)} · {item.local || 'Local a definir'} · {item.status}</small></p>) : <p>Nenhuma reunião cadastrada.</p>}</article></section>}
+        {type === 'comunicacao' && <section style={{ background: '#fff', padding: 20, borderRadius: 12 }}><h2>Comunicações</h2>{[...(messages.recebidas || []), ...(messages.enviadas || [])].length ? [...(messages.recebidas || []), ...(messages.enviadas || [])].map((item) => <article key={`${item.id}-${item.remetente || item.destinatario}`} style={{ borderTop: '1px solid #edf1f7', padding: '12px 0' }}><b>{item.assunto}</b><p>{item.corpo}</p><small>{item.remetente ? `De: ${item.remetente}` : `Para: ${item.destinatario}`} · {formatDate(item.criadoEm)}</small></article>) : <p>Nenhuma comunicação encontrada.</p>}</section>}
+        {type === 'ocorrencias' && <section style={{ background: '#fff', padding: 24, border: '1px solid #dce7f5', borderRadius: 12 }}><h2>Integração pendente</h2><p>Não existe uma API oficial de ocorrências pedagógicas na homologação. O formulário local foi retirado para impedir registros que desapareceriam ao recarregar a página.</p></section>}
+      </>}
+    </main>
+  </div>;
 }
