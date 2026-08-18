@@ -8,8 +8,6 @@ import {
   FolderClock,
   Megaphone,
   PackageCheck,
-  Search,
-  Settings2,
   UsersRound,
 } from 'lucide-react';
 import { api } from './services/api';
@@ -21,10 +19,6 @@ const emptyOverview = {
   totals: { schools: 0, students: 0, classes: 0, professors: 0, employees: 0 },
   upcomingMeetings: 0,
 };
-
-function PlannedBadge() {
-  return <small className="administration-planned">Em implantação</small>;
-}
 
 export default function AdministracaoDashboard({ token, user, onLogout }) {
   const [overview, setOverview] = useState(emptyOverview);
@@ -79,7 +73,7 @@ export default function AdministracaoDashboard({ token, user, onLogout }) {
     <AdministracaoSidebar user={user} onLogout={onLogout}/>
 
     <main className="administration-main">
-      <header className="administration-topbar"><div><small>GESTÃO ADMINISTRATIVA MUNICIPAL</small><h1>Visão Geral Administrativa</h1><p>Operação, atendimento e acompanhamento de toda a rede municipal.</p></div><div className="administration-top-actions"><label><Search aria-hidden="true"/><input aria-label="Pesquisar no portal" placeholder="Pesquisar" disabled/><PlannedBadge/></label><button type="button" disabled aria-label="Configurações em implantação"><Settings2 aria-hidden="true"/></button></div></header>
+      <header className="administration-topbar"><div><small>GESTÃO ADMINISTRATIVA MUNICIPAL</small><h1>Visão Geral Administrativa</h1><p>Operação, atendimento e acompanhamento de toda a rede municipal.</p></div></header>
 
       {error && <AdministrationError message={error} onRetry={() => load()}/>}
       {loading && <div className="administration-dashboard-skeleton"><AdministrationSkeleton rows={4} label="Atualizando painel administrativo"/></div>}
