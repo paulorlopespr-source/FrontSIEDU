@@ -116,7 +116,7 @@ function Layout({ children, onLogout, variant = 'gestor' }) {
 }
 
 function MunicipalBrand({ user }) {
-  return <div className="municipal-brand-stamp" aria-label="Prefeitura Municipal de Pindobaçu"><img src="/images/prefeitura.png" alt="Prefeitura Municipal de Pindobaçu" /><span>Prefeitura Municipal de Pindobaçu<br /><small>Secretaria Municipal de Educação · SIEDU</small>{user?.nome && <small className="municipal-user-id">{user.nome} · {user.matriculaSecretaria || 'Matrícula em atualização'}</small>}</span></div>;
+  return <div className="municipal-brand-stamp" aria-label="Prefeitura Municipal de Pindobaçu"><img src="/images/prefeitura-transparent.svg" alt="Prefeitura Municipal de Pindobaçu" /><span>Prefeitura Municipal de Pindobaçu<br /><small>Secretaria Municipal de Educação · SIEDU</small>{user?.nome && <small className="municipal-user-id">{user.nome} · {user.matriculaSecretaria || 'Matrícula em atualização'}</small>}</span></div>;
 }
 function Login({ onLogin }) {
   const navigate = useNavigate();
@@ -148,7 +148,7 @@ function Login({ onLogin }) {
       <section className="login-brand">
         <div className="prefeitura-highlight">
           <img
-            src="/images/prefeitura.png"
+            src="/images/prefeitura-transparent.svg"
             alt="Prefeitura Municipal de Pindoba&ccedil;u"
           />
           <span>
@@ -210,7 +210,7 @@ function Login({ onLogin }) {
 
         <div className="city-brand">
           <img
-            src="/images/prefeitura.png"
+            src="/images/prefeitura-transparent.svg"
             alt="Prefeitura Municipal de Pindoba&ccedil;u"
           />
           <span>
