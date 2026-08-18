@@ -32,9 +32,6 @@ export default function AdministracaoSidebar({ user, onLogout }) {
   return <><button className="administration-menu-toggle" type="button" aria-expanded={open} aria-controls="administration-navigation" onClick={() => setOpen(value => !value)}>{open ? <X/> : <Menu/>}<span>Menu</span></button>
   {open && <button className="administration-menu-backdrop" aria-label="Fechar menu" onClick={() => setOpen(false)}/>}
   <aside className={`administration-sidebar ${open ? 'is-open' : ''}`} id="administration-navigation">
-    <Link className="administration-brand" to="/administracao" aria-label="SIEDU — Secretaria Administrativa">
-      <span>S</span><div><strong>SIEDU</strong><small>Secretaria Administrativa</small></div>
-    </Link>
     <div className="administration-city-brand">
       <img src={prefeituraLogo} alt="Prefeitura Municipal de Pindobaçu — Governo que cuida da gente"/>
     </div>

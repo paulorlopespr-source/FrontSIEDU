@@ -109,11 +109,6 @@ export function GestorSidebar({ onLogout }) {
   const active = (path) => path === '/gestor' ? current === '/gestor' : current === path || (!path.includes('?') && location.pathname.startsWith(path));
   return (
     <aside className="dashboard-sidebar">
-      <div className="sidebar-brand">
-        <img src="/images/sigepin.png" alt="SIEDU-PINDOBAÇU" />
-        <div><strong>SIEDU-PINDOBAÇU</strong><span>Sistema Integrado de Educação</span></div>
-      </div>
-
       <Link className={`sidebar-current ${current === '/gestor' ? 'active' : ''}`} to="/gestor"><LayoutDashboard size={18} /> Painel executivo</Link>
 
       <nav className="sidebar-menu">
