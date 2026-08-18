@@ -157,6 +157,10 @@ export const api = {
   getProtocolReferences(token) { return request('/protocols/references', {}, token); },
   createProtocol(data, token) { return post('/protocols', data, token); },
   actOnProtocol(id, data, token) { return request(`/protocols/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, token); },
+  listAdministrativeRequests(token) { return request('/administrative-requests', {}, token); },
+  getAdministrativeRequestReferences(token) { return request('/administrative-requests/references', {}, token); },
+  createAdministrativeRequest(data, token) { return post('/administrative-requests', data, token); },
+  actOnAdministrativeRequest(id, data, token) { return request(`/administrative-requests/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, token); },
 
   deleteUser(id, token) {
     return request(`/users/${id}`, { method: 'DELETE' }, token);
