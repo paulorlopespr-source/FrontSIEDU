@@ -32,6 +32,7 @@ import AdministracaoDemandas from './AdministracaoDemandas';
 import AdministracaoDashboard from './AdministracaoDashboard';
 import AdministracaoPessoas from './AdministracaoPessoas';
 import AdministracaoAfastamentos from './AdministracaoAfastamentos';
+import AdministracaoPatrimonio from './AdministracaoPatrimonio';
 import {
   DetalhesEscolaGestor,
   ListaEscolasGestor,
@@ -895,6 +896,11 @@ export default function App() {
       <Route
         path="/administracao/afastamentos"
         element={<Protected token={session?.token}><Allowed allowed={isEducationAdministration(session?.user)} user={session?.user}><AdministracaoAfastamentos token={session?.token} user={session?.user} onLogout={logout}/></Allowed></Protected>}
+      />
+
+      <Route
+        path="/administracao/patrimonio"
+        element={<Protected token={session?.token}><Allowed allowed={isEducationAdministration(session?.user)} user={session?.user}><AdministracaoPatrimonio token={session?.token} user={session?.user} onLogout={logout}/></Allowed></Protected>}
       />
 
       <Route

@@ -13,7 +13,7 @@ const navigationGroups = [
   ] },
   { label: 'OPERAÇÕES', items: [
     { label: 'Demandas', icon: Megaphone, to: '/administracao/demandas' },
-    { label: 'Patrimônio', icon: PackageCheck }, { label: 'Almoxarifado', icon: Warehouse },
+    { label: 'Patrimônio', icon: PackageCheck, to: '/administracao/patrimonio' }, { label: 'Almoxarifado', icon: Warehouse },
     { label: 'Transporte', icon: Truck }, { label: 'Manutenção', icon: Wrench },
   ] },
   { label: 'ADMINISTRATIVO', items: [
