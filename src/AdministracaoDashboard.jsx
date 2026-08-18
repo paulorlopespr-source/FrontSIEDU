@@ -13,6 +13,7 @@ import {
 import { api } from './services/api';
 import AdministracaoSidebar from './AdministracaoSidebar';
 import { AdministrationError, AdministrationSkeleton } from './AdministrationState';
+import { AppShell, PageHeader } from './SieduUI';
 import './administracao-dashboard.css';
 
 const emptyOverview = {
@@ -69,16 +70,18 @@ export default function AdministracaoDashboard({ token, user, onLogout }) {
 
   const recentDemands = demands.slice(0, 5);
 
-  return <div className="administration-shell">
-    <AdministracaoSidebar user={user} onLogout={onLogout}/>
-
+  return <AppShell className="administration-shell" sidebar={<AdministracaoSidebar user={user} onLogout={onLogout}/> }>
     <main className="administration-main">
-      <header className="administration-topbar"><div><small>GESTÃO ADMINISTRATIVA MUNICIPAL</small><h1>Visão Geral Administrativa</h1><p>Operação, atendimento e acompanhamento de toda a rede municipal.</p></div></header>
+      <PageHeader eyebrow="Gestão administrativa municipal" title="Visão Geral Administrativa" description="Operação, atendimento e acompanhamento de toda a rede municipal." breadcrumbs={[{ label: 'Início', to: '/administracao' }, { label: 'Visão geral' }]}/>
 
       {error && <AdministrationError message={error} onRetry={() => load()}/>}
       {loading && <div className="administration-dashboard-skeleton"><AdministrationSkeleton rows={4} label="Atualizando painel administrativo"/></div>}
 
-      {!loading && <section className="administration-metrics">{metrics.map(({ label, value, icon: Icon, detail, tone }) => <article className={`tone-${tone}`} key={label}><span><Icon aria-hidden="true"/></span><strong>{typeof value === 'number' ? value.toLocaleString('pt-BR') : value}</strong><h2>{label}</h2><p>{detail}</p></article>)}</section>}
+      {!loading && <section className="administration-metrics">{metrics.map(({ label, value, icon: Icon, detail, tone }, index) => {
+        const destination = ['/administracao/funcionarios', null, '/administracao/demandas', '/administracao/patrimonio', '/administracao/solicitacoes'][index];
+        const content = <><span><Icon aria-hidden="true"/></span><strong>{typeof value === 'number' ? value.toLocaleString('pt-BR') : value}</strong><h2>{label}</h2><p>{detail}</p></>;
+        return destination ? <Link className={`tone-${tone} administration-metric-link`} to={destination} key={label}>{content}</Link> : <article className={`tone-${tone}`} key={label}>{content}</article>;
+      })}</section>}
 
       {!loading && <section className="administration-workspace">
         <article className="administration-panel administration-demands"><header><div><small>OPERAÇÃO PRIORITÁRIA</small><h2>Demandas das escolas</h2><p>Receba e execute as demandas autorizadas pela gestão municipal.</p></div><Link to="/administracao/demandas">Abrir módulo <ChevronRight aria-hidden="true"/></Link></header><div className="administration-demand-summary"><span><strong>{demandSummary.open}</strong>Em acompanhamento</span><span><strong>{demandSummary.authorized}</strong>Autorizadas</span><span className={demandSummary.urgent ? 'urgent' : ''}><strong>{demandSummary.urgent}</strong>Alta prioridade</span></div>{recentDemands.length ? <div className="administration-demand-list">{recentDemands.map((demand) => <div key={demand.id}><span><b>{demand.titulo}</b><small>{demand.escola || 'Rede municipal'} · {demand.status}</small></span><em>{demand.urgencia || demand.prioridade || 'Normal'}</em></div>)}</div> : <div className="administration-empty"><Boxes aria-hidden="true"/><p>Nenhuma demanda disponível neste momento.</p></div>}</article>
@@ -86,5 +89,5 @@ export default function AdministracaoDashboard({ token, user, onLogout }) {
         <article className="administration-panel administration-roadmap administration-quick-actions"><header><div><small>ACESSO DIRETO</small><h2>Ações rápidas</h2><p>Atalhos para as rotinas mais utilizadas.</p></div></header><div><Link to="/administracao/funcionarios"><UsersRound aria-hidden="true"/><b>Cadastrar funcionário</b><small>Cadastro funcional auditável</small></Link><Link to="/administracao/vinculos"><Building2 aria-hidden="true"/><b>Alterar lotação</b><small>Vínculos com escolas e setores</small></Link><Link to="/administracao/demandas"><Megaphone aria-hidden="true"/><b>Acompanhar demandas</b><small>Triagem e execução operacional</small></Link><Link to="/administracao/protocolo"><FolderClock aria-hidden="true"/><b>Registrar documento</b><small>Protocolo administrativo digital</small></Link></div></article>
       </section>}
     </main>
-  </div>;
+  </AppShell>;
 }

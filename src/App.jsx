@@ -77,6 +77,7 @@ import {
 } from './permissions';
 import { AccessDenied, NotFound, UnsupportedProfile } from './RouteFeedback';
 import MobileNavigation from './MobileNavigation';
+import { ConfirmDialog } from './SieduUI';
 import {
   ConsultaTurmas,
   DetalhesAluno,
@@ -669,6 +670,7 @@ function readSession() {
 
 export default function App() {
   const [session, setSession] = useState(readSession);
+  const [logoutRequested, setLogoutRequested] = useState(false);
 
   useEffect(() => {
     function expireSession() {
@@ -699,16 +701,18 @@ export default function App() {
   }
 
   function logout() {
-    if (!window.confirm('Tem certeza que quer sair do sistema?')) {
-      return;
-    }
+    setLogoutRequested(true);
+  }
+
+  function confirmLogout() {
     setSession(null);
     localStorage.removeItem('sigepin_session');
     sessionStorage.removeItem('sigepin_session');
+    setLogoutRequested(false);
   }
 
   return (
-    <><ConnectionStatus/><MunicipalBrand user={session?.user} onLogout={logout}/><MobileNavigation user={session?.user} onLogout={logout}/><Routes>
+    <><ConnectionStatus/><MunicipalBrand user={session?.user} onLogout={logout}/><MobileNavigation user={session?.user} onLogout={logout}/><ConfirmDialog open={logoutRequested} title="Sair do SIEDU?" description="Sua sessão será encerrada e você voltará para a tela de login. Dados ainda não enviados em formulários poderão ser perdidos." confirmLabel="Sair do sistema" danger onConfirm={confirmLogout} onCancel={() => setLogoutRequested(false)}/><Routes>
       <Route path="/login" element={<Login onLogin={login} />} />
       <Route path="/termos" element={<Protected token={session?.token}><TermosUso token={session?.token} user={session?.user} onAccepted={updateUser} /></Protected>} />
       <Route path="/recuperar-senha" element={<RecuperarSenha />} />
