@@ -143,6 +143,11 @@ export const api = {
   createInventoryProduct(data, token) { return post('/inventory/products', data, token); },
   createInventoryRequest(data, token) { return post('/inventory/requests', data, token); },
   actOnInventoryRequest(id, data, token) { return request(`/inventory/requests/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, token); },
+  listMaintenance(token) { return request('/maintenance', {}, token); },
+  getMaintenanceReferences(token) { return request('/maintenance/references', {}, token); },
+  createMaintenance(data, token) { return post('/maintenance', data, token); },
+  actOnMaintenance(id, data, token) { return request(`/maintenance/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, token); },
+  downloadMaintenanceAttachment(orderId, attachment, token) { return download(`/maintenance/${orderId}/attachments/${attachment.id}`, attachment.nome, token); },
 
   deleteUser(id, token) {
     return request(`/users/${id}`, { method: 'DELETE' }, token);
