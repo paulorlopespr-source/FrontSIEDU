@@ -29,6 +29,7 @@ function PlannedBadge() {
 export default function AdministracaoDashboard({ token, user, onLogout }) {
   const [overview, setOverview] = useState(emptyOverview);
   const [demands, setDemands] = useState([]);
+  const [assetSummary, setAssetSummary] = useState({ divergencia: 0 });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -36,13 +37,15 @@ export default function AdministracaoDashboard({ token, user, onLogout }) {
       setLoading(true);
       try {
         setError('');
-        const [network, schoolDemands] = await Promise.all([
+        const [network, schoolDemands, assets] = await Promise.all([
           api.getMunicipalOverview(token),
           api.listMunicipalDemands(token),
+          api.listAssets(token),
         ]);
         if (!active()) return;
         setOverview(network || emptyOverview);
         setDemands(schoolDemands || []);
+        setAssetSummary(assets?.resumo || { divergencia: 0 });
       } catch (requestError) {
         if (active()) setError(requestError.message);
       } finally {
@@ -66,7 +69,7 @@ export default function AdministracaoDashboard({ token, user, onLogout }) {
     { label: 'Funcionários vinculados', value: overview.totals.employees, icon: UsersRound, detail: 'Toda a rede municipal', tone: 'blue' },
     { label: 'Escolas', value: overview.totals.schools, icon: Building2, detail: 'Unidades acompanhadas', tone: 'blue' },
     { label: 'Demandas abertas', value: demandSummary.open, icon: Megaphone, detail: 'Aguardando andamento', tone: demandSummary.open ? 'orange' : 'blue' },
-    { label: 'Patrimônios com pendência', value: '—', icon: PackageCheck, detail: 'Módulo em implantação', tone: 'muted' },
+    { label: 'Patrimônios com pendência', value: assetSummary.divergencia || 0, icon: PackageCheck, detail: 'Bens com divergência cadastrada', tone: assetSummary.divergencia ? 'orange' : 'blue' },
     { label: 'Solicitações pendentes', value: demandSummary.authorized, icon: ClipboardList, detail: 'Execuções aguardando atendimento', tone: demandSummary.authorized ? 'orange' : 'blue' },
   ];
 
@@ -86,7 +89,7 @@ export default function AdministracaoDashboard({ token, user, onLogout }) {
       {!loading && <section className="administration-workspace">
         <article className="administration-panel administration-demands"><header><div><small>OPERAÇÃO PRIORITÁRIA</small><h2>Demandas das escolas</h2><p>Receba e execute as demandas autorizadas pela gestão municipal.</p></div><Link to="/administracao/demandas">Abrir módulo <ChevronRight aria-hidden="true"/></Link></header><div className="administration-demand-summary"><span><strong>{demandSummary.open}</strong>Em acompanhamento</span><span><strong>{demandSummary.authorized}</strong>Autorizadas</span><span className={demandSummary.urgent ? 'urgent' : ''}><strong>{demandSummary.urgent}</strong>Alta prioridade</span></div>{recentDemands.length ? <div className="administration-demand-list">{recentDemands.map((demand) => <div key={demand.id}><span><b>{demand.titulo}</b><small>{demand.escola || 'Rede municipal'} · {demand.status}</small></span><em>{demand.urgencia || demand.prioridade || 'Normal'}</em></div>)}</div> : <div className="administration-empty"><Boxes aria-hidden="true"/><p>Nenhuma demanda disponível neste momento.</p></div>}</article>
 
-        <article className="administration-panel administration-roadmap administration-quick-actions"><header><div><small>ACESSO DIRETO</small><h2>Ações rápidas</h2><p>Atalhos para as rotinas mais utilizadas.</p></div></header><div><Link to="/administracao/funcionarios"><UsersRound aria-hidden="true"/><b>Cadastrar funcionário</b><small>Cadastro funcional auditável</small></Link><Link to="/administracao/vinculos"><Building2 aria-hidden="true"/><b>Alterar lotação</b><small>Vínculos com escolas e setores</small></Link><Link to="/administracao/demandas"><Megaphone aria-hidden="true"/><b>Acompanhar demandas</b><small>Triagem e execução operacional</small></Link><span><FolderClock aria-hidden="true"/><b>Registrar documento</b><small>Em implantação</small></span></div></article>
+        <article className="administration-panel administration-roadmap administration-quick-actions"><header><div><small>ACESSO DIRETO</small><h2>Ações rápidas</h2><p>Atalhos para as rotinas mais utilizadas.</p></div></header><div><Link to="/administracao/funcionarios"><UsersRound aria-hidden="true"/><b>Cadastrar funcionário</b><small>Cadastro funcional auditável</small></Link><Link to="/administracao/vinculos"><Building2 aria-hidden="true"/><b>Alterar lotação</b><small>Vínculos com escolas e setores</small></Link><Link to="/administracao/demandas"><Megaphone aria-hidden="true"/><b>Acompanhar demandas</b><small>Triagem e execução operacional</small></Link><Link to="/administracao/protocolo"><FolderClock aria-hidden="true"/><b>Registrar documento</b><small>Protocolo administrativo digital</small></Link></div></article>
       </section>}
     </main>
   </div>;
