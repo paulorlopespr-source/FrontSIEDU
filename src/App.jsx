@@ -33,6 +33,7 @@ import AdministracaoDashboard from './AdministracaoDashboard';
 import AdministracaoPessoas from './AdministracaoPessoas';
 import AdministracaoAfastamentos from './AdministracaoAfastamentos';
 import AdministracaoPatrimonio from './AdministracaoPatrimonio';
+import Almoxarifado from './Almoxarifado';
 import {
   DetalhesEscolaGestor,
   ListaEscolasGestor,
@@ -901,6 +902,16 @@ export default function App() {
       <Route
         path="/administracao/patrimonio"
         element={<Protected token={session?.token}><Allowed allowed={isEducationAdministration(session?.user)} user={session?.user}><AdministracaoPatrimonio token={session?.token} user={session?.user} onLogout={logout}/></Allowed></Protected>}
+      />
+
+      <Route
+        path="/administracao/almoxarifado"
+        element={<Protected token={session?.token}><Allowed allowed={isEducationAdministration(session?.user)} user={session?.user}><Almoxarifado token={session?.token} user={session?.user} onLogout={logout}/></Allowed></Protected>}
+      />
+
+      <Route
+        path="/diretor/almoxarifado"
+        element={<Protected token={session?.token}><Allowed allowed={canAccessSchoolPortal(session?.user)} user={session?.user}><Almoxarifado token={session?.token} user={session?.user} onLogout={logout}/></Allowed></Protected>}
       />
 
       <Route
