@@ -128,7 +128,7 @@ export function GestorSidebar({ onLogout }) {
       </section>
 
       <div className="sidebar-city">
-        <img src="/images/prefeitura.png" alt="Prefeitura de Pindobaçu" />
+        <img src="/images/prefeitura-transparent.svg" alt="Prefeitura de Pindobaçu" />
         <span>Prefeitura Municipal de Pindobaçu</span>
       </div>
       <Link className="sidebar-system-home" to="/gestor" aria-label="Voltar ao painel executivo"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link>
@@ -150,7 +150,7 @@ export function GestorTopbar({ user, onLogout, alertCount = 0 }) {
   return (
     <header className="dashboard-topbar">
       <button className="menu-trigger" type="button" disabled title="Menu já está aberto nesta versão"><Menu size={21} /></button>
-      <div className="topbar-title"><img className="portal-header-logo" src="/images/prefeitura.png" alt="Prefeitura Municipal de Pindobaçu" /><div><strong>Portal do Gestor</strong><span>Secretaria Municipal de Educação</span></div></div>
+      <div className="topbar-title"><img className="portal-header-logo" src="/images/prefeitura-transparent.svg" alt="Prefeitura Municipal de Pindobaçu" /><div><strong>Portal do Gestor</strong><span>Secretaria Municipal de Educação</span></div></div>
       <form className="dashboard-search" onSubmit={search} title="Pesquisar módulos da rede"><Search size={17} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Pesquisar escolas, alunos e relatórios..." /></form>
       <div className="topbar-actions">
         <button type="button" disabled title="Use a seção de alertas do painel"><Bell size={19} />{alertCount > 0 && <i>{alertCount}</i>}</button>
