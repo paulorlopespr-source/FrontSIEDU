@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { api } from './services/api';
 import AdministracaoSidebar from './AdministracaoSidebar';
+import { AdministrationError, AdministrationSkeleton } from './AdministrationState';
 import './administracao-dashboard.css';
 
 const emptyOverview = {
@@ -31,25 +32,26 @@ export default function AdministracaoDashboard({ token, user, onLogout }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let active = true;
-    async function load() {
+  async function load(active = () => true) {
+      setLoading(true);
       try {
         setError('');
         const [network, schoolDemands] = await Promise.all([
           api.getMunicipalOverview(token),
           api.listMunicipalDemands(token),
         ]);
-        if (!active) return;
+        if (!active()) return;
         setOverview(network || emptyOverview);
         setDemands(schoolDemands || []);
       } catch (requestError) {
-        if (active) setError(requestError.message);
+        if (active()) setError(requestError.message);
       } finally {
-        if (active) setLoading(false);
+        if (active()) setLoading(false);
       }
-    }
-    load();
+  }
+  useEffect(() => {
+    let active = true;
+    load(() => active);
     return () => { active = false; };
   }, [token]);
 
@@ -76,16 +78,16 @@ export default function AdministracaoDashboard({ token, user, onLogout }) {
     <main className="administration-main">
       <header className="administration-topbar"><div><small>GESTÃO ADMINISTRATIVA MUNICIPAL</small><h1>Visão Geral Administrativa</h1><p>Operação, atendimento e acompanhamento de toda a rede municipal.</p></div><div className="administration-top-actions"><label><Search aria-hidden="true"/><input aria-label="Pesquisar no portal" placeholder="Pesquisar" disabled/><PlannedBadge/></label><button type="button" disabled aria-label="Configurações em implantação"><Settings2 aria-hidden="true"/></button></div></header>
 
-      {error && <p className="administration-feedback">Não foi possível atualizar o painel: {error}</p>}
-      {loading && <p className="administration-loading">Atualizando dados administrativos...</p>}
+      {error && <AdministrationError message={error} onRetry={() => load()}/>}
+      {loading && <div className="administration-dashboard-skeleton"><AdministrationSkeleton rows={4} label="Atualizando painel administrativo"/></div>}
 
-      <section className="administration-metrics">{metrics.map(({ label, value, icon: Icon, detail, tone }) => <article className={`tone-${tone}`} key={label}><span><Icon aria-hidden="true"/></span><strong>{typeof value === 'number' ? value.toLocaleString('pt-BR') : value}</strong><h2>{label}</h2><p>{detail}</p></article>)}</section>
+      {!loading && <section className="administration-metrics">{metrics.map(({ label, value, icon: Icon, detail, tone }) => <article className={`tone-${tone}`} key={label}><span><Icon aria-hidden="true"/></span><strong>{typeof value === 'number' ? value.toLocaleString('pt-BR') : value}</strong><h2>{label}</h2><p>{detail}</p></article>)}</section>}
 
-      <section className="administration-workspace">
+      {!loading && <section className="administration-workspace">
         <article className="administration-panel administration-demands"><header><div><small>OPERAÇÃO PRIORITÁRIA</small><h2>Demandas das escolas</h2><p>Receba e execute as demandas autorizadas pela gestão municipal.</p></div><Link to="/administracao/demandas">Abrir módulo <ChevronRight aria-hidden="true"/></Link></header><div className="administration-demand-summary"><span><strong>{demandSummary.open}</strong>Em acompanhamento</span><span><strong>{demandSummary.authorized}</strong>Autorizadas</span><span className={demandSummary.urgent ? 'urgent' : ''}><strong>{demandSummary.urgent}</strong>Alta prioridade</span></div>{recentDemands.length ? <div className="administration-demand-list">{recentDemands.map((demand) => <div key={demand.id}><span><b>{demand.titulo}</b><small>{demand.escola || 'Rede municipal'} · {demand.status}</small></span><em>{demand.urgencia || demand.prioridade || 'Normal'}</em></div>)}</div> : <div className="administration-empty"><Boxes aria-hidden="true"/><p>Nenhuma demanda disponível neste momento.</p></div>}</article>
 
         <article className="administration-panel administration-roadmap administration-quick-actions"><header><div><small>ACESSO DIRETO</small><h2>Ações rápidas</h2><p>Atalhos para as rotinas mais utilizadas.</p></div></header><div><Link to="/administracao/funcionarios"><UsersRound aria-hidden="true"/><b>Cadastrar funcionário</b><small>Cadastro funcional auditável</small></Link><Link to="/administracao/vinculos"><Building2 aria-hidden="true"/><b>Alterar lotação</b><small>Vínculos com escolas e setores</small></Link><Link to="/administracao/demandas"><Megaphone aria-hidden="true"/><b>Acompanhar demandas</b><small>Triagem e execução operacional</small></Link><span><FolderClock aria-hidden="true"/><b>Registrar documento</b><small>Em implantação</small></span></div></article>
-      </section>
+      </section>}
     </main>
   </div>;
 }
