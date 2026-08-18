@@ -4,7 +4,7 @@
 .administration-sidebar{overflow-x:hidden;overflow-y:auto}
 .administration-brand{color:#fff;text-decoration:none}
 .administration-brand small,.administration-sidebar small{margin-top:0}
-.administration-city-brand{display:grid;place-items:center;margin:10px 16px 4px;padding:4px 0;background:transparent}.administration-city-brand img{display:block;width:100%;max-width:220px;height:118px;object-fit:contain;filter:drop-shadow(0 2px 4px #001a3d66)}
+.administration-city-brand{display:grid;grid-template-columns:46px 1fr;align-items:center;gap:9px;margin:10px 16px 4px;padding:5px 0;background:transparent}.administration-city-brand img{display:block;width:46px;height:38px;object-fit:contain;filter:drop-shadow(0 2px 4px #001a3d66)}.administration-city-brand span{display:grid}.administration-city-brand strong{font-size:10px;line-height:1.25}.administration-city-brand small{color:#bfd5ed;font-size:8px}
 .administration-sidebar nav{display:block;flex:none;gap:0;width:100%}
 .administration-sidebar nav section{display:block;width:100%}
 .administration-sidebar nav a,.administration-nav-disabled{width:100%;margin:0}
@@ -20,7 +20,7 @@
   .administration-sidebar nav section{display:contents}
   .administration-sidebar nav h2,.administration-nav-disabled{display:none}
   .administration-sidebar nav a{flex:0 0 auto;width:auto;min-width:max-content;padding:9px 12px;background:#ffffff0d}
-  .administration-brand{padding:15px 18px}.administration-city-brand{margin:8px 14px 4px}.administration-city-brand img{height:104px}
+  .administration-brand{padding:15px 18px}.administration-city-brand{margin:8px 14px 4px}.administration-city-brand img{height:38px}
   .administration-user{display:none}
 }
 .administration-page-actions{display:flex;align-items:center;gap:9px}

@@ -407,6 +407,7 @@
 
 .sidebar-city { margin-top: 20px; padding: 16px 8px 0; border-color: rgba(255, 255, 255, .1); color: #dce7f2; font-size: 9px; line-height: 1.4; opacity: .8; }
 .sidebar-city img { width: 30px; height: 34px; }
+.dashboard-sidebar > .sidebar-city{order:-2;margin:0 4px 4px;padding:4px 5px 7px;border-top:0;border-bottom:1px solid rgba(255,255,255,.14);color:#eef6ff;font-size:10px;opacity:1}.dashboard-sidebar > .sidebar-system-home{order:-1}
 
 .dashboard-topbar {
   position: sticky;
