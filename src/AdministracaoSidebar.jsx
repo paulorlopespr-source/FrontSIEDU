@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { prefeituraLogo } from './prefeitura-logo';
 import {
   Bell, Building2, CalendarDays, ChevronRight, ClipboardList, FileArchive,
   FileBarChart, FolderClock, LayoutDashboard, LogOut, Megaphone, PackageCheck,
@@ -49,6 +50,9 @@ export default function AdministracaoSidebar({ user, onLogout }) {
     <Link className="administration-brand" to="/administracao" aria-label="SIEDU — Secretaria Administrativa">
       <span>S</span><div><strong>SIEDU</strong><small>Secretaria Administrativa</small></div>
     </Link>
+    <div className="administration-city-brand">
+      <img src={prefeituraLogo} alt="Prefeitura Municipal de Pindobaçu — Governo que cuida da gente"/>
+    </div>
     <nav aria-label="Navegação da Secretaria Administrativa">
       <NavLink to="/administracao" end className={({ isActive }) => isActive ? 'active' : undefined}><LayoutDashboard aria-hidden="true"/><span>Visão Geral</span></NavLink>
       {navigationGroups.map((group) => <section key={group.label}><h2>{group.label}</h2>{group.items.map((item) => <NavigationItem item={item} key={item.label}/>)}</section>)}
