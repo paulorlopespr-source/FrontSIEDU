@@ -133,6 +133,7 @@ export default function DiretorDashboard({ user, onLogout, token }) {
 
           <h3>Administração</h3>
           {mayCreateDemand && <Link to="/diretor/demandas">Solicitações e demandas</Link>}
+          <Link to="/diretor/almoxarifado">Solicitar materiais</Link>
           {mayManageAcademics && <Link to="/diretor/documentos">Documentos</Link>}
           {mayAccessFinance && <Link to="/diretor/financeiro">Gestão financeira</Link>}
           {mayManageAcademics && <Link to="/diretor/historicos">Históricos escolares</Link>}
