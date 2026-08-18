@@ -10,7 +10,7 @@ import {
 const navigationGroups = [
   { label: 'GESTÃO DE PESSOAS', items: [
     { label: 'Funcionários', icon: UsersRound, to: '/administracao/funcionarios' }, { label: 'Vínculos e Lotações', icon: Building2, to: '/administracao/vinculos' },
-    { label: 'Férias e Afastamentos', icon: CalendarDays, to: '/administracao/afastamentos' }, { label: 'Documentos Funcionais', icon: FileArchive },
+    { label: 'Férias e Afastamentos', icon: CalendarDays, to: '/administracao/afastamentos' }, { label: 'Documentos Funcionais', icon: FileArchive, to: '/administracao/documentos-funcionais' },
   ] },
   { label: 'OPERAÇÕES', items: [
     { label: 'Demandas', icon: Megaphone, to: '/administracao/demandas' },
