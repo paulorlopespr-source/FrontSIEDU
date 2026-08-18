@@ -10,8 +10,9 @@ function DiretorAreaLayout({ user, onLogout, children }) {
   return (
     <div className="director-area">
       <aside className="director-area-sidebar">
+        <div className="sidebar-prefeitura-logo"><img src="/images/prefeitura.png" alt="Prefeitura Municipal de Pindobaçu"/></div>
+        <Link className="sidebar-system-home" to="/diretor" aria-label="Voltar ao painel da escola"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link>
         <div className="director-area-brand">
-          <img src="/images/sigepin.png" alt="SIEDU-PINDOBAÇU" />
           <strong>SIEDU-PINDOBAÇU</strong>
           <small>Sistema Integrado de Educação</small>
         </div>

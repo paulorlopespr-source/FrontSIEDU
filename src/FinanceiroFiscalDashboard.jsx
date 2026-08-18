@@ -1,4 +1,4 @@
-import React,{useEffect,useMemo,useState}from'react';
+import React,{useEffect,useMemo,useState}from'react';import{Link}from'react-router-dom';
 import{AlertTriangle,BarChart3,Bell,Bus,CheckCircle2,CircleDollarSign,ClipboardCheck,FileBarChart,FileCheck2,LogOut,Menu,ReceiptText,Search,ShieldCheck,WalletCards,X}from'lucide-react';
 import{api}from'./services/api';
 import{prefeituraLogo}from'./prefeitura-logo';
@@ -9,7 +9,7 @@ const short=(value)=>Number(value||0).toLocaleString('pt-BR',{notation:'compact'
 
 function Sidebar({user,onLogout,open,setOpen}){
  const items=[['Painel Financeiro e Fiscal',BarChart3,'#visao'],['Orçamento e Execução',CircleDollarSign,'#execucao'],['Despesas e Pagamentos',WalletCards,'#execucao'],['Prestação de Contas',ClipboardCheck,'#prestacoes'],['Relatórios Fiscais',FileBarChart,'#prestacoes'],['Transportes',Bus,'#atalhos'],['Auditorias e Inspeções',ShieldCheck,'#auditorias']];
- return <><button className="finance-menu" onClick={()=>setOpen(!open)}>{open?<X/>:<Menu/>} Menu</button>{open&&<button className="finance-backdrop" onClick={()=>setOpen(false)} aria-label="Fechar menu"/>}<aside className={`finance-sidebar ${open?'open':''}`}><header><img src="/images/siedu-logo-transparent.svg" alt="SIEDU"/><div><strong>SIEDU</strong><small>Financeiro e Fiscal</small></div></header><img className="finance-city-logo" src={prefeituraLogo} alt="Prefeitura Municipal de Pindobaçu"/><nav><small>VISÃO GERAL</small>{items.map(([label,Icon,href],index)=><a className={index===0?'active':''} href={href} key={label} onClick={()=>setOpen(false)}><Icon/><span>{label}</span></a>)}</nav><footer><div><b>{user?.nome}</b><small>{user?.perfil}</small></div><button onClick={onLogout}><LogOut/>Sair</button></footer></aside></>;
+ return <><button className="finance-menu" onClick={()=>setOpen(!open)}>{open?<X/>:<Menu/>} Menu</button>{open&&<button className="finance-backdrop" onClick={()=>setOpen(false)} aria-label="Fechar menu"/>}<aside className={`finance-sidebar ${open?'open':''}`}><header><div><strong>SIEDU</strong><small>Financeiro e Fiscal</small></div></header><img className="finance-city-logo" src={prefeituraLogo} alt="Prefeitura Municipal de Pindobaçu"/><Link className="sidebar-system-home" to="/financeiro" aria-label="Voltar ao painel financeiro"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link><nav><small>VISÃO GERAL</small>{items.map(([label,Icon,href],index)=><a className={index===0?'active':''} href={href} key={label} onClick={()=>setOpen(false)}><Icon/><span>{label}</span></a>)}</nav><footer><div><b>{user?.nome}</b><small>{user?.perfil}</small></div><button onClick={onLogout}><LogOut/>Sair</button></footer></aside></>;
 }
 
 function Metric({label,value,detail,Icon,tone}){return <article className={`finance-metric ${tone}`}><span><Icon/></span><div><small>{label}</small><strong>{value}</strong><p>{detail}</p></div></article>}

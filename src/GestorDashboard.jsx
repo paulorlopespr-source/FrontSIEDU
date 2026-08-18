@@ -136,6 +136,7 @@ export function GestorSidebar({ onLogout }) {
         <img src="/images/prefeitura.png" alt="Prefeitura de Pindobaçu" />
         <span>Prefeitura Municipal de Pindobaçu</span>
       </div>
+      <Link className="sidebar-system-home" to="/gestor" aria-label="Voltar ao painel executivo"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link>
     </aside>
   );
 }
