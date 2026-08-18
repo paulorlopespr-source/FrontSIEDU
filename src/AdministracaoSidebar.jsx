@@ -19,6 +19,7 @@ const navigationGroups = [
   ] },
   { label: 'ADMINISTRATIVO', items: [
     { label: 'Documentos e Protocolo', icon: FolderClock, to: '/administracao/protocolo' }, { label: 'Solicitações', icon: ClipboardList, to: '/administracao/solicitacoes' },
+  ] },
 ];
 
 function NavigationItem({ item }) {
