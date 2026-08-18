@@ -36,6 +36,7 @@ import AdministracaoPatrimonio from './AdministracaoPatrimonio';
 import Almoxarifado from './Almoxarifado';
 import AdministracaoManutencao from './AdministracaoManutencao';
 import AdministracaoProtocolo from './AdministracaoProtocolo';
+import AdministracaoTransporte from './AdministracaoTransporte';
 import {
   DetalhesEscolaGestor,
   ListaEscolasGestor,
@@ -919,6 +920,11 @@ export default function App() {
       <Route
         path="/administracao/protocolo"
         element={<Protected token={session?.token}><Allowed allowed={isEducationAdministration(session?.user)} user={session?.user}><AdministracaoProtocolo token={session?.token} user={session?.user} onLogout={logout}/></Allowed></Protected>}
+      />
+
+      <Route
+        path="/administracao/transporte"
+        element={<Protected token={session?.token}><Allowed allowed={isEducationAdministration(session?.user)} user={session?.user}><AdministracaoTransporte token={session?.token} user={session?.user} onLogout={logout}/></Allowed></Protected>}
       />
 
       <Route
