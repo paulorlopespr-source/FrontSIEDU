@@ -41,6 +41,14 @@ async function request(path, options = {}, token) {
   return payload;
 }
 
+async function protectedBlobUrl(path, token) {
+  const response = await fetch(`${requireApiUrl()}${path}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  if (!response.ok) throw new Error('Não foi possível carregar a foto do bem.');
+  return URL.createObjectURL(await response.blob());
+}
+
 function buildQuery(filters = {}) {
   return new URLSearchParams(
     Object.entries(filters).filter(([, value]) => value !== '' && value != null),
@@ -130,6 +138,7 @@ export const api = {
   createAsset(data, token) { return post('/assets', data, token); },
   updateAsset(id, data, token) { return request(`/assets/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, token); },
   transferAsset(id, data, token) { return post(`/assets/${id}/transfer`, data, token); },
+  getAssetPhotoUrl(id, token) { return protectedBlobUrl(`/assets/${id}/photo`, token); },
 
   deleteUser(id, token) {
     return request(`/users/${id}`, { method: 'DELETE' }, token);
