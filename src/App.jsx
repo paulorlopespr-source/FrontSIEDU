@@ -45,6 +45,7 @@ import {
 } from './GestorEscolas';
 import { DocumentosEscolares, Frequencia, HistoricoEscolar } from './DiretorFerramentas';
 import FinanceiroEscolar from './FinanceiroEscolar';
+import FinanceiroFiscalDashboard from './FinanceiroFiscalDashboard';
 import SairDoSistema from './SairDoSistema';
 import DiretorDashboard from './DiretorDashboard';
 import CadastroDiretor from './CadastrosDiretor';
@@ -68,6 +69,7 @@ import {
   destinationFor,
   isMunicipalCoordinator,
   isEducationAdministration,
+  isFinanceFiscal,
   isMunicipalManager,
   isProfessor,
   isStudent,
@@ -1032,6 +1034,11 @@ export default function App() {
             ) : <AccessDenied user={session?.user} />}
           </Protected>
         }
+      />
+
+      <Route
+        path="/financeiro"
+        element={<Protected token={session?.token}>{isFinanceFiscal(session?.user) ? <FinanceiroFiscalDashboard token={session?.token} user={session?.user} onLogout={logout} /> : <AccessDenied user={session?.user} />}</Protected>}
       />
 
       <Route

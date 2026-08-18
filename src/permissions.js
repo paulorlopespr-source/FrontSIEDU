@@ -4,6 +4,7 @@ export const profiles = Object.freeze({
   SUPERINTENDENT: 'Superintendente / Diretor de Ensino',
   MUNICIPAL_COORDINATOR: 'Coordenador Pedagógico Municipal',
   EDUCATION_ADMIN_TECHNICIAN: 'Secretaria Administrativa da Educação',
+  FINANCE_FISCAL: 'Setor Financeiro e Fiscal da Educação',
   DIRECTOR: 'Diretor',
   VICE_DIRECTOR: 'Vice-Diretor',
   SCHOOL_COORDINATOR: 'Coordenador Pedagógico',
@@ -39,6 +40,7 @@ export const isMunicipalManager = (user) => municipalManagers.has(user?.perfil);
 export const isSuperintendent = (user) => user?.perfil === profiles.SUPERINTENDENT;
 export const isMunicipalCoordinator = (user) => user?.perfil === profiles.MUNICIPAL_COORDINATOR;
 export const isEducationAdministration = (user) => [profiles.EDUCATION_ADMIN_TECHNICIAN, 'Técnico da Secretaria de Educação'].includes(user?.perfil);
+export const isFinanceFiscal = (user) => user?.perfil === profiles.FINANCE_FISCAL;
 export const isProfessor = (user) => user?.perfil === profiles.PROFESSOR;
 export const isStudent = (user) => user?.perfil === profiles.STUDENT;
 export const canManageSchoolCalendar = (user) => calendarManagers.has(user?.perfil);
@@ -69,6 +71,7 @@ export function destinationFor(user) {
   if (isSuperintendent(user)) return '/superintendencia';
   if (isMunicipalCoordinator(user)) return '/coordenacao';
   if (isEducationAdministration(user)) return '/administracao';
+  if (isFinanceFiscal(user)) return '/financeiro';
   if (canAccessSchoolPortal(user)) return '/diretor';
   if (isProfessor(user)) return '/professor';
   if (isStudent(user)) return '/aluno';
