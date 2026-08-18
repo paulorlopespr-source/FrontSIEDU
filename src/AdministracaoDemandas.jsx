@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { AlertTriangle, CheckCircle2, Clock3, FileBarChart, Search, X } from 'lucide-react';
 import AdministracaoSidebar from './AdministracaoSidebar';
 import { api } from './services/api';
+import { AdministrationEmpty, AdministrationError, AdministrationSkeleton } from './AdministrationState';
 import './administracao-demandas.css';
 
 const columns=['Recebida','Em análise','Autorizada','Em execução','Concluída'];
@@ -22,10 +23,10 @@ export default function AdministracaoDemandas({token,user,onLogout}){
   const currentStage=selected?stage(selected.status):'';
   return <div className="administration-shell"><AdministracaoSidebar user={user} onLogout={onLogout}/><main className="administration-main admin-demands-page">
     <header className="administration-topbar"><div><small>SECRETARIA ADMINISTRATIVA &gt; OPERAÇÕES</small><h1>Demandas</h1><p>Recebimento, encaminhamento e atendimento das solicitações das escolas.</p></div><div className="demand-view-switch"><button className={view==='list'?'active':''} onClick={()=>setView('list')}>Lista</button><button className={view==='kanban'?'active':''} onClick={()=>setView('kanban')}>Kanban</button></div></header>
-    <div className="admin-demands-content">{error&&<p className="admin-demand-feedback error" role="alert">{error}</p>}{message&&<p className="admin-demand-feedback success">{message}</p>}
+    <div className="admin-demands-content">{error&&<AdministrationError message={error} onRetry={()=>load(null)}/>} {message&&<p className="admin-demand-feedback success" role="status">{message}</p>}
       <section className="admin-demand-metrics"><article><FileBarChart/><span><strong>{summary.novas}</strong><small>Novas</small></span></article><article className="urgent"><AlertTriangle/><span><strong>{summary.urgentes}</strong><small>Urgentes</small></span></article><article className="progress"><Clock3/><span><strong>{summary.andamento}</strong><small>Em andamento</small></span></article><article className="late"><AlertTriangle/><span><strong>{summary.atrasadas}</strong><small>Atrasadas</small></span></article></section>
       <section className="admin-demand-workspace"><header><div><h2>Fluxo operacional</h2><p>Diretor → Secretaria Administrativa → Setor responsável → Atendimento → Conclusão</p></div><label><Search/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar protocolo, escola ou categoria"/></label></header>
-        {loading?<div className="admin-demand-empty">Carregando demandas…</div>:filtered.length===0?<div className="admin-demand-empty">Nenhuma demanda encontrada.</div>:view==='list'?<div className="admin-demand-list">{filtered.map(card)}</div>:<div className="admin-demand-kanban">{columns.map(column=><section key={column}><header><b>{column}</b><span>{filtered.filter(item=>stage(item.status)===column).length}</span></header><div>{filtered.filter(item=>stage(item.status)===column).map(card)}</div></section>)}</div>}
+        {loading?<AdministrationSkeleton rows={5} label="Carregando demandas"/>:filtered.length===0?<AdministrationEmpty title="Nenhuma demanda encontrada" description={search?'Revise o termo pesquisado ou limpe o filtro.':'As demandas enviadas pelas escolas aparecerão aqui para triagem e atendimento.'}/>:view==='list'?<div className="admin-demand-list">{filtered.map(card)}</div>:<div className="admin-demand-kanban">{columns.map(column=><section key={column}><header><b>{column}</b><span>{filtered.filter(item=>stage(item.status)===column).length}</span></header><div>{filtered.filter(item=>stage(item.status)===column).map(card)}</div></section>)}</div>}
       </section>
     </div>
     {selected&&<aside className="admin-demand-drawer"><div className="admin-demand-backdrop" onClick={()=>setSelected(null)}/><section><header><div><small>PROTOCOLO #{selected.id}</small><h2>{selected.titulo}</h2></div><button aria-label="Fechar" onClick={()=>setSelected(null)}><X/></button></header><div className="admin-demand-detail">

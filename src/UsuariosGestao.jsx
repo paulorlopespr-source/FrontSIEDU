@@ -1,6 +1,7 @@
 import React, { useEffect, useId, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from './services/api';
+import { AdministrationEmpty, AdministrationError, AdministrationSkeleton } from './AdministrationState';
 import { isValidCpf, isValidEmail } from './validation';
 import './usuarios-vinculos.css';
 
@@ -143,6 +144,7 @@ export default function UsuariosGestao({ token, onLogout, embedded = false, admi
 
   async function loadUsers() {
     setLoading(true);
+    setError('');
     try {
       const result = await api.listUsers({
         busca: search.trim(),
@@ -337,7 +339,8 @@ export default function UsuariosGestao({ token, onLogout, embedded = false, admi
         <p>Dados pessoais, vínculo profissional e permissões organizados em um único cadastro auditável.</p>
       </section>}
 
-      {(error || message) && <section className="user-feedback" aria-live="polite">{error && <p className="error">{error}</p>}{message && <p className="success">{message}</p>}</section>}
+      {error && <AdministrationError message={error} onRetry={loadUsers}/>}
+      {message && <section className="user-feedback" aria-live="polite"><p className="success">{message}</p></section>}
 
       {credentials && (
         <section className="first-access-card" aria-live="polite">
@@ -439,7 +442,7 @@ export default function UsuariosGestao({ token, onLogout, embedded = false, admi
               <span>{loading ? 'Carregando...' : pagination.total + ' cadastro(s)'}</span>
             </div>
           </div>
-          <div className="user-table-scroll"><table><thead><tr><th>Funcionário</th><th>Perfil</th><th>Unidades</th><th>Acesso</th><th>Ações</th></tr></thead><tbody>{users.map((item) => <tr key={item.id}><td><div className="employee-cell"><span className="employee-avatar">{initials(item.nome)}</span><div><strong>{item.nomeSocial || item.nome}</strong><small>{item.matriculaFuncional || item.usuario}</small></div></div></td><td>{item.perfil}</td><td><div className="school-tags">{(item.escolas || []).map((school) => <span key={school.id}>{school.nome}</span>)}{!item.escolas?.length && <em>Sem lotação</em>}</div></td><td><span className={`access-status status-${item.situacaoAcesso || 'pendente'}`}>{item.deve_alterar_senha ? 'Primeiro acesso' : item.situacaoAcesso || (item.ativo ? 'Ativo' : 'Inativo')}</span>{item.doisFatoresObrigatorio && <small>2FA obrigatório</small>}</td><td><div className="user-row-actions">{schoolProfiles.has(item.perfil) && <button className="button-secondary" type="button" onClick={() => setEditingBinding({ id: item.id, nome: item.nome, perfil: item.perfil, escolaIds: (item.escolas || []).map((school) => school.id) })}>{bindingsOnly ? 'Alterar lotação' : 'Escolas'}</button>}{!bindingsOnly && <button className="button-secondary" type="button" onClick={()=>toggleAccess(item)}>{item.situacaoAcesso==='ativo'&&item.ativo?'Inativar':'Reativar'}</button>}{!administrationMode && !bindingsOnly && <button className="danger" type="button" onClick={() => remove(item.id)}>Excluir</button>}</div></td></tr>)}</tbody></table></div>
+          {loading ? <AdministrationSkeleton rows={6} label="Carregando funcionários"/> : users.length === 0 ? <AdministrationEmpty title="Nenhum funcionário encontrado" description={search ? 'Revise o nome, matrícula, perfil ou CPF informado.' : 'Cadastre o primeiro funcionário para iniciar a gestão de pessoas da rede.'}/> : <div className="user-table-scroll"><table><thead><tr><th>Funcionário</th><th>Perfil</th><th>Unidades</th><th>Acesso</th><th>Ações</th></tr></thead><tbody>{users.map((item) => <tr key={item.id}><td><div className="employee-cell"><span className="employee-avatar">{initials(item.nome)}</span><div><strong>{item.nomeSocial || item.nome}</strong><small>{item.matriculaFuncional || item.usuario}</small></div></div></td><td>{item.perfil}</td><td><div className="school-tags">{(item.escolas || []).map((school) => <span key={school.id}>{school.nome}</span>)}{!item.escolas?.length && <em>Sem lotação</em>}</div></td><td><span className={`access-status status-${item.situacaoAcesso || 'pendente'}`}>{item.deve_alterar_senha ? 'Primeiro acesso' : item.situacaoAcesso || (item.ativo ? 'Ativo' : 'Inativo')}</span>{item.doisFatoresObrigatorio && <small>2FA obrigatório</small>}</td><td><div className="user-row-actions">{schoolProfiles.has(item.perfil) && <button className="button-secondary" type="button" onClick={() => setEditingBinding({ id: item.id, nome: item.nome, perfil: item.perfil, escolaIds: (item.escolas || []).map((school) => school.id) })}>{bindingsOnly ? 'Alterar lotação' : 'Escolas'}</button>}{!bindingsOnly && <button className="button-secondary" type="button" onClick={()=>toggleAccess(item)}>{item.situacaoAcesso==='ativo'&&item.ativo?'Inativar':'Reativar'}</button>}{!administrationMode && !bindingsOnly && <button className="danger" type="button" onClick={() => remove(item.id)}>Excluir</button>}</div></td></tr>)}</tbody></table></div>}
           <div className="user-pagination">
             <label>
               Por página
