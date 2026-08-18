@@ -1,17 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { api } from './services/api';
-
-const formatHours = (minutes) => {
-  const total = Math.max(0, Math.floor(minutes || 0));
-  return String(Math.floor(total / 60)).padStart(2, '0') + ':' + String(total % 60).padStart(2, '0');
-};
 
 export default function CoordenadorDashboard({ user, token, onLogout }) {
   const [schools, setSchools] = useState([]);
   const [dashboard, setDashboard] = useState({ summary: {} });
-  const [clockedIn, setClockedIn] = useState(false);
-  const [minutes, setMinutes] = useState(0);
-  const [startedAt, setStartedAt] = useState(null);
   const [notice, setNotice] = useState('');
   const [pendingPlans, setPendingPlans] = useState(0);
   const [idebAnalysis, setIdebAnalysis] = useState(null);
@@ -19,35 +11,7 @@ export default function CoordenadorDashboard({ user, token, onLogout }) {
   useEffect(() => {
     Promise.all([api.listSchools(token).catch(() => []), api.getManagerDashboard(token).catch(() => ({ summary: {} })), api.listLessonPlansForReview('Enviado para aprovação', token).catch(() => []), api.getIdebAnalysis(token).catch(() => null)])
       .then(([units, data, plans, analysis]) => { setSchools(units || []); setDashboard(data || { summary: {} }); setPendingPlans(plans.length); setIdebAnalysis(analysis); });
-    const saved = JSON.parse(localStorage.getItem('siedu_coordenacao_jornada') || '{}');
-    if (saved.userId === user?.id) {
-      setClockedIn(Boolean(saved.startedAt));
-      setStartedAt(saved.startedAt || null);
-      setMinutes(Number(saved.minutes || 0));
-    }
   }, [token, user?.id]);
-
-  useEffect(() => {
-    if (!clockedIn || !startedAt) return undefined;
-    const update = () => setMinutes((Date.now() - new Date(startedAt).getTime()) / 60000);
-    update();
-    const interval = window.setInterval(update, 30000);
-    return () => window.clearInterval(interval);
-  }, [clockedIn, startedAt]);
-
-  const hoursToday = useMemo(() => clockedIn && startedAt ? (Date.now() - new Date(startedAt).getTime()) / 60000 : minutes, [clockedIn, startedAt, minutes]);
-
-  function toggleWorkday() {
-    if (clockedIn) {
-      const total = (Date.now() - new Date(startedAt).getTime()) / 60000;
-      localStorage.setItem('siedu_coordenacao_jornada', JSON.stringify({ userId: user?.id, minutes: total, startedAt: null }));
-      setMinutes(total); setClockedIn(false); setStartedAt(null); setNotice('Jornada encerrada. As horas de hoje foram contabilizadas.');
-      return;
-    }
-    const now = new Date().toISOString();
-    localStorage.setItem('siedu_coordenacao_jornada', JSON.stringify({ userId: user?.id, minutes: 0, startedAt: now }));
-    setMinutes(0); setStartedAt(now); setClockedIn(true); setNotice('Jornada iniciada. O tempo de trabalho está sendo contabilizado.');
-  }
 
   const cards = [
     ['🏫', 'Turmas acompanhadas', dashboard.summary?.classes || 0, '#1674e8'],
