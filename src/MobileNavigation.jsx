@@ -77,12 +77,20 @@ function quickActionFor(user) {
   return item('Início', destinationFor(user), Plus);
 }
 
+function quickActionsFor(user) {
+  if (isProfessor(user)) return [item('Fazer chamada', '/professor/diario', BookOpenCheck), item('Lançar nota', '/professor/notas', GraduationCap), item('Criar atividade', '/professor/atividades', ClipboardList), item('Plano de aula', '/professor/planos', FileText)];
+  if (isEducationAdministration(user)) return [item('Funcionários', '/administracao/funcionarios', Users), item('Nova solicitação', '/administracao/solicitacoes', ClipboardList), item('Registrar protocolo', '/administracao/protocolo', FileClock), item('Demandas', '/administracao/demandas', Bell)];
+  if (isMunicipalManager(user)) return [item('Indicadores', '/gestao-municipal', GraduationCap), item('Escolas', '/gestor/escolas', School), item('Demandas', '/gestor/demandas', ClipboardList), item('Relatórios', '/gestor/rede/relatorios', FileText)];
+  if (canManageSchoolAcademics(user)) return [item('Nova matrícula', '/diretor/matricular-aluno', Users), item('Frequência', '/diretor/frequencia', BookOpenCheck), item('Documentos', '/diretor/documentos', FileText), ...(canAccessSchoolDemands(user) ? [item('Registrar demanda', '/diretor/demandas', ClipboardList)] : [])];
+  if (isMunicipalCoordinator(user)) return [item('Turmas', '/coordenacao/turmas', School), item('Planos', '/coordenacao/planos', FileText), item('Frequência', '/coordenacao/frequencia', BookOpenCheck), item('Agenda', '/coordenacao/agenda', CalendarDays)];
+  return [quickActionFor(user)];
+}
+
 export default function MobileNavigation({ user, onLogout }) {
   const location = useLocation();
   const [panel, setPanel] = useState(null);
   const modules = useMemo(() => modulesFor(user), [user]);
-  const quickAction = quickActionFor(user);
-  const QuickActionIcon = quickAction.icon;
+  const quickActions = useMemo(() => quickActionsFor(user), [user]);
   const home = destinationFor(user);
 
   useEffect(() => setPanel(null), [location.pathname]);
@@ -95,19 +103,20 @@ export default function MobileNavigation({ user, onLogout }) {
   }, [panel]);
 
   if (!user) return null;
-  const PanelIcon = panel === 'notifications' ? Bell : panel === 'profile' ? UserRound : Menu;
+  const PanelIcon = panel === 'notifications' ? Bell : panel === 'profile' ? UserRound : panel === 'quick' ? Plus : Menu;
 
   return <>
     <nav className="mobile-bottom-nav" aria-label="Navegação principal móvel">
       <Link className={location.pathname === home ? 'active' : ''} to={home}><Home/><span>Início</span></Link>
       <button type="button" onClick={() => setPanel('notifications')} aria-expanded={panel === 'notifications'}><Bell/><span>Avisos</span></button>
-      <Link className="mobile-quick-action" to={quickAction.to} aria-label={quickAction.label}><QuickActionIcon/><span>{quickAction.label}</span></Link>
+      <button className="mobile-quick-action" type="button" onClick={() => setPanel('quick')} aria-label="Abrir ações rápidas" aria-expanded={panel === 'quick'}><Plus/><span>Ação rápida</span></button>
       <button type="button" onClick={() => setPanel('modules')} aria-expanded={panel === 'modules'}><Menu/><span>Módulos</span></button>
       <button type="button" onClick={() => setPanel('profile')} aria-expanded={panel === 'profile'}><UserRound/><span>Perfil</span></button>
     </nav>
     {panel && <div className="mobile-drawer-layer" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setPanel(null)}>
-      <section className="mobile-drawer" role="dialog" aria-modal="true" aria-label={panel === 'modules' ? 'Módulos disponíveis' : panel === 'profile' ? 'Perfil e sessão' : 'Avisos'}>
-        <header><span><PanelIcon/><strong>{panel === 'modules' ? 'Módulos' : panel === 'profile' ? 'Meu perfil' : 'Avisos'}</strong></span><button type="button" onClick={() => setPanel(null)} aria-label="Fechar"><X/></button></header>
+      <section className="mobile-drawer" role="dialog" aria-modal="true" aria-label={panel === 'modules' ? 'Módulos disponíveis' : panel === 'profile' ? 'Perfil e sessão' : panel === 'quick' ? 'Ações rápidas' : 'Avisos'}>
+        <header><span><PanelIcon/><strong>{panel === 'modules' ? 'Módulos' : panel === 'profile' ? 'Meu perfil' : panel === 'quick' ? 'Ações rápidas' : 'Avisos'}</strong></span><button type="button" onClick={() => setPanel(null)} aria-label="Fechar"><X/></button></header>
+        {panel === 'quick' && <div className="mobile-quick-list"><p>Escolha uma ação disponível para o seu perfil.</p>{quickActions.map(({ label, to, icon: Icon }) => <Link key={to} to={to}><Icon aria-hidden="true"/><span>{label}</span><ChevronRight aria-hidden="true"/></Link>)}</div>}
         {panel === 'modules' && <div className="mobile-module-list">{modules.map(({ label, to, icon: Icon }) => <Link key={to} to={to} className={location.pathname === to ? 'active' : ''}><Icon/><span>{label}</span><ChevronRight/></Link>)}</div>}
         {panel === 'notifications' && <div className="mobile-empty-state"><Bell/><strong>Central de avisos</strong><p>Sem uma contagem geral disponível. Consulte os módulos abaixo para ver alertas e pendências atualizados.</p><h3>Urgentes</h3><span>Nenhum alerta geral recebido.</span><h3>Pendências</h3>{modules.slice(0, 2).map(({ label, to }) => <Link key={to} to={to}>{label}<ChevronRight/></Link>)}<h3>Informativas</h3>{modules[2] && <Link to={modules[2].to}>{modules[2].label}<ChevronRight/></Link>}</div>}
         {panel === 'profile' && <div className="mobile-profile-panel"><div className="mobile-profile-identity"><span>{String(user.nome || 'U').slice(0, 2).toUpperCase()}</span><div><strong>{user.nome}</strong><small>{user.perfil}</small></div></div><Link to="/alterar-senha">Alterar senha<ChevronRight/></Link><button type="button" className="mobile-logout" onClick={onLogout}>Sair do sistema</button></div>}
