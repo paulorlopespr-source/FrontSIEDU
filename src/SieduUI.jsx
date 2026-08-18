@@ -2,6 +2,39 @@ import React, { useEffect } from 'react';
 import { AlertCircle, CheckCircle2, Inbox, LoaderCircle, RefreshCw, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+export function Button({ variant = 'primary', size = 'medium', icon: Icon, children, className = '', type = 'button', ...props }) {
+  return <button type={type} className={`siedu-button is-${variant} is-${size} ${className}`.trim()} {...props}>{Icon && <Icon aria-hidden="true"/>}<span>{children}</span></button>;
+}
+
+export function Field({ label, htmlFor, required = false, hint, error, children, className = '' }) {
+  return <div className={`siedu-field ${error ? 'has-error' : ''} ${className}`.trim()}><label htmlFor={htmlFor}>{label}{required && <span aria-hidden="true"> *</span>}</label>{children}{error ? <small className="siedu-field-error" id={`${htmlFor}-error`}>{error}</small> : hint && <small className="siedu-field-hint">{hint}</small>}</div>;
+}
+
+export const Input = React.forwardRef(function Input({ className = '', error, ...props }, ref) {
+  return <input ref={ref} className={`siedu-input ${className}`.trim()} aria-invalid={error ? 'true' : undefined} aria-describedby={error && props.id ? `${props.id}-error` : props['aria-describedby']} {...props}/>;
+});
+
+export const Select = React.forwardRef(function Select({ className = '', error, children, ...props }, ref) {
+  return <select ref={ref} className={`siedu-select ${className}`.trim()} aria-invalid={error ? 'true' : undefined} aria-describedby={error && props.id ? `${props.id}-error` : props['aria-describedby']} {...props}>{children}</select>;
+});
+
+export const Textarea = React.forwardRef(function Textarea({ className = '', error, ...props }, ref) {
+  return <textarea ref={ref} className={`siedu-textarea ${className}`.trim()} aria-invalid={error ? 'true' : undefined} aria-describedby={error && props.id ? `${props.id}-error` : props['aria-describedby']} {...props}/>;
+});
+
+export function Card({ as: Component = 'section', className = '', children, ...props }) {
+  return <Component className={`siedu-card ${className}`.trim()} {...props}>{children}</Component>;
+}
+
+export function KpiCard({ label, value, description, icon: Icon, tone = 'info', to }) {
+  const content = <>{Icon && <span className="siedu-kpi-icon"><Icon aria-hidden="true"/></span>}<strong>{value}</strong><h2>{label}</h2>{description && <p>{description}</p>}</>;
+  return to ? <Link className={`siedu-kpi is-${tone} is-actionable`} to={to}>{content}</Link> : <article className={`siedu-kpi is-${tone}`}>{content}</article>;
+}
+
+export function Badge({ tone = 'neutral', children, className = '' }) {
+  return <span className={`siedu-badge is-${tone} ${className}`.trim()}>{children}</span>;
+}
+
 export function AppShell({ sidebar, children, className = '' }) {
   return <div className={`siedu-app-shell ${className}`.trim()}>{sidebar}<div className="siedu-app-content">{children}</div></div>;
 }

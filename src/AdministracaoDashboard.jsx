@@ -13,7 +13,7 @@ import {
 import { api } from './services/api';
 import AdministracaoSidebar from './AdministracaoSidebar';
 import { AdministrationError, AdministrationSkeleton } from './AdministrationState';
-import { AppShell, PageHeader } from './SieduUI';
+import { AppShell, KpiCard, PageHeader } from './SieduUI';
 import './administracao-dashboard.css';
 
 const emptyOverview = {
@@ -79,8 +79,7 @@ export default function AdministracaoDashboard({ token, user, onLogout }) {
 
       {!loading && <section className="administration-metrics">{metrics.map(({ label, value, icon: Icon, detail, tone }, index) => {
         const destination = ['/administracao/funcionarios', null, '/administracao/demandas', '/administracao/patrimonio', '/administracao/solicitacoes'][index];
-        const content = <><span><Icon aria-hidden="true"/></span><strong>{typeof value === 'number' ? value.toLocaleString('pt-BR') : value}</strong><h2>{label}</h2><p>{detail}</p></>;
-        return destination ? <Link className={`tone-${tone} administration-metric-link`} to={destination} key={label}>{content}</Link> : <article className={`tone-${tone}`} key={label}>{content}</article>;
+        return <KpiCard key={label} label={label} value={typeof value === 'number' ? value.toLocaleString('pt-BR') : value} description={detail} icon={Icon} tone={tone === 'orange' ? 'warning' : 'info'} to={destination}/>;
       })}</section>}
 
       {!loading && <section className="administration-workspace">
