@@ -139,6 +139,10 @@ export const api = {
   updateAsset(id, data, token) { return request(`/assets/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, token); },
   transferAsset(id, data, token) { return post(`/assets/${id}/transfer`, data, token); },
   getAssetPhotoUrl(id, token) { return protectedBlobUrl(`/assets/${id}/photo`, token); },
+  getInventory(token) { return request('/inventory', {}, token); },
+  createInventoryProduct(data, token) { return post('/inventory/products', data, token); },
+  createInventoryRequest(data, token) { return post('/inventory/requests', data, token); },
+  actOnInventoryRequest(id, data, token) { return request(`/inventory/requests/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, token); },
 
   deleteUser(id, token) {
     return request(`/users/${id}`, { method: 'DELETE' }, token);
