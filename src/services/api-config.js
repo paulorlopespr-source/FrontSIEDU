@@ -1,4 +1,5 @@
 const DEFAULT_PRODUCTION_API_URL = 'https://backendsiedu-production.up.railway.app/api';
+const HOMOLOGATION_API_URL = 'https://backendsiedu-homologacao.up.railway.app/api';
 
 function normalizeUrl(value) {
   return value?.trim().replace(/\/+$/, '') || '';
@@ -6,10 +7,13 @@ function normalizeUrl(value) {
 
 export function resolveApiUrl({ configuredUrl, hostname = '' } = {}) {
   const normalized = normalizeUrl(configuredUrl);
+  if (hostname.endsWith('.vercel.app') && normalized.includes('backend-siedu-homologacao.up.railway.app')) {
+    return HOMOLOGATION_API_URL;
+  }
   if (normalized) return normalized;
 
   // A URL de preview nunca deve acessar dados de produção por omissão.
-  if (hostname.endsWith('.vercel.app')) return null;
+  if (hostname.endsWith('.vercel.app')) return HOMOLOGATION_API_URL;
 
   return DEFAULT_PRODUCTION_API_URL;
 }
