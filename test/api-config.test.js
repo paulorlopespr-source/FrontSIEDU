@@ -9,10 +9,20 @@ test('usa a API explicitamente configurada e remove a barra final', () => {
   );
 });
 
-test('impede que previews Vercel caiam silenciosamente em produção', () => {
+test('direciona previews Vercel exclusivamente para homologação', () => {
   assert.equal(
     resolveApiUrl({ hostname: 'front-siedu-git-minha-branch.vercel.app' }),
-    null,
+    'https://backendsiedu-homologacao.up.railway.app/api',
+  );
+});
+
+test('corrige o domínio antigo de homologação com hífen indevido', () => {
+  assert.equal(
+    resolveApiUrl({
+      configuredUrl: 'https://backend-siedu-homologacao.up.railway.app/api',
+      hostname: 'front-siedu-git-minha-branch.vercel.app',
+    }),
+    'https://backendsiedu-homologacao.up.railway.app/api',
   );
 });
 
