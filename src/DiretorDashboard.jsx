@@ -114,8 +114,8 @@ export default function DiretorDashboard({ user, onLogout, token }) {
     <div className="director-dashboard">
       <aside className="director-side">
         <div className="director-brand">
-          <img src="/images/sigepin.png" alt="SIEDU-PINDOBAÇU" />
-          <b>SIEDU-PINDOBAÇU</b>
+          <img src="/images/sigepin.png" alt="SIEDU-SIEDU" />
+          <b>SIEDU-SIEDU</b>
           <span>Sistema Integrado de Educação</span>
         </div>
 
@@ -179,6 +179,18 @@ export default function DiretorDashboard({ user, onLogout, token }) {
             </p>
           )}
 
+          <section id="acoes" className="director-quick">
+            <h2>Ações rápidas</h2>
+            {mayManageStaff && <Link to="/diretor/cadastrar-professor">Cadastrar professor</Link>}
+            {mayManageAcademics && <Link to="/diretor/cadastrar-turma">Cadastrar turma</Link>}
+            {mayManageStaff && <Link to="/diretor/cadastrar-secretario">Cadastrar secretário</Link>}
+            {mayManageAcademics && <Link to="/diretor/matricular-aluno">Matricular aluno</Link>}
+            {mayManageAcademics && <Link to="/diretor/imprimir-documentos">Impressão de documentos</Link>}
+            {mayManageLearning && <Link to="/aprendizagem">Editar trilhas após resultados</Link>}
+            {mayCreateDemand && <Link to="/diretor/demandas">Enviar solicitação à Secretaria</Link>}
+            {!mayManageStaff && !mayManageAcademics && <p>Este perfil possui somente consulta aos indicadores da unidade.</p>}
+          </section>
+
           <section className="director-cards">
             {cards.map(([title, value, description, icon]) => (
               <article key={title}>
@@ -190,18 +202,6 @@ export default function DiretorDashboard({ user, onLogout, token }) {
                 </div>
               </article>
             ))}
-          </section>
-
-          <section id="acoes" className="director-quick">
-            <h2>Ações rápidas</h2>
-            {mayManageStaff && <Link to="/diretor/cadastrar-professor">Cadastrar professor</Link>}
-            {mayManageAcademics && <Link to="/diretor/cadastrar-turma">Cadastrar turma</Link>}
-            {mayManageStaff && <Link to="/diretor/cadastrar-secretario">Cadastrar secretário</Link>}
-            {mayManageAcademics && <Link to="/diretor/matricular-aluno">Matricular aluno</Link>}
-            {mayManageAcademics && <Link to="/diretor/imprimir-documentos">Impressão de documentos</Link>}
-            {mayManageLearning && <Link to="/aprendizagem">Editar trilhas após resultados</Link>}
-            {mayCreateDemand && <Link to="/diretor/demandas">Enviar solicitação à Secretaria</Link>}
-            {!mayManageStaff && !mayManageAcademics && <p>Este perfil possui somente consulta aos indicadores da unidade.</p>}
           </section>
 
           <section className="director-grid">
