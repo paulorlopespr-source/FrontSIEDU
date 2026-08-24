@@ -579,4 +579,11 @@ export const api = {
   createAcademicEmployee(data, token) {
     return post('/academic/employees', data, token);
   },
+
+  getPedagogicalContext(token) { return request('/pedagogical-management/context', {}, token); },
+  getPedagogicalRecords(filters, token) { return getWithFilters('/pedagogical-management/records', filters, token); },
+  createComplementaryActivity(data, token) { return post('/pedagogical-management/activities', data, token); },
+  createInterventionPlan(data, token) { return post('/pedagogical-management/interventions', data, token); },
+  createClassCouncil(data, token) { return post('/pedagogical-management/councils', data, token); },
+  createPei(data, token) { return post('/pedagogical-management/peis', data, token); },
 };
