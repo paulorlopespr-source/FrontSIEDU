@@ -87,8 +87,8 @@ export function GestorSidebar({ onLogout }) {
   return (
     <aside className="dashboard-sidebar">
       <div className="sidebar-brand">
-        <img src="/images/sigepin.png" alt="SIEDU-PINDOBAÇU" />
-        <div><strong>SIEDU-PINDOBAÇU</strong><span>Sistema Integrado de Educação</span></div>
+        <img src="/images/sigepin.png" alt="SIEDU" />
+        <div><strong>SIEDU</strong><span>Sistema Integrado de Educação</span></div>
       </div>
 
       <Link className={`sidebar-current ${current === '/gestor' ? 'active' : ''}`} to="/gestor"><span>⌂</span> Dashboard</Link>
@@ -110,8 +110,8 @@ export function GestorSidebar({ onLogout }) {
       </section>
 
       <div className="sidebar-city">
-        <img src="/images/prefeitura.png" alt="Prefeitura de Pindobaçu" />
-        <span>Prefeitura Municipal de Pindobaçu</span>
+        <img src="/images/sigepin.png" alt="SIEDU" />
+        <span>Sistema Integrado de Educação</span>
       </div>
     </aside>
   );
@@ -131,7 +131,7 @@ export function GestorTopbar({ user, onLogout, alertCount = 0 }) {
   return (
     <header className="dashboard-topbar">
       <button className="menu-trigger" type="button" disabled title="Menu já está aberto nesta versão">☰</button>
-      <div className="topbar-title"><img className="portal-header-logo" src="/images/prefeitura.png" alt="Prefeitura Municipal de Pindobaçu" /><div><strong>Portal do Gestor</strong><span>Secretaria Municipal de Educação</span></div></div>
+      <div className="topbar-title"><img className="portal-header-logo" src="/images/sigepin.png" alt="SIEDU" /><div><strong>Portal do Gestor</strong><span>Gestão educacional integrada</span></div></div>
       <form className="dashboard-search" onSubmit={search} title="Pesquisar módulos da rede"><span>⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Pesquisar escolas, alunos e relatórios..." /></form>
       <div className="topbar-actions">
         <button type="button" disabled title="Use a seção de alertas do painel">🔔{alertCount > 0 && <i>{alertCount}</i>}</button>
@@ -294,7 +294,7 @@ export default function GestorDashboard({ user, onLogout, token }) {
         <GestorTopbar user={user} onLogout={onLogout} alertCount={dashboard.alerts.length + demandNotifications.filter((item) => !item.lidaEm).length} />
         <main className="dashboard-content" id="indicadores">
           <section className="dashboard-welcome">
-            <div><h1>Bom dia, Gestor! 👋</h1><p>Visão geral da Rede Municipal de Ensino de Pindobaçu.</p><small>{writtenDate}</small></div>
+            <div><h1>Bom dia, Gestor! 👋</h1><p>Visão geral da rede de ensino.</p><small>{writtenDate}</small></div>
             <div><button type="button" disabled title="Período atual do relatório">{startOfYear} - {todayLabel}</button><button className="export-button" type="button" onClick={() => window.print()}>⇩ Exportar relatório</button></div>
           </section>
 
@@ -302,6 +302,7 @@ export default function GestorDashboard({ user, onLogout, token }) {
           {loading && <p className="dashboard-loading">Atualizando indicadores do banco...</p>}
 
           <section className="stats-grid">{stats.map((stat) => <StatCard key={stat.label} stat={stat} />)}</section>
+          <section className="quick-actions"><h2>Ações rápidas</h2><div>{quickActions.map(([label, link, icon]) => <Link key={label} to={link}><span>{icon}</span><b>{label}</b></Link>)}</div></section>
 
           <section className="dashboard-management">
             <div><span className="eyebrow">ACESSO ADMINISTRATIVO</span><h2>Gestão municipal integrada</h2><p>Os indicadores abaixo são calculados a partir dos registros reais do PostgreSQL.</p></div>
@@ -327,8 +328,7 @@ export default function GestorDashboard({ user, onLogout, token }) {
 
           <section className="dashboard-lower dashboard-real-lower"><UsersPanel users={dashboard.users} /></section>
 
-          <section className="quick-actions"><h2>Ações rápidas</h2><div>{quickActions.map(([label, link, icon]) => <Link key={label} to={link}><span>{icon}</span><b>{label}</b></Link>)}</div></section>
-          <footer className="dashboard-footer">© 2026 SIEDU-PINDOBAÇU — Sistema Integrado de Educação de Pindobaçu. Todos os direitos reservados.<span>Versão 0.0.1 · Dados atualizados automaticamente</span></footer>
+      <footer className="dashboard-footer">© 2026 SIEDU — Sistema Integrado de Educação. Todos os direitos reservados.<span>Versão 0.0.1 · Dados atualizados automaticamente</span></footer>
         </main>
       </div>
     </div>
