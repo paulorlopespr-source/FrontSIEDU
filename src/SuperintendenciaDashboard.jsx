@@ -49,19 +49,19 @@ export default function SuperintendenciaDashboard({ user, token, onLogout }) {
   const th = { textAlign: 'left', padding: 10, color: '#627492', fontSize: 13 };
   const td = { padding: 10, borderTop: '1px solid #edf1f7' };
 
-  return <div style={{ minHeight: '100vh', background: '#f4f7fb', color: '#17335e' }}>
-    <header style={{ background: '#fff', borderBottom: '1px solid #dbe4f2', padding: '16px 5%', display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
+  return <div className="siedu-profile-page superintendencia-portal" style={{ minHeight: '100vh', background: '#f4f7fb', color: '#17335e' }}>
+    <header className="siedu-profile-header superintendencia-header" style={{ background: '#fff', borderBottom: '1px solid #dbe4f2', padding: '16px 5%', display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
       <div style={{ marginRight: 'auto' }}><small style={{ color: '#1872d3', fontWeight: 800 }}>SUPERVISÃO PEDAGÓGICA MUNICIPAL</small><h1 style={{ margin: 0, fontSize: 22 }}>Portal da Superintendência</h1></div>
       <Link to="/superintendencia">Painel</Link><Link to="/gestao-municipal">Gestão municipal</Link><Link to="/aprendizagem">SAEB e Aprendizagem</Link><a href="#demandas">Escolas</a><a href="#pedagogico">Pedagógico</a><a href="#financeiro">Financeiro</a>
       <div><b>{user?.nome || 'Superintendente'}</b><small style={{ display: 'block', color: '#627492' }}>Superintendente / Diretor de Ensino</small></div>
       <button type="button" onClick={onLogout}>Sair</button>
     </header>
-    <main style={{ maxWidth: 1380, margin: 'auto', padding: '34px 5%' }}>
-      <section style={{ padding: 30, borderRadius: 18, background: 'linear-gradient(120deg,#0e4f9b,#1872d3)', color: '#fff', display: 'flex', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap' }}>
+    <main className="siedu-profile-content superintendencia-content" style={{ maxWidth: 1380, margin: 'auto', padding: '34px 5%' }}>
+      <section className="siedu-profile-hero" style={{ padding: 30, borderRadius: 18, background: 'linear-gradient(120deg,#0e4f9b,#1872d3)', color: '#fff', display: 'flex', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap' }}>
         <div><small>REDE MUNICIPAL DE ENSINO</small><h2 style={{ fontSize: 28, margin: '8px 0' }}>Acompanhamento pedagógico, financeiro e institucional</h2><p>Consulte resultados, acompanhe demandas, recursos e prestações de contas das unidades.</p></div>
         <Link to="/gestao-municipal" style={{background:'#fff',color:'#1263bd',padding:12,borderRadius:8,fontWeight:800}}>Indicadores, agenda e demandas</Link>
       </section>
-      <section style={{ ...card, marginTop: 18 }}><small style={{ color: '#1872d3', fontWeight: 800 }}>ACESSO DIRETO</small><h2>Ações rápidas</h2><div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}><Link to="/gestao-municipal?tab=agenda">Agenda e visitas</Link><Link to="/gestao-municipal?tab=demandas">Demandas escolares</Link><Link to="/aprendizagem">SAEB e aprendizagem</Link><Link to="/gestao-municipal?tab=relatorios">Emitir relatório</Link></div></section>
+      <section className="siedu-profile-quick-actions" style={{ ...card, marginTop: 18 }}><small style={{ color: '#1872d3', fontWeight: 800 }}>ACESSO DIRETO</small><h2>Ações rápidas</h2><div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}><Link to="/gestao-municipal?tab=agenda">Agenda e visitas</Link><Link to="/gestao-municipal?tab=demandas">Demandas escolares</Link><Link to="/aprendizagem">SAEB e aprendizagem</Link><Link to="/gestao-municipal?tab=relatorios">Emitir relatório</Link></div></section>
       <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(190px,1fr))', gap: 15, margin: '22px 0' }}>
         {indicators.map(([label, value, detail]) => <article key={label} style={{ background: '#fff', padding: 20, borderRadius: 14, border: '1px solid #e2e9f3' }}><small>{label}</small><strong style={{ display: 'block', fontSize: 28, color: '#1263bd', margin: '10px 0' }}>{value}</strong><small>{detail}</small></article>)}
       </section>
