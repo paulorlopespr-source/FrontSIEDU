@@ -1,7 +1,7 @@
 .municipal-page {
   min-height: 100vh;
-  background: #f3f6fb;
-  color: #14345f;
+  background: var(--siedu-canvas, #f3f6fb);
+  color: var(--siedu-text, #14345f);
   font:
     14px Inter,
     Arial,
@@ -12,12 +12,16 @@
   justify-content: space-between;
   gap: 24px;
   align-items: center;
-  padding: 26px 5%;
-  color: #fff;
-  background: linear-gradient(120deg, #073a78, #126bc4);
+  padding: 24px 5%;
+  color: var(--siedu-text, #14345f);
+  background: var(--siedu-surface, #fff);
+  border-bottom: 1px solid var(--siedu-border, #dce5f1);
 }
 .municipal-header small {
+  color: var(--siedu-blue-700, #126bc4);
+  font-size: 10px;
   font-weight: 900;
+  letter-spacing: .1em;
 }
 .municipal-header h1 {
   margin: 6px 0;
@@ -32,7 +36,8 @@
   flex-wrap: wrap;
 }
 .municipal-header a {
-  color: #fff;
+  color: var(--siedu-blue-700, #126bc4);
+  font-weight: 800;
 }
 .municipal-header button,
 .municipal-card button {
@@ -45,8 +50,8 @@
   cursor: pointer;
 }
 .municipal-header button {
-  background: #fff;
-  color: #174c83;
+  background: var(--siedu-blue-700, #126bc4);
+  color: #fff;
 }
 .municipal-summary {
   display: grid;
@@ -58,10 +63,10 @@
 }
 .municipal-summary article,
 .municipal-card {
-  background: #fff;
-  border: 1px solid #dce5f1;
-  border-radius: 14px;
-  box-shadow: 0 3px 12px #264b7610;
+  background: var(--siedu-surface, #fff);
+  border: 1px solid var(--siedu-border, #dce5f1);
+  border-radius: var(--siedu-radius-md, 12px);
+  box-shadow: var(--siedu-shadow, 0 3px 12px #264b7610);
 }
 .municipal-summary article {
   padding: 18px;
@@ -73,7 +78,7 @@
 .municipal-summary strong {
   margin-top: 8px;
   font-size: 28px;
-  color: #126bc4;
+  color: var(--siedu-blue-700, #126bc4);
 }
 .municipal-tabs {
   display: flex;
