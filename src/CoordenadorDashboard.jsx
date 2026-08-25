@@ -32,8 +32,8 @@ export default function CoordenadorDashboard({ user, token, onLogout }) {
     ['🧭', 'AC, Intervenção, Conselho e PEI', '/coordenacao/gestao-pedagogica'],
   ];
 
-  return <div className="siedu-legacy-portal coordinator-portal" style={{ minHeight: '100vh', background: '#f4f7fc', color: '#09245a', fontFamily: 'Arial, sans-serif' }}>
-    <header className="siedu-legacy-topbar" style={{ height: 78, background: '#fff', display: 'flex', alignItems: 'center', padding: '0 4%', gap: 24, boxShadow: '0 2px 12px #dbe4f255', position: 'sticky', top: 0, zIndex: 2 }}>
+  return <div className="siedu-legacy-portal siedu-profile-page coordinator-portal" style={{ minHeight: '100vh', background: '#f4f7fc', color: '#09245a', fontFamily: 'Arial, sans-serif' }}>
+    <header className="siedu-legacy-topbar siedu-profile-header" style={{ height: 78, background: '#fff', display: 'flex', alignItems: 'center', padding: '0 4%', gap: 24, boxShadow: '0 2px 12px #dbe4f255', position: 'sticky', top: 0, zIndex: 2 }}>
       <div style={{ fontSize: 24, color: '#0a3270' }}>☰</div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><img className="portal-header-logo" src="/images/prefeitura-transparent.svg" alt="Prefeitura Municipal de Pindobaçu" /><div><b style={{ fontSize: 21 }}>Portal do Coordenador</b><small style={{ display: 'block', color: '#607399' }}>Coordenação Pedagógica Municipal</small></div></div>
       <div style={{ margin: '0 auto', width: 'min(42vw, 510px)', border: '1px solid #d5e0ef', borderRadius: 11, padding: '13px 18px', color: '#7183a3' }}>⌕ &nbsp; Pesquisar turmas, professores, alunos e conteúdos...</div>
@@ -46,7 +46,7 @@ export default function CoordenadorDashboard({ user, token, onLogout }) {
         {['Dashboard', 'Turmas', 'Professores', 'Alunos', 'Gestão pedagógica', 'Diário de classe', 'Planejamento', 'Frequência', 'Avaliações e IDEB', 'Relatórios', 'Comunicação', 'Agenda', 'Calendário escolar', 'Ocorrências'].map((item, index) => <button type="button" key={item} onClick={() => { const destinations = { Turmas: '/coordenacao/turmas', Professores: '/coordenacao/professores', Alunos: '/coordenacao/alunos', 'Gestão pedagógica': '/coordenacao/gestao-pedagogica', 'Diário de classe': '/coordenacao/diario', Planejamento: '/coordenacao/planos', Frequência: '/coordenacao/frequencia', 'Avaliações e IDEB': '/coordenacao/avaliacoes', Relatórios: '/coordenacao/relatorios', Comunicação: '/coordenacao/comunicacao', Agenda: '/coordenacao/agenda', 'Calendário escolar': '/calendario-escolar', Ocorrências: '/coordenacao/ocorrencias' }; destinations[item] ? window.location.assign(destinations[item]) : setNotice('Você já está no painel principal.'); }} style={{ width: '100%', padding: '12px 10px', marginTop: index === 0 ? 18 : 2, borderRadius: 8, background: index === 0 ? '#1476ef' : 'transparent', fontWeight: 600, textAlign: 'left' }}>{item}</button>)}
         <p style={{ marginTop: 38, borderTop: '1px solid #ffffff33', paddingTop: 18, fontSize: 12 }}>Secretaria Municipal de Educação<br />Prefeitura de Pindobaçu - Bahia</p>
       </aside>
-      <section className="siedu-legacy-content" style={{ padding: '32px 3.5%', overflow: 'hidden' }}>
+      <section className="siedu-legacy-content siedu-profile-content" style={{ padding: '32px 3.5%', overflow: 'hidden' }}>
         <div style={{ display: 'flex', gap: 24, justifyContent: 'space-between', flexWrap: 'wrap' }}>
           <div><h2 style={{ margin: 0, fontSize: 27 }}>Olá, {user?.nome?.split(' ')[0] || 'Coordenador(a)'}! 👋</h2><p style={{ color: '#5e7193' }}>Acompanhe os indicadores e as atividades pedagógicas da rede.</p></div>
         </div>
