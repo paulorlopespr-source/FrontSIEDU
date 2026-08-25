@@ -61,6 +61,7 @@ export default function SuperintendenciaDashboard({ user, token, onLogout }) {
         <div><small>REDE MUNICIPAL DE ENSINO</small><h2 style={{ fontSize: 28, margin: '8px 0' }}>Acompanhamento pedagógico, financeiro e institucional</h2><p>Consulte resultados, acompanhe demandas, recursos e prestações de contas das unidades.</p></div>
         <Link to="/gestao-municipal" style={{background:'#fff',color:'#1263bd',padding:12,borderRadius:8,fontWeight:800}}>Indicadores, agenda e demandas</Link>
       </section>
+      <section style={{ ...card, marginTop: 18 }}><small style={{ color: '#1872d3', fontWeight: 800 }}>ACESSO DIRETO</small><h2>Ações rápidas</h2><div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}><Link to="/gestao-municipal?tab=agenda">Agenda e visitas</Link><Link to="/gestao-municipal?tab=demandas">Demandas escolares</Link><Link to="/aprendizagem">SAEB e aprendizagem</Link><Link to="/gestao-municipal?tab=relatorios">Emitir relatório</Link></div></section>
       <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(190px,1fr))', gap: 15, margin: '22px 0' }}>
         {indicators.map(([label, value, detail]) => <article key={label} style={{ background: '#fff', padding: 20, borderRadius: 14, border: '1px solid #e2e9f3' }}><small>{label}</small><strong style={{ display: 'block', fontSize: 28, color: '#1263bd', margin: '10px 0' }}>{value}</strong><small>{detail}</small></article>)}
       </section>

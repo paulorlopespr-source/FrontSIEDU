@@ -321,8 +321,8 @@ export default function GestorDashboard({ user, onLogout, token }) {
           {error && <p className="dashboard-data-error">{error}</p>}
           {loading && <p className="dashboard-loading">Atualizando indicadores do banco...</p>}
 
-          <section className="stats-grid">{stats.map((stat) => <StatCard key={stat.label} stat={stat} />)}</section>
           <section className="quick-actions"><h2>Ações rápidas</h2><div>{quickActions.map(([label, link, Icon]) => <Link key={label} to={link}><span><Icon size={20} strokeWidth={1.8} /></span><b>{label}</b></Link>)}</div></section>
+          <section className="stats-grid">{stats.map((stat) => <StatCard key={stat.label} stat={stat} />)}</section>
 
           <section className="dashboard-management">
             <div><span className="eyebrow">ACESSO ADMINISTRATIVO</span><h2>Gestão municipal integrada</h2><p>Os indicadores abaixo são calculados a partir dos registros reais do PostgreSQL.</p></div>
