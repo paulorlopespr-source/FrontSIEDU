@@ -6,7 +6,12 @@
   --siedu-text-xs:12px;--siedu-text-sm:14px;--siedu-text-md:16px;--siedu-text-lg:20px;--siedu-text-xl:24px;--siedu-text-2xl:32px;
   --siedu-radius-sm:8px;--siedu-radius-md:12px;--siedu-radius-lg:16px;--siedu-shadow:0 1px 2px #0f233a08,0 8px 24px #0f233a0b;
 }
-body{color:var(--siedu-text);background:var(--siedu-canvas);font-family:Inter,Arial,sans-serif}
+body{color:var(--siedu-text);background:var(--siedu-canvas);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select,textarea{font-family:inherit}
+#root{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+#root [style*="font-family"],#root [style*="fontFamily"]{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif!important}
+#root h1,#root h2,#root h3,#root h4{font-family:inherit;letter-spacing:-.015em}
+#root p,#root label,#root input,#root select,#root textarea,#root button,#root table{font-family:inherit}
 .siedu-app-shell{display:grid;grid-template-columns:auto minmax(0,1fr);min-height:100vh}.siedu-app-content{min-width:0}
 .siedu-page-header{display:flex;min-height:112px;padding:var(--siedu-space-6) var(--siedu-space-8);align-items:center;justify-content:space-between;gap:var(--siedu-space-6);border-bottom:1px solid var(--siedu-border);background:var(--siedu-surface)}
 .siedu-page-heading>small{display:block;margin-bottom:var(--siedu-space-1);color:var(--siedu-blue-700);font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.siedu-page-heading h1{margin:0;color:var(--siedu-text);font-size:var(--siedu-text-xl);line-height:1.2;letter-spacing:-.35px}.siedu-page-heading p{margin:var(--siedu-space-2) 0 0;color:var(--siedu-muted);font-size:var(--siedu-text-xs)}
