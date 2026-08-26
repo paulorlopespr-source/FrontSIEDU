@@ -23,12 +23,12 @@ export default function CoordenadorDashboard({ user, token, onLogout }) {
   ];
   const actions = [
     ['📈', 'Ciclos, Trilhas e SAEB', '/aprendizagem'],
-    ['👥', 'Acompanhar turmas', '#acompanhamentos'],
+    ['👥', 'Acompanhar turmas', '/coordenacao/turmas'],
     ['📝', 'Planos de aula', '/coordenacao/planos'],
     ['📊', 'Gerar relatórios', '/coordenacao/relatorios'],
-    ['📣', 'Enviar comunicado', '#comunicacao'],
+    ['📣', 'Enviar comunicado', '/coordenacao/comunicacao'],
     ['📅', 'Agendar reunião', '/gestao-municipal?tab=agenda'],
-    ['⚠️', 'Ocorrências pedagógicas', '#ocorrencias'],
+    ['⚠️', 'Ocorrências pedagógicas', '/coordenacao/ocorrencias'],
     ['🧭', 'AC, Intervenção, Conselho e PEI', '/coordenacao/gestao-pedagogica'],
   ];
 
