@@ -17,7 +17,7 @@ export default function IdebAnalysisPanel({ analysis }) {
     <section className="municipal-card ideb-analysis">
       <header className="ideb-analysis-header">
         <div>
-          <small>REDE MUNICIPAL DE PINDOBAÇU</small>
+          <small>REDE MUNICIPAL DE ENSINO</small>
           <h2>Análise do IDEB — últimos 10 anos</h2>
           <p>Resultados oficiais por ciclo de aplicação. O IDEB é divulgado a cada dois anos.</p>
         </div>

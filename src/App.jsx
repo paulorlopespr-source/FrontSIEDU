@@ -47,6 +47,7 @@ import {
 import { DocumentosEscolares, Frequencia, HistoricoEscolar } from './DiretorFerramentas';
 import FinanceiroEscolar from './FinanceiroEscolar';
 import FinanceiroFiscalDashboard from './FinanceiroFiscalDashboard';
+import FinanceiroFiscalModulo from './FinanceiroFiscalModulo';
 import SairDoSistema from './SairDoSistema';
 import DiretorDashboard from './DiretorDashboard';
 import CadastroDiretor from './CadastrosDiretor';
@@ -120,7 +121,7 @@ function Layout({ children, onLogout, variant = 'gestor' }) {
 
 function MunicipalBrand({ user, onLogout }) {
   if (!user) return null;
-  return <aside className="municipal-brand-stamp" aria-label="Identificação institucional e sessão do SIEDU"><div className="municipal-contractor"><img src="/images/prefeitura-transparent.svg" alt="Prefeitura Municipal de Pindobaçu"/><span><strong>Prefeitura Municipal de Pindobaçu</strong><small>Contratante institucional</small></span></div><Link className="municipal-system-brand" to={destinationFor(user)} aria-label="Voltar ao painel inicial do SIEDU"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link><div className="municipal-session"><small className="municipal-user-id">{user.nome} · {user.matriculaSecretaria || user.perfil}</small><button className="global-logout-button" type="button" onClick={onLogout}>Sair</button></div></aside>;
+  return <aside className="municipal-brand-stamp" aria-label="Identificação institucional e sessão do SIEDU"><div className="municipal-contractor"><img src="/images/prefeitura-transparent.svg" alt="Identidade da instituição contratante"/><span><strong>Instituição contratante</strong><small>Secretaria de Educação</small></span></div><Link className="municipal-system-brand" to={destinationFor(user)} aria-label="Voltar ao painel inicial do SIEDU"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link><div className="municipal-session"><small className="municipal-user-id">{user.nome} · {user.matriculaSecretaria || user.perfil}</small><button className="global-logout-button" type="button" onClick={onLogout}>Sair</button></div></aside>;
 }
 function ConnectionStatus() {
   const [online, setOnline] = useState(() => navigator.onLine);
@@ -1060,6 +1061,14 @@ export default function App() {
         path="/financeiro"
         element={<Protected token={session?.token}>{isFinanceFiscal(session?.user) ? <FinanceiroFiscalDashboard token={session?.token} user={session?.user} onLogout={logout} /> : <AccessDenied user={session?.user} />}</Protected>}
       />
+
+      {['orcamento', 'despesas', 'prestacoes', 'relatorios', 'auditorias'].map((module) => (
+        <Route
+          key={module}
+          path={`/financeiro/${module}`}
+          element={<Protected token={session?.token}>{isFinanceFiscal(session?.user) ? <FinanceiroFiscalModulo module={module} token={session?.token} user={session?.user} onLogout={logout} /> : <AccessDenied user={session?.user} />}</Protected>}
+        />
+      ))}
 
       <Route
         path="/gestor/financeiro"

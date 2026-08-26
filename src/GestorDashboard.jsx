@@ -110,8 +110,8 @@ export function GestorSidebar({ onLogout }) {
   return (
     <aside className="dashboard-sidebar">
       <div className="sidebar-city">
-        <img src="/images/prefeitura-transparent.svg" alt="Prefeitura de Pindobaçu" />
-        <span>Prefeitura Municipal de Pindobaçu</span>
+        <img src="/images/siedu-logo-transparent.svg" alt="SIEDU" />
+        <span>Sistema Integrado de Educação</span>
       </div>
       <Link className="sidebar-system-home" to="/gestor" aria-label="Voltar ao painel executivo"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link>
       <Link className={`sidebar-current ${current === '/gestor' ? 'active' : ''}`} to="/gestor"><LayoutDashboard size={18} /> Painel executivo</Link>
@@ -150,7 +150,7 @@ export function GestorTopbar({ user, onLogout, alertCount = 0 }) {
   return (
     <header className="dashboard-topbar">
       <button className="menu-trigger" type="button" disabled title="Menu já está aberto nesta versão"><Menu size={21} /></button>
-      <div className="topbar-title"><img className="portal-header-logo" src="/images/prefeitura-transparent.svg" alt="Prefeitura Municipal de Pindobaçu" /><div><strong>Portal do Gestor</strong><span>Secretaria Municipal de Educação</span></div></div>
+      <div className="topbar-title"><img className="portal-header-logo" src="/images/siedu-logo-transparent.svg" alt="SIEDU" /><div><strong>Portal do Gestor</strong><span>Secretaria Municipal de Educação</span></div></div>
       <form className="dashboard-search" onSubmit={search} title="Pesquisar módulos da rede"><Search size={17} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Pesquisar escolas, alunos e relatórios..." /></form>
       <div className="topbar-actions">
         <button type="button" disabled title="Use a seção de alertas do painel"><Bell size={19} />{alertCount > 0 && <i>{alertCount}</i>}</button>
@@ -314,7 +314,7 @@ export default function GestorDashboard({ user, onLogout, token }) {
         <GestorTopbar user={user} onLogout={onLogout} alertCount={dashboard.alerts.length + demandNotifications.filter((item) => !item.lidaEm).length} />
         <main className="dashboard-content" id="indicadores">
           <section className="dashboard-welcome">
-            <div><span className="dashboard-kicker">PAINEL DO SECRETÁRIO</span><h1>Visão geral da rede</h1><p>Rede Municipal de Ensino de Pindobaçu</p><small>{writtenDate}</small></div>
+            <div><span className="dashboard-kicker">PAINEL DO SECRETÁRIO</span><h1>Visão geral da rede</h1><p>Rede Municipal de Ensino</p><small>{writtenDate}</small></div>
             <div><button type="button" disabled title="Período atual do relatório">{startOfYear} - {todayLabel}</button><button className="export-button" type="button" onClick={() => window.print()}>⇩ Exportar relatório</button></div>
           </section>
 
@@ -348,7 +348,7 @@ export default function GestorDashboard({ user, onLogout, token }) {
 
           <section className="dashboard-lower dashboard-real-lower"><UsersPanel users={dashboard.users} /></section>
 
-          <footer className="dashboard-footer">© 2026 SIEDU — Sistema Integrado de Educação de Pindobaçu. Todos os direitos reservados.<span>Versão 0.0.1 · Dados atualizados automaticamente</span></footer>
+          <footer className="dashboard-footer">© 2026 SIEDU — Sistema Integrado de Educação. Todos os direitos reservados.<span>Versão 0.0.1 · Dados atualizados automaticamente</span></footer>
         </main>
       </div>
     </div>

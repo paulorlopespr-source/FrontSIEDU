@@ -25,7 +25,7 @@ export default function ProfessorDashboard({ user, token, onLogout }) {
   const dark=profile.tema==='escuro'||(profile.tema==='sistema'&&window.matchMedia?.('(prefers-color-scheme: dark)').matches);const accent=profile.corDestaque||'#176fe3';
   return <div className="siedu-legacy-portal professor-portal" style={{minHeight:'100vh',background:dark?'#101827':'#f5f8fd',color:dark?'#edf4ff':'#071f52',fontFamily:'Arial,sans-serif'}}>
     <header className="siedu-legacy-topbar" style={{height:78,background:'#fff',display:'flex',alignItems:'center',gap:24,padding:'0 3%',boxShadow:'0 2px 12px #dbe4f270'}}>
-      <div style={{display:'flex',alignItems:'center',gap:10}}><img className="portal-header-logo" src="/images/prefeitura-transparent.svg" alt="Prefeitura Municipal de Pindobaçu"/><b style={{fontSize:22}}>☰ &nbsp; Portal do Professor</b></div>
+      <div style={{display:'flex',alignItems:'center',gap:10}}><img className="portal-header-logo" src="/images/siedu-logo-transparent.svg" alt="SIEDU"/><b style={{fontSize:22}}>☰ &nbsp; Portal do Professor</b></div>
       <div style={{margin:'0 auto',width:'min(42vw,500px)',border:'1px solid #d5e0ef',borderRadius:11,padding:'13px 18px',color:'#7183a3'}}>⌕ &nbsp; Pesquisar alunos, turmas e conteúdos...</div>
       {profile.foto&&<img src={profile.foto} alt="Foto do professor" style={{width:46,height:46,borderRadius:'50%',objectFit:'cover'}}/>}<div><b>{profile.nome||user?.nome||'Professor(a)'}</b><small style={{display:'block',color:'#607399'}}>{data.professor?.disciplina||'Professor da Rede Municipal'}</small></div>
       <button type="button" onClick={onLogout}>Sair</button>
@@ -34,7 +34,7 @@ export default function ProfessorDashboard({ user, token, onLogout }) {
       <aside className="siedu-legacy-sidebar" style={{background:`linear-gradient(${accent},#042958)`,color:'#fff',padding:'28px 16px'}}>
         <h1 style={{margin:0,fontSize:30}}>🎓 SIEDU</h1><p style={{fontSize:13}}>Sistema Integrado de Educação</p>
         {[['🏠 Início','/professor'],['👥 Minhas Turmas','/professor/turmas'],['📖 Diário de Classe','/professor/diario'],['✅ Lançar Notas','/professor/notas'],['✍️ Planejamento de Aula','/professor/planejamento'],['📋 Plano de Aula','/professor/planos'],['📝 Atividades e Avaliações','/professor/atividades'],['▶️ Materiais da Aula','/professor/materiais'],['📊 Relatórios','/professor/relatorios'],['✉️ Mensagens','/professor/mensagens'],['📅 Calendário','/professor/calendario'],['⚙️ Configurações','/professor/perfil']].map(([label,path],i)=><button type="button" key={label} onClick={()=>window.location.assign(path)} style={{display:'block',width:'100%',color:'#fff',border:0,padding:'12px 10px',marginTop:i===0?20:2,borderRadius:8,background:i===0?'#1476ef':'transparent',textAlign:'left'}}>{label}</button>)}
-        <p style={{marginTop:40,borderTop:'1px solid #ffffff33',paddingTop:18,fontSize:12}}>Prefeitura Municipal de Pindobaçu - Bahia</p>
+        <p style={{marginTop:40,borderTop:'1px solid #ffffff33',paddingTop:18,fontSize:12}}>Secretaria de Educação · SIEDU</p>
       </aside>
       <section className="siedu-legacy-content" style={{padding:'34px 3.5%'}}>
         <div style={{display:'flex',justifyContent:'space-between',gap:20,flexWrap:'wrap'}}><div><h1>Olá, Professor {user?.nome?.split(' ')[0]}! 👋</h1><p>Gerencie exclusivamente suas turmas, aulas e avaliações.</p></div><blockquote style={{...panel,maxWidth:300,color:'#1459bd'}}>“Ensinar não é transferir conhecimento, mas criar possibilidades.”<br/><b>— Paulo Freire</b></blockquote></div>
