@@ -85,3 +85,4 @@ export default function ProfessorAtividades({ token }) {
     </main>
   </div>;
 }
+
