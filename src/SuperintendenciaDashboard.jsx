@@ -95,3 +95,4 @@ export default function SuperintendenciaDashboard({ user, token, onLogout }) {
     </main>
   </div>;
 }
+
