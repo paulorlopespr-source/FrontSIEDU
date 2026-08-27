@@ -714,7 +714,7 @@ export default function App() {
   }
 
   return (
-    <><ConnectionStatus/><MunicipalBrand user={session?.user} onLogout={logout}/><MobileNavigation user={session?.user} onLogout={logout}/><ConfirmDialog open={logoutRequested} title="Sair do SIEDU?" description="Sua sessão será encerrada e você voltará para a tela de login. Dados ainda não enviados em formulários poderão ser perdidos." confirmLabel="Sair do sistema" danger onConfirm={confirmLogout} onCancel={() => setLogoutRequested(false)}/><React.Suspense fallback={<main className="app-page"><p role="status">Carregando tela...</p></main>}><Routes>
+    <><ConnectionStatus/><MunicipalBrand user={session?.user} onLogout={logout}/>{!isStudent(session?.user) && <MobileNavigation user={session?.user} onLogout={logout}/>}<ConfirmDialog open={logoutRequested} title="Sair do SIEDU?" description="Sua sessão será encerrada e você voltará para a tela de login. Dados ainda não enviados em formulários poderão ser perdidos." confirmLabel="Sair do sistema" danger onConfirm={confirmLogout} onCancel={() => setLogoutRequested(false)}/><React.Suspense fallback={<main className="app-page"><p role="status">Carregando tela...</p></main>}><Routes>
       <Route path="/login" element={<Login onLogin={login} />} />
       <Route path="/termos" element={<Protected token={session?.token}><TermosUso token={session?.token} user={session?.user} onAccepted={updateUser} /></Protected>} />
       <Route path="/recuperar-senha" element={<RecuperarSenha />} />
