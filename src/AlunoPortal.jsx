@@ -19,6 +19,8 @@ const sections = [
   ['notificacoes', '🔔', 'Notificações'],
 ];
 
+const primarySections = sections.filter(([slug]) => ['inicio', 'materiais', 'notas', 'frequencia', 'calendario'].includes(slug));
+
 const initialData = {
   aluno: null,
   disciplinas: [],
@@ -61,16 +63,18 @@ export default function AlunoPortal({ user, token, onLogout }) {
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     let active = true;
     setLoading(true);
+    setError('');
     api.getStudentPortal(token)
       .then((result) => { if (active) setData({ ...initialData, ...result }); })
       .catch((requestError) => { if (active) setError(requestError.message); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
-  }, [token]);
+  }, [token, reloadKey]);
 
   const nextActivities = useMemo(
     () => data.atividades.filter((item) => ['Pendente', 'Atrasada', 'Programada'].includes(item.status)).slice(0, 4),
@@ -187,9 +191,11 @@ export default function AlunoPortal({ user, token, onLogout }) {
   }[selected];
 
   return <div className="student-portal">
-    <aside className="student-sidebar"><div className="sidebar-prefeitura-logo"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></div><Link className="sidebar-system-home" to="/aluno" aria-label="Voltar ao início do Portal do Aluno"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link><nav>{sections.map(([slug, icon, label]) => <Link className={selected === slug ? 'active' : ''} to={slug === 'inicio' ? '/aluno' : `/aluno/${slug}`} key={slug}><span>{icon}</span>{label}{slug === 'notificacoes' && data.resumo.notificacoesNaoLidas > 0 && <i>{data.resumo.notificacoesNaoLidas}</i>}</Link>)}</nav><div className="student-sidebar-footer"><b>SIEDU — Sistema Integrado de Educação</b><small>Secretaria Municipal de Educação</small></div></aside> 
+    <a className="student-skip-link" href="#conteudo-aluno">Ir para o conteúdo</a>
+    <aside className="student-sidebar" aria-label="Menu completo do Portal do Aluno"><div className="sidebar-prefeitura-logo"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></div><Link className="sidebar-system-home" to="/aluno" aria-label="Voltar ao início do Portal do Aluno"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link><nav>{sections.map(([slug, icon, label]) => <Link aria-current={selected === slug ? 'page' : undefined} className={selected === slug ? 'active' : ''} to={slug === 'inicio' ? '/aluno' : `/aluno/${slug}`} key={slug}><span aria-hidden="true">{icon}</span>{label}{slug === 'notificacoes' && data.resumo.notificacoesNaoLidas > 0 && <i aria-label={`${data.resumo.notificacoesNaoLidas} notificações não lidas`}>{data.resumo.notificacoesNaoLidas}</i>}</Link>)}</nav><div className="student-sidebar-footer"><b>SIEDU — Sistema Integrado de Educação</b><small>Secretaria Municipal de Educação</small></div></aside> 
     <div className="student-shell"><header className="student-topbar"><div><small>{data.aluno?.escola || 'Rede Municipal de Ensino'}</small><strong>{data.aluno?.turma || 'Portal do Aluno'}</strong></div><div className="student-user"><span>{(data.aluno?.nome || user?.nome || 'A').charAt(0)}</span><div><b>{data.aluno?.nomeSocial || data.aluno?.nome || user?.nome}</b><small>Aluno(a)</small></div><button type="button" onClick={onLogout}>Sair</button></div></header>
-      <main className="student-content">{loading ? <div className="student-loading">Carregando seus dados escolares...</div> : error ? <div className="student-error"><h1>Não foi possível carregar o portal</h1><p>{error}</p><button type="button" onClick={() => window.location.reload()}>Tentar novamente</button></div> : content()}</main>
+      <main id="conteudo-aluno" className="student-content" tabIndex="-1">{loading ? <div className="student-loading" role="status" aria-live="polite">Carregando seus dados escolares...</div> : error ? <div className="student-error" role="alert"><h1>Não foi possível carregar o portal</h1><p>{error}</p><button type="button" onClick={() => setReloadKey((value) => value + 1)}>Tentar novamente</button></div> : content()}</main>
     </div>
+    <nav className="student-mobile-nav" aria-label="Navegação principal do aluno">{primarySections.map(([slug, icon, label]) => <Link aria-current={selected === slug ? 'page' : undefined} className={selected === slug ? 'active' : ''} to={slug === 'inicio' ? '/aluno' : `/aluno/${slug}`} key={slug}><span aria-hidden="true">{icon}</span><small>{label === 'Notas e boletim' ? 'Notas' : label}</small></Link>)}</nav>
   </div>;
 }
