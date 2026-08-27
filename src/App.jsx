@@ -1218,4 +1218,3 @@ export default function App() {
     </Routes></React.Suspense></>
   );
 }
-

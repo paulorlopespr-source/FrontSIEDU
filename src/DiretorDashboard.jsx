@@ -229,4 +229,3 @@ export default function DiretorDashboard({ user, onLogout, token }) {
     </div>
   );
 }
-

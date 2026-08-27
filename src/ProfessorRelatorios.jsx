@@ -24,4 +24,3 @@ export default function ProfessorRelatorios({token}){
   </section>}
   </main></div>
 }
-

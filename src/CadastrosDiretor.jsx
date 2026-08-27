@@ -635,4 +635,3 @@ export default function CadastroDiretor({ type, token, onLogout }) {
     </main>
   );
 }
-
