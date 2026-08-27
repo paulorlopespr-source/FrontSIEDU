@@ -38,3 +38,4 @@ export default function ProfessorDiario({token,user}){
   </main>
  </div>;
 }
+
