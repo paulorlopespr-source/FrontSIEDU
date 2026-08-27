@@ -1,60 +1,60 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { api } from './services/api';
-import GestorDashboard from './GestorDashboard';
-import GestorRede from './GestorRede';
-import SuperintendenciaDashboard from './SuperintendenciaDashboard';
-import CoordenadorDashboard from './CoordenadorDashboard';
-import ProfessorDashboard from './ProfessorDashboard';
-import ProfessorTurmas from './ProfessorTurmas';
-import ProfessorDiario from './ProfessorDiario';
-import ProfessorNotas from './ProfessorNotas';
-import ProfessorBoletim from './ProfessorBoletim';
-import ProfessorPlanejamento from './ProfessorPlanejamento';
-import ProfessorPlanos from './ProfessorPlanos';
-import ProfessorAtividades from './ProfessorAtividades';
-import ProfessorProvaImpressao from './ProfessorProvaImpressao';
-import ProfessorMateriais from './ProfessorMateriais';
-import ProfessorRelatorios from './ProfessorRelatorios';
-import ProfessorCalendario from './ProfessorCalendario';
-import ProfessorPerfil from './ProfessorPerfil';
-import ProfessorMensagens from './ProfessorMensagens';
-import CoordenadorPlanos from './CoordenadorPlanos';
-import CoordenadorProfessores from './CoordenadorProfessores';
-import CoordenadorAlunos from './CoordenadorAlunos';
-import CoordenadorModulo from './CoordenadorModulo';
-import CoordenadorGestaoPedagogica from './CoordenadorGestaoPedagogica';
-import AlunoPortal from './AlunoPortal';
-import AprendizagemGestao from './AprendizagemGestao';
-import CalendarioEscolarGestao from './CalendarioEscolarGestao';
-import GestaoMunicipal from './GestaoMunicipal';
-import DemandasEscolares from './DemandasEscolares';
-import AdministracaoDemandas from './AdministracaoDemandas';
-import AdministracaoDashboard from './AdministracaoDashboard';
-import AdministracaoPessoas from './AdministracaoPessoas';
-import AdministracaoAfastamentos from './AdministracaoAfastamentos';
-import AdministracaoDocumentosFuncionais from './AdministracaoDocumentosFuncionais';
-import AdministracaoPatrimonio from './AdministracaoPatrimonio';
-import Almoxarifado from './Almoxarifado';
-import AdministracaoManutencao from './AdministracaoManutencao';
-import AdministracaoProtocolo from './AdministracaoProtocolo';
-import AdministracaoSolicitacoes from './AdministracaoSolicitacoes';
-import AdministracaoTransporte from './AdministracaoTransporte';
+const GestorDashboard = React.lazy(() => import('./GestorDashboard'));
+const GestorRede = React.lazy(() => import('./GestorRede'));
+const SuperintendenciaDashboard = React.lazy(() => import('./SuperintendenciaDashboard'));
+const CoordenadorDashboard = React.lazy(() => import('./CoordenadorDashboard'));
+const ProfessorDashboard = React.lazy(() => import('./ProfessorDashboard'));
+const ProfessorTurmas = React.lazy(() => import('./ProfessorTurmas'));
+const ProfessorDiario = React.lazy(() => import('./ProfessorDiario'));
+const ProfessorNotas = React.lazy(() => import('./ProfessorNotas'));
+const ProfessorBoletim = React.lazy(() => import('./ProfessorBoletim'));
+const ProfessorPlanejamento = React.lazy(() => import('./ProfessorPlanejamento'));
+const ProfessorPlanos = React.lazy(() => import('./ProfessorPlanos'));
+const ProfessorAtividades = React.lazy(() => import('./ProfessorAtividades'));
+const ProfessorProvaImpressao = React.lazy(() => import('./ProfessorProvaImpressao'));
+const ProfessorMateriais = React.lazy(() => import('./ProfessorMateriais'));
+const ProfessorRelatorios = React.lazy(() => import('./ProfessorRelatorios'));
+const ProfessorCalendario = React.lazy(() => import('./ProfessorCalendario'));
+const ProfessorPerfil = React.lazy(() => import('./ProfessorPerfil'));
+const ProfessorMensagens = React.lazy(() => import('./ProfessorMensagens'));
+const CoordenadorPlanos = React.lazy(() => import('./CoordenadorPlanos'));
+const CoordenadorProfessores = React.lazy(() => import('./CoordenadorProfessores'));
+const CoordenadorAlunos = React.lazy(() => import('./CoordenadorAlunos'));
+const CoordenadorModulo = React.lazy(() => import('./CoordenadorModulo'));
+const CoordenadorGestaoPedagogica = React.lazy(() => import('./CoordenadorGestaoPedagogica'));
+const AlunoPortal = React.lazy(() => import('./AlunoPortal'));
+const AprendizagemGestao = React.lazy(() => import('./AprendizagemGestao'));
+const CalendarioEscolarGestao = React.lazy(() => import('./CalendarioEscolarGestao'));
+const GestaoMunicipal = React.lazy(() => import('./GestaoMunicipal'));
+const DemandasEscolares = React.lazy(() => import('./DemandasEscolares'));
+const AdministracaoDemandas = React.lazy(() => import('./AdministracaoDemandas'));
+const AdministracaoDashboard = React.lazy(() => import('./AdministracaoDashboard'));
+const AdministracaoPessoas = React.lazy(() => import('./AdministracaoPessoas'));
+const AdministracaoAfastamentos = React.lazy(() => import('./AdministracaoAfastamentos'));
+const AdministracaoDocumentosFuncionais = React.lazy(() => import('./AdministracaoDocumentosFuncionais'));
+const AdministracaoPatrimonio = React.lazy(() => import('./AdministracaoPatrimonio'));
+const Almoxarifado = React.lazy(() => import('./Almoxarifado'));
+const AdministracaoManutencao = React.lazy(() => import('./AdministracaoManutencao'));
+const AdministracaoProtocolo = React.lazy(() => import('./AdministracaoProtocolo'));
+const AdministracaoSolicitacoes = React.lazy(() => import('./AdministracaoSolicitacoes'));
+const AdministracaoTransporte = React.lazy(() => import('./AdministracaoTransporte'));
 import {
   DetalhesEscolaGestor,
   ListaEscolasGestor,
 } from './GestorEscolas';
 import { DocumentosEscolares, Frequencia, HistoricoEscolar } from './DiretorFerramentas';
-import FinanceiroEscolar from './FinanceiroEscolar';
-import FinanceiroFiscalDashboard from './FinanceiroFiscalDashboard';
-import FinanceiroFiscalModulo from './FinanceiroFiscalModulo';
-import SairDoSistema from './SairDoSistema';
-import DiretorDashboard from './DiretorDashboard';
-import CadastroDiretor from './CadastrosDiretor';
-import TransporteEscolar from './TransporteEscolar';
-import RecuperarSenha from './RecuperarSenha';
-import AuditoriaSistema from './AuditoriaSistema';
-import Usuarios from './UsuariosGestao';
+const FinanceiroEscolar = React.lazy(() => import('./FinanceiroEscolar'));
+const FinanceiroFiscalDashboard = React.lazy(() => import('./FinanceiroFiscalDashboard'));
+const FinanceiroFiscalModulo = React.lazy(() => import('./FinanceiroFiscalModulo'));
+const SairDoSistema = React.lazy(() => import('./SairDoSistema'));
+const DiretorDashboard = React.lazy(() => import('./DiretorDashboard'));
+const CadastroDiretor = React.lazy(() => import('./CadastrosDiretor'));
+const TransporteEscolar = React.lazy(() => import('./TransporteEscolar'));
+const RecuperarSenha = React.lazy(() => import('./RecuperarSenha'));
+const AuditoriaSistema = React.lazy(() => import('./AuditoriaSistema'));
+const Usuarios = React.lazy(() => import('./UsuariosGestao'));
 import { passwordValidation } from './validation';
 import {
   canAccessSchoolFinance,
@@ -165,10 +165,10 @@ function Login({ onLogin }) {
         <div className="prefeitura-highlight">
           <img
             src="/images/siedu-logo-transparent.svg"
-            alt="Prefeitura Municipal de Pindoba&ccedil;u"
+            alt="SIEDU — Sistema Integrado de Educação"
           />
           <span>
-            Prefeitura Municipal de Pindoba&ccedil;u
+            Institui&ccedil;&atilde;o contratante
             <small>Secretaria Municipal de Educa&ccedil;&atilde;o</small>
           </span>
         </div>
@@ -180,7 +180,7 @@ function Login({ onLogin }) {
             <p>
               Sistema Integrado de Educa&ccedil;&atilde;o
               <br />
-              de Pindoba&ccedil;u - BA
+              para redes de ensino
             </p>
           </div>
         </div>
@@ -227,10 +227,10 @@ function Login({ onLogin }) {
         <div className="city-brand">
           <img
             src="/images/siedu-logo-transparent.svg"
-            alt="Prefeitura Municipal de Pindoba&ccedil;u"
+            alt="SIEDU — Sistema Integrado de Educação"
           />
           <span>
-            Prefeitura Municipal de Pindoba&ccedil;u
+            Institui&ccedil;&atilde;o contratante
             <br />
             Secretaria Municipal de Educa&ccedil;&atilde;o
           </span>
@@ -305,7 +305,7 @@ function Login({ onLogin }) {
 
         <footer>
           <span>Ano letivo 2026 &middot; SIEDU Beta &middot; <b className="connection-online">Conexão ativa</b></span>
-          <span>&copy; Olhos de &Aacute;guia Desenvolvimento &middot; Prefeitura Municipal de Pindoba&ccedil;u</span>
+          <span>&copy; Olhos de &Aacute;guia Desenvolvimento &middot; SIEDU</span>
         </footer>
       </section>
     </main>
@@ -714,7 +714,7 @@ export default function App() {
   }
 
   return (
-    <><ConnectionStatus/><MunicipalBrand user={session?.user} onLogout={logout}/><MobileNavigation user={session?.user} onLogout={logout}/><ConfirmDialog open={logoutRequested} title="Sair do SIEDU?" description="Sua sessão será encerrada e você voltará para a tela de login. Dados ainda não enviados em formulários poderão ser perdidos." confirmLabel="Sair do sistema" danger onConfirm={confirmLogout} onCancel={() => setLogoutRequested(false)}/><Routes>
+    <><ConnectionStatus/><MunicipalBrand user={session?.user} onLogout={logout}/><MobileNavigation user={session?.user} onLogout={logout}/><ConfirmDialog open={logoutRequested} title="Sair do SIEDU?" description="Sua sessão será encerrada e você voltará para a tela de login. Dados ainda não enviados em formulários poderão ser perdidos." confirmLabel="Sair do sistema" danger onConfirm={confirmLogout} onCancel={() => setLogoutRequested(false)}/><React.Suspense fallback={<main className="app-page"><p role="status">Carregando tela...</p></main>}><Routes>
       <Route path="/login" element={<Login onLogin={login} />} />
       <Route path="/termos" element={<Protected token={session?.token}><TermosUso token={session?.token} user={session?.user} onAccepted={updateUser} /></Protected>} />
       <Route path="/recuperar-senha" element={<RecuperarSenha />} />
@@ -1215,6 +1215,7 @@ export default function App() {
       />
 
       <Route path="*" element={<NotFound user={session?.user} />} />
-    </Routes></>
+    </Routes></React.Suspense></>
   );
 }
+
