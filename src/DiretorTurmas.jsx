@@ -620,3 +620,4 @@ export function DetalhesAluno({ user, onLogout, token }) {
     </DiretorAreaLayout>
   );
 }
+
