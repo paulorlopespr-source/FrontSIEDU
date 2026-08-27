@@ -1,1 +1,1 @@
-export const prefeituraLogo = '/images/prefeitura-transparent.svg';
+export const prefeituraLogo = '/images/siedu-logo-transparent.svg';

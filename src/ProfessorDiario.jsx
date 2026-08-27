@@ -12,8 +12,8 @@ export default function ProfessorDiario({token,user}){
  async function save(e){e.preventDefault();setError('');setMessage('');try{await api.saveProfessorDiary({...form,turmaId:Number(form.turmaId),quantidadeAulas:Number(form.quantidadeAulas)},token);setMessage('Aula, conteúdo e frequência registrados com sucesso.');setRecords(await api.listProfessorDiaries(token));}catch(err){setError(err.message);}}
  return <div style={{minHeight:'100vh',background:'#f4f7fc',color:'#082458',fontFamily:'Arial'}}>
   <header style={{background:'#fff',padding:'12px 4%',display:'flex',alignItems:'center',gap:20,borderBottom:'1px solid #dce5f0'}}>
-   <img src="/images/prefeitura-transparent.svg" alt="Prefeitura Municipal de Pindobaçu" style={{width:76,height:62,objectFit:'contain'}}/>
-   <div><b style={{fontSize:22}}>Diário de Classe — SIEDU</b><small style={{display:'block'}}>Prefeitura Municipal de Pindobaçu · Secretaria Municipal de Educação</small></div>
+   <img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação" style={{width:76,height:62,objectFit:'contain'}}/>
+   <div><b style={{fontSize:22}}>Diário de Classe — SIEDU</b><small style={{display:'block'}}>Secretaria de Educação</small></div> 
    <Link to="/professor" style={{marginLeft:'auto'}}>← Portal do Professor</Link>
   </header>
   <main style={{maxWidth:1250,margin:'auto',padding:'28px 4%'}}>

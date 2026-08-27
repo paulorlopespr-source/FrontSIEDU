@@ -113,7 +113,7 @@ export default function DiretorDashboard({ user, onLogout, token }) {
   return (
     <div className="director-dashboard">
       <aside className="director-side">
-        <div className="sidebar-prefeitura-logo"><img src="/images/prefeitura-transparent.svg" alt="Prefeitura Municipal de Pindobaçu"/></div>
+        <div className="sidebar-prefeitura-logo"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></div> 
         <Link className="sidebar-system-home" to="/diretor" aria-label="Voltar ao painel da escola"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link>
         <Link className="director-current" to="/diretor">
           &#8962; Dashboard

@@ -62,7 +62,7 @@ const initialValues = {
     numeroEndereco: '',
     complemento: '',
     bairro: '',
-    cidade: 'Pindobaçu',
+    cidade: '',
     uf: 'BA',
     responsavel: '',
     parentesco: '',

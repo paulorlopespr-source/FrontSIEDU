@@ -121,7 +121,7 @@ function Layout({ children, onLogout, variant = 'gestor' }) {
 
 function MunicipalBrand({ user, onLogout }) {
   if (!user) return null;
-  return <aside className="municipal-brand-stamp" aria-label="Identificação institucional e sessão do SIEDU"><div className="municipal-contractor"><img src="/images/prefeitura-transparent.svg" alt="Identidade da instituição contratante"/><span><strong>Instituição contratante</strong><small>Secretaria de Educação</small></span></div><Link className="municipal-system-brand" to={destinationFor(user)} aria-label="Voltar ao painel inicial do SIEDU"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link><div className="municipal-session"><small className="municipal-user-id">{user.nome} · {user.matriculaSecretaria || user.perfil}</small><button className="global-logout-button" type="button" onClick={onLogout}>Sair</button></div></aside>;
+  return <aside className="municipal-brand-stamp" aria-label="Identificação institucional e sessão do SIEDU"><div className="municipal-contractor"><img src="/images/siedu-logo-transparent.svg" alt="Identidade da instituição contratante"/><span><strong>Instituição contratante</strong><small>Secretaria de Educação</small></span></div><Link className="municipal-system-brand" to={destinationFor(user)} aria-label="Voltar ao painel inicial do SIEDU"><img src="/images/siedu-logo-transparent.svg" alt="SIEDU — Sistema Integrado de Educação"/></Link><div className="municipal-session"><small className="municipal-user-id">{user.nome} · {user.matriculaSecretaria || user.perfil}</small><button className="global-logout-button" type="button" onClick={onLogout}>Sair</button></div></aside>;
 }
 function ConnectionStatus() {
   const [online, setOnline] = useState(() => navigator.onLine);
@@ -164,7 +164,7 @@ function Login({ onLogin }) {
       <section className="login-brand">
         <div className="prefeitura-highlight">
           <img
-            src="/images/prefeitura-transparent.svg"
+            src="/images/siedu-logo-transparent.svg"
             alt="Prefeitura Municipal de Pindoba&ccedil;u"
           />
           <span>
@@ -226,7 +226,7 @@ function Login({ onLogin }) {
 
         <div className="city-brand">
           <img
-            src="/images/prefeitura-transparent.svg"
+            src="/images/siedu-logo-transparent.svg"
             alt="Prefeitura Municipal de Pindoba&ccedil;u"
           />
           <span>
