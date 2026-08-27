@@ -32,3 +32,4 @@ export default function ProfessorProvaImpressao({token}){
   </article>
  </main>
 }
+
