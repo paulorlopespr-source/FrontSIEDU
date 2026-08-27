@@ -3,7 +3,7 @@
   "short_name": "SIEDU",
   "start_url": "/",
   "display": "standalone",
-  "description": "Sistema Integrado de Educação da Rede Municipal de Pindobaçu",
+  "description": "Sistema Integrado de Educação para redes de ensino",
   "scope": "/",
   "orientation": "any",
   "background_color": "#f5f8fc",
@@ -13,3 +13,4 @@
     { "src": "/siedu-icon-512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
+
